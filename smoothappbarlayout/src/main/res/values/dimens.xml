@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="mine_cover_height">203dp</dimen>
+    <dimen name="mine_info_height">239dp</dimen>
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+
+
+
+
+
+
+
+
+
+    <drawable name="color_status_bar">@drawable/bg_status_bar</drawable>
+    <color name="tab_text_color">#aaaaaa</color>
+    <color name="color_red">#d90716</color>
+    <color name="tab_text_color_selected">#d90716</color>
+    <color name="indicator_white">#ffffff</color>
+
+</resources>

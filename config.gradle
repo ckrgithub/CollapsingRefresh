@@ -1,0 +1,16 @@
+//全局参数
+ext {
+    appConfig = [
+            versionCode  : 1,
+            versionName  : "1.0",
+            applicationId: "com.ckr.collapsingrefresh",
+    ]
+
+    androidConfig = [
+            compileSdkVersion: 26,
+            minSdkVersion    : 15,
+            targetSdkVersion : 26,
+    ]
+
+    supportVersion = "26.1.0"
+}
