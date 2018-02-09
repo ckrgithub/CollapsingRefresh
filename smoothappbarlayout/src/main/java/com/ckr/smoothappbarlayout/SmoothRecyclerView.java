@@ -17,7 +17,7 @@ import static com.ckr.smoothappbarlayout.base.LogUtil.Logw;
 
 
 /**
- * Created by PC大佬 on 2017/11/4.
+ * Created by PC大佬 on 2018/2/9.
  */
 
 public class SmoothRecyclerView extends RecyclerView {

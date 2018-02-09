@@ -5,9 +5,8 @@ import android.view.View;
 
 
 /**
- * Created by PC大佬 on 2017/8/5.
+ * Created by PC大佬 on 2018/2/9.
  */
-
 
 public abstract class BaseViewHorld extends RecyclerView.ViewHolder {
     public BaseViewHorld(View itemView) {

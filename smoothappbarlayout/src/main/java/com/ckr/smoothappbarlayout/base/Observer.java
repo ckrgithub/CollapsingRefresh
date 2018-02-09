@@ -19,11 +19,11 @@ package com.ckr.smoothappbarlayout.base;
 import android.view.View;
 
 /**
- * Created by henrytao on 2/3/16.
+ * Created by PC大佬 on 2018/2/9.
  */
 public interface Observer {
 
-  View getView();
+	View getView();
 
-  void setOnScrollListener(OnSmoothScrollListener onScrollListener);
+	void setOnScrollListener(OnSmoothScrollListener onScrollListener);
 }

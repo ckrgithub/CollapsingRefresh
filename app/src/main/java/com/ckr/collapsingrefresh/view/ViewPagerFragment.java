@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,7 +26,7 @@ import butterknife.BindDimen;
 import butterknife.BindView;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Created by PC大佬 on 2018/2/9.
  */
 public class ViewPagerFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener, ViewPager.OnPageChangeListener {
     @BindView(R.id.viewPager)

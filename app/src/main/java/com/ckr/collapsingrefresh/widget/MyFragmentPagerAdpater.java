@@ -9,7 +9,7 @@ import com.ckr.collapsingrefresh.view.BaseFragment;
 import java.util.List;
 
 /**
- * Created by Administrator on 2017/5/3.
+ * Created by PC大佬 on 2018/2/9.
  */
 
 public class MyFragmentPagerAdpater extends FragmentPagerAdapter {

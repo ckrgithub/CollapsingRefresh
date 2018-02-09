@@ -3,9 +3,8 @@ package com.ckr.collapsingrefresh;
 import android.app.Application;
 
 /**
- * Created by Administrator on 2017/8/11.
+ * Created by PC大佬 on 2018/2/9.
  */
-
 public class BaseApplication extends Application {
     private static BaseApplication application;
 

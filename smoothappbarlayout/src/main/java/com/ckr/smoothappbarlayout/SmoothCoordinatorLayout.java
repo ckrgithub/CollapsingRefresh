@@ -9,7 +9,7 @@ import com.ckr.smoothappbarlayout.base.LogUtil;
 
 
 /**
- * Created by PC大佬 on 2017/11/3.
+ * Created by PC大佬 on 2018/2/9.
  */
 
 public class SmoothCoordinatorLayout extends CoordinatorLayout {

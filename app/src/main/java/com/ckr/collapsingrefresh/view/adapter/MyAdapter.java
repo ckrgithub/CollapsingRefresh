@@ -10,7 +10,7 @@ import com.ckr.collapsingrefresh.model.AlbumList;
 
 
 /**
- * Created by PC大佬 on 2017/11/2.
+ * Created by PC大佬 on 2018/2/9.
  */
 
 public class MyAdapter extends BaseAdpater<AlbumList, MyAdapter.MHorld> {

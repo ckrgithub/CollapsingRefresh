@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.ckr.collapsingrefresh.view.ViewPagerFragment;
 
-
+/**
+ * Created by PC大佬 on 2018/2/9.
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override

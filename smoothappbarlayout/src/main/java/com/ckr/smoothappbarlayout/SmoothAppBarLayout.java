@@ -34,7 +34,7 @@ import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
 
 
 /**
- * Created by henrytao on 2/1/16.
+ * Created by PC大佬 on 2018/2/9.
  */
 @CoordinatorLayout.DefaultBehavior(SmoothAppBarLayout.SmoothBehavior.class)
 public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollListener {

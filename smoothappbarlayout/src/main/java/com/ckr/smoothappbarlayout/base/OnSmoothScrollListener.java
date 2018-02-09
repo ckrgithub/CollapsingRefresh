@@ -19,15 +19,15 @@ package com.ckr.smoothappbarlayout.base;
 import android.view.View;
 
 /**
- * Created by henrytao on 2/3/16.
+ * Created by PC大佬 on 2018/2/9.
  */
 public interface OnSmoothScrollListener {
 
-  void setScrollTarget(View target);
+	void setScrollTarget(View target);
 
-  void setCurrentScrollY(int scrollY);
+	void setCurrentScrollY(int scrollY);
 
-  void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy);
+	void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy);
 
-  int getCurrentOffset();
+	int getCurrentOffset();
 }

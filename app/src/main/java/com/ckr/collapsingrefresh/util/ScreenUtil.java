@@ -9,11 +9,7 @@ import java.lang.reflect.Field;
 
 
 /**
- * TODO<屏幕分辨率工具类>
- *
- * @author cjl
- * @data: 2015年8月23日 下午4:23:50
- * @version: V1.0
+ * Created by PC大佬 on 2018/2/9.
  */
 public class ScreenUtil {
 

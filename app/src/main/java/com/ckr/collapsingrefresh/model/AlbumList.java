@@ -1,7 +1,7 @@
 package com.ckr.collapsingrefresh.model;
 
 /**
- * Created by PC大佬 on 2017/11/2.
+ * Created by PC大佬 on 2018/2/9.
  */
 
 public class AlbumList implements Cloneable{

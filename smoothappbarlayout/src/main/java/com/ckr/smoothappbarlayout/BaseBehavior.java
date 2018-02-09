@@ -35,7 +35,9 @@ import java.util.List;
 import static android.support.v4.view.ViewCompat.offsetTopAndBottom;
 import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
 
-
+/**
+ * Created by PC大佬 on 2018/2/9.
+ */
 public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSmoothScrollListener {
     private static final String TAG = "BaseBehavior";
     private AppBarLayout child;
