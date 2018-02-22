@@ -32,9 +32,7 @@ public class SmoothRecyclerView extends RecyclerView {
     private int mTouchSlop;
     private int mScrollState;
     private int mPointId;
-    private boolean isScrollDown;
     private boolean isInterrupt;
-    private boolean isDragging;
 
     public SmoothRecyclerView(Context context) {
         this(context, null);
@@ -48,7 +46,6 @@ public class SmoothRecyclerView extends RecyclerView {
         super(context, attrs, defStyle);
         final ViewConfiguration vc = ViewConfiguration.get(context);
         mTouchSlop = vc.getScaledTouchSlop();
-//        setOnFlingListener(new OnSmoothFlingListener());
     }
 
     private boolean forwardDirection;//滑动方向
@@ -56,9 +53,7 @@ public class SmoothRecyclerView extends RecyclerView {
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         Logd(TAG, "onTouchEvent: mScrollState:"+mScrollState);
-        isScrollDown = false;
         isInterrupt = false;
-        isDragging = false;
         MotionEvent motionEvent = MotionEvent.obtain(e);
         int action = motionEvent.getActionMasked();
         int actionIndex = motionEvent.getActionIndex();
@@ -69,9 +64,9 @@ public class SmoothRecyclerView extends RecyclerView {
             if (abs < 423) {
                 state = 1;
             } else {
-                boolean scrollDown = canScrollVertically(-1);
-                Logw(TAG, "onTouchEvent: scrollDown:" + scrollDown);
-                if ((abs == 423 && !scrollDown)) {
+                boolean canScrollDown = canScrollVertically(-1);
+                Logw(TAG, "onTouchEvent: canScrollDown:" + canScrollDown);
+                if ((abs == 423 && !canScrollDown)) {
                     state = 2;
                 }
             }
@@ -96,13 +91,6 @@ public class SmoothRecyclerView extends RecyclerView {
                             }
                             int y = (int) (e.getRawY() + 0.5f);
                             int dy = mLastY - y;
-                            if (Math.abs(dy) > mTouchSlop) {
-                                /*if (dy > 0) {
-                                    dy -= mTouchSlop;
-								} else {
-									dy += mTouchSlop;
-								}*/
-                            }
                             if (dy > 0) {
                                 forwardDirection = true;
                             } else {
@@ -111,10 +99,8 @@ public class SmoothRecyclerView extends RecyclerView {
                             mLastY = y;
                             if (state == 2) {
                                 if (!forwardDirection) {
-                                    Loge(TAG, "onTouchEvent: isScrollDown = true,拦截"+ ",dy:" + dy);
+                                    Loge(TAG, "onTouchEvent: isInterrupt  canScrollDown ,拦截"+ ",dy:" + dy+",isFling:"+isFling);
                                     isInterrupt = true;
-                                    isScrollDown = true;
-                                    isDragging = true;
                                     if (mTotalScrollY == 0) {
                                         listener.onScrollChanged(this,
                                                 computeHorizontalScrollOffset(), 0,
@@ -124,7 +110,7 @@ public class SmoothRecyclerView extends RecyclerView {
                                 }
                             } else {
                                 if (mTotalScrollY == 0) {
-                                Loge(TAG, "onTouchEvent: isInterrupt = true,拦截"+ ",dy:" + dy);
+                                Loge(TAG, "onTouchEvent: isInterrupt = true,拦截"+ ",dy:" + dy+",isFling:"+isFling);
                                     isInterrupt = true;
                                     listener.onScrollChanged(this,
                                             computeHorizontalScrollOffset(), 0,
@@ -136,11 +122,9 @@ public class SmoothRecyclerView extends RecyclerView {
                             }
                             break;
                         case MotionEvent.ACTION_CANCEL:
-                            isDragging = false;
                             isInterrupt = true;
                             break;
                         case MotionEvent.ACTION_UP:
-                            isDragging = false;
                             isInterrupt = true;
                             break;
                         case MotionEvent.ACTION_POINTER_UP:
@@ -210,7 +194,6 @@ public class SmoothRecyclerView extends RecyclerView {
         return bundle;
     }
 
-
     @Override
     public void onScrollStateChanged(int state) {
 //		super.onScrollStateChanged(state);
@@ -221,14 +204,11 @@ public class SmoothRecyclerView extends RecyclerView {
         switch (state) {
             case SCROLL_STATE_IDLE:
                 isFling = false;
-                isDragging = false;
                 break;
             case SCROLL_STATE_SETTLING:
                 isFling = true;
-                isDragging = false;
                 break;
             case SCROLL_STATE_DRAGGING:
-                isDragging = true;
                 break;
         }
         Logd(TAG, "onScrollChanged: mScrollState:" + mScrollState);
@@ -258,31 +238,13 @@ public class SmoothRecyclerView extends RecyclerView {
         } else {
             if (listener != null) {
                 if (isInterrupt) {
-                    Loge(TAG, "fling,onTouchEvent 向下=true");
+                    Loge(TAG, "fling,onTouchEvent isInterrupt = true,isFling:"+isFling);
                     return true;
                 } else {
-                    Loge(TAG, "fling,onTouchEvent 向下 = false");
-                    if (mTotalScrollY > 0) {
-                    }
+                    Loge(TAG, "fling,onTouchEvent isInterrupt = false,isFling:"+isFling);
                 }
             }
             return super.fling(velocityX, velocityY);
         }
-    }
-    
-    class OnSmoothFlingListener extends OnFlingListener {
-
-        @Override
-        public boolean onFling(int velocityX, int velocityY) {
-            int minFlingVelocity = getMinFlingVelocity();
-            boolean fling = (Math.abs(velocityY) > minFlingVelocity || Math.abs(velocityX) > minFlingVelocity)
-                    && smoothFromFling( velocityX, velocityY);
-            return fling;
-        }
-    }
-
-    private boolean smoothFromFling(int velocityX, int velocityY) {
-        Logd(TAG, "smoothFromFling,onTouchEvent: isInterrupt:"+isInterrupt);
-        return isInterrupt;
     }
 }
