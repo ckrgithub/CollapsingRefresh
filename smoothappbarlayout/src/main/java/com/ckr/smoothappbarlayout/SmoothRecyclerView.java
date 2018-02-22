@@ -219,6 +219,11 @@ public class SmoothRecyclerView extends RecyclerView {
         super.onScrolled(dx, dy);
         Logd(TAG, "onScrolled() called with: mTotalScrollY = [" + mTotalScrollY + "], dy = [" + dy + "]" + ",isFling:" + isFling);
         mTotalScrollY += dy;
+        if (mTotalScrollY==0) {
+            if (listener != null) {
+                listener.handleFling();
+            }
+        }
     }
 
     boolean isFling;
@@ -231,7 +236,7 @@ public class SmoothRecyclerView extends RecyclerView {
             Logd(TAG, "fling: 拦截:" + minFlingVelocity);
             return true;
         }
-        Loge(TAG, "fling() onScrollChanged, velocityX = [" + velocityX + "], velocityY = [" + velocityY + "]" + ",mTotalScrollY：" + mTotalScrollY);
+        Loge(TAG, "fling onScrollChanged, velocityX = [" + velocityX + "], velocityY = [" + velocityY + "]" + ",mTotalScrollY：" + mTotalScrollY);
         //make more smooth
         if (velocityY > 0) {
             return super.fling(velocityX, velocityY);

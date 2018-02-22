@@ -117,6 +117,14 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
         return smoothBehavior.getCurrentOffset();
     }
 
+    @Override
+    public void handleFling() {
+        if (smoothBehavior == null) {
+            initBehavior();
+        }
+        smoothBehavior.handleFling();
+    }
+
     private void initBehavior() {
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) getLayoutParams();
         this.smoothBehavior = (SmoothBehavior) params.getBehavior();

@@ -30,4 +30,6 @@ public interface OnSmoothScrollListener {
 	void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy);
 
 	int getCurrentOffset();
+
+	void handleFling();
 }
