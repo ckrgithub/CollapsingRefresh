@@ -24,6 +24,7 @@ import android.support.v4.widget.ScrollerCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Interpolator;
 
 import com.ckr.smoothappbarlayout.base.LogUtil;
 import com.ckr.smoothappbarlayout.base.OnSmoothScrollListener;
@@ -87,6 +88,14 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		}
 	}
 
+	static final Interpolator sQuinticInterpolator = new Interpolator() {
+		@Override
+		public float getInterpolation(float t) {
+			t -= 1.0f;
+			return t * t * t * t * t + 1.0f;
+		}
+	};
+
 	/**
 	 * to see HeaderBehavior.method:fling()
 	 *
@@ -101,7 +110,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 	final boolean fling(AppBarLayout layout, View target, int startY, int minOffset,
 						int maxOffset, float velocityY, boolean flingUp) {
 		Logd(TAG, "fling: startY:" + startY + ",minOffset:" + minOffset + ",maxOffset:" + maxOffset
-				+ ",maxOffset:" + maxOffset + ",velocityY:" + velocityY + ",flingUp:" + flingUp + ",mTotalScrollY:" + mTotalScrollY);
+				+ ",velocityY:" + velocityY + ",flingUp:" + flingUp + ",mTotalScrollY:" + mTotalScrollY);
 		if (mFlingRunnable != null) {
 			if (mScroller != null) {
 				mScroller.abortAnimation();
@@ -110,9 +119,14 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 			mFlingRunnable = null;
 		}
 		if (mScroller == null) {
-			mScroller = ScrollerCompat.create(layout.getContext());
+			mScroller = ScrollerCompat.create(layout.getContext(), sQuinticInterpolator);
 		}
+		// TODO: 2018/2/22
 		mScroller.fling(0, -startY, 0, Math.round(velocityY), 0, 0, minOffset, maxOffset);
+
+//		mScroller.fling(0, 0, 0, Math.round(velocityY),
+//				Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE);
+
 		boolean canScroll = mScroller.computeScrollOffset();
 		Logd(TAG, "fling: canScroller: " + canScroll);
 		if (canScroll) {
@@ -124,11 +138,20 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		}
 	}
 
+	/**
+	 * RecyclerView is calculating a scroll.
+	 * If there are too many of these in Systrace, some Views inside RecyclerView might be causing
+	 * it. Try to avoid using EditText, focusable views or handle them with care.
+	 */
+	static final String TRACE_SCROLL_TAG = "RV Scroll";
+
 	private class FlingRunnable implements Runnable {
 		private final AppBarLayout mLayout;
 		private final View scrollTarget;
 		private final boolean isFlingUp;
 		private final boolean accuracy;
+		private int mLastFlingX;
+		private int mLastFlingY;
 
 		FlingRunnable(AppBarLayout layout, View target, boolean flingUp, boolean accuracy) {
 			mLayout = layout;
@@ -140,6 +163,44 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		@Override
 		public void run() {
 			if (mLayout != null && mScroller != null && vScrollTarget == scrollTarget) {
+				if (mScroller.computeScrollOffset()) {
+					final int y = mScroller.getCurrY();
+					final int dy = y - mLastFlingY;
+					int vresult = 0;
+					mLastFlingY = y;
+					int overscrollX = 0, overscrollY = 0;
+//					TraceCompat.beginSection(TRACE_SCROLL_TAG);
+//					if (dy != 0) {
+//						vresult = 0;
+//						overscrollY = dy - vresult;
+//					}
+//					TraceCompat.endSection();
+//					if (overscrollX != 0 || overscrollY != 0) {
+//						final int vel = (int) mScroller.getCurrVelocity();
+//
+//						int velY = 0;
+//						if (overscrollY != y) {
+//							velY = overscrollY < 0 ? -vel : overscrollY > 0 ? vel : 0;
+//						}
+//						if ((velY != 0 || overscrollY == y || mScroller.getFinalY() == 0)) {
+//							mScroller.abortAnimation();
+//						}
+//					}
+					int top = child.getTop();
+					int ny = Math.abs(Math.max(-423, dy));
+						/*if (accuracy) {
+							ny = Math.abs(dy - top);
+						} else {
+							ny = Math.abs(mTotalScrollY + top);
+						}*/
+					Loge(TAG, "run: dy:" + dy + ",mTotalScrollY:" + mTotalScrollY + ",top:" + top + ",ny:" + ny);
+					if (mTotalScrollY <= 423) {
+						setTopAndBottomOffset(ny);
+					}
+					ViewCompat.postOnAnimation(mLayout, this);
+				}
+			}
+			/*if (mLayout != null && mScroller != null && vScrollTarget == scrollTarget) {
 				boolean canScroll = mScroller.computeScrollOffset();
 				Logd(TAG, "run: canScroll:" + canScroll + ",isFlingUp:" + isFlingUp);
 				if (canScroll) {
@@ -177,17 +238,19 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 						}
 					}
 				}
-			}
+			}*/
 		}
 	}
 
 	@Override
 	public boolean onNestedFling(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target,
 								 float velocityX, float velocityY, boolean consumed) {
-		Loge(TAG, "onNestedFling: fling = [" + velocityX + "], velocityY = [" + velocityY + "], consumed = [" + consumed + "]");
+		Loge(TAG, "onNestedFling: fling = [" + velocityX + "], velocityY = [" + velocityY + "], consumed = [" + consumed + "]"
+				+ "，mTotalScrollY：" + mTotalScrollY);
 		if (consumed) {
 			if (velocityY < 0) {
 				this.velocityY = velocityY;
+				handleFling();
 //            if (velocityY < -VELOCITY_UNITS) {
 //                flingHandle(child, target, velocityY);
 			} /*else if (velocityY > 0) {
@@ -254,7 +317,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 				setTopAndBottomOffset(dy);
 			}
 			/*int top = child.getTop();
-            if (dy == top) {
+			if (dy == top) {
                 return;
             }*/
 
@@ -278,8 +341,8 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 //        LogUtil.Logw(TAG, "onNestedScroll: mScrollY:" + dyUnconsumed);
 //        LogUtil.Loge(TAG, "onNestedScroll: setTopAndBottomOffset");
 		// TODO: 2017/11/7
-       /* if (dyConsumed != 0) {//向上拖动时，调整appBarLayout的top
-            setTopAndBottomOffset(dyConsumed + dyUnconsumed);
+	   /* if (dyConsumed != 0) {//向上拖动时，调整appBarLayout的top
+			setTopAndBottomOffset(dyConsumed + dyUnconsumed);
         } else if (dyUnconsumed != 0) {//向下拖动时，调整appBarLayout的top
             setTopAndBottomOffset(-dyUnconsumed);
         }*/

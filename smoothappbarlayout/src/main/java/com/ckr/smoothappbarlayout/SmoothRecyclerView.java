@@ -219,10 +219,13 @@ public class SmoothRecyclerView extends RecyclerView {
         super.onScrolled(dx, dy);
         Logd(TAG, "onScrolled() called with: mTotalScrollY = [" + mTotalScrollY + "], dy = [" + dy + "]" + ",isFling:" + isFling);
         mTotalScrollY += dy;
-        if (mTotalScrollY==0) {
+        /*if (mTotalScrollY==0) {
             if (listener != null) {
                 listener.handleFling();
             }
+        }*/
+        if (listener != null) {
+            listener.onScrollValueChanged(mTotalScrollY);
         }
     }
 

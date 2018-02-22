@@ -38,124 +38,137 @@ import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
  */
 @CoordinatorLayout.DefaultBehavior(SmoothAppBarLayout.SmoothBehavior.class)
 public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollListener {
-    private static final String TAG="SmartAppBarLayout";
-    protected final List<WeakReference<OnOffsetChangedListener>> mOffsetChangedListeners = new ArrayList<>();
-    private SmoothBehavior smoothBehavior;
+	private static final String TAG = "SmartAppBarLayout";
+	protected final List<WeakReference<OnOffsetChangedListener>> mOffsetChangedListeners = new ArrayList<>();
+	private SmoothBehavior smoothBehavior;
 
-    public SmoothAppBarLayout(Context context) {
-        super(context);
-    }
+	public SmoothAppBarLayout(Context context) {
+		super(context);
+	}
 
-    public SmoothAppBarLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+	public SmoothAppBarLayout(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-    }
+	@Override
+	protected void onAttachedToWindow() {
+		super.onAttachedToWindow();
+	}
 
-    @Override
-    public void addOnOffsetChangedListener(OnOffsetChangedListener listener) {
-        super.addOnOffsetChangedListener(listener);
-        int i = 0;
-        for (int z = this.mOffsetChangedListeners.size(); i < z; ++i) {
-            WeakReference ref = (WeakReference) this.mOffsetChangedListeners.get(i);
-            if (ref != null && ref.get() == listener) {
-                return;
-            }
-        }
-        this.mOffsetChangedListeners.add(new WeakReference(listener));
-    }
+	@Override
+	public void addOnOffsetChangedListener(OnOffsetChangedListener listener) {
+		super.addOnOffsetChangedListener(listener);
+		int i = 0;
+		for (int z = this.mOffsetChangedListeners.size(); i < z; ++i) {
+			WeakReference ref = (WeakReference) this.mOffsetChangedListeners.get(i);
+			if (ref != null && ref.get() == listener) {
+				return;
+			}
+		}
+		this.mOffsetChangedListeners.add(new WeakReference(listener));
+	}
 
-    @Override
-    public void removeOnOffsetChangedListener(OnOffsetChangedListener listener) {
-        super.removeOnOffsetChangedListener(listener);
-        Iterator i = mOffsetChangedListeners.iterator();
-        while (true) {
-            OnOffsetChangedListener item;
-            do {
-                if (!i.hasNext()) {
-                    return;
-                }
-                WeakReference ref = (WeakReference) i.next();
-                item = (OnOffsetChangedListener) ref.get();
-            } while (item != listener && item != null);
-            i.remove();
-        }
-    }
+	@Override
+	public void removeOnOffsetChangedListener(OnOffsetChangedListener listener) {
+		super.removeOnOffsetChangedListener(listener);
+		Iterator i = mOffsetChangedListeners.iterator();
+		while (true) {
+			OnOffsetChangedListener item;
+			do {
+				if (!i.hasNext()) {
+					return;
+				}
+				WeakReference ref = (WeakReference) i.next();
+				item = (OnOffsetChangedListener) ref.get();
+			} while (item != listener && item != null);
+			i.remove();
+		}
+	}
 
-    @Override
-    public void setScrollTarget(View target) {
-        if (smoothBehavior == null) {
-            initBehavior();
-        }
-        smoothBehavior.setScrollTarget(target);
-    }
+	@Override
+	public void setScrollTarget(View target) {
+		if (smoothBehavior == null) {
+			initBehavior();
+		}
+		smoothBehavior.setScrollTarget(target);
+	}
 
-    @Override
-    public void setCurrentScrollY(int scrollY) {
-        if (smoothBehavior == null) {
-            initBehavior();
-        }
-        smoothBehavior.setCurrentScrollY(scrollY);
-    }
+	@Override
+	public void setCurrentScrollY(int scrollY) {
+		if (smoothBehavior == null) {
+			initBehavior();
+		}
+		smoothBehavior.setCurrentScrollY(scrollY);
+	}
 
-    @Override
-    public void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy) {
-        if (smoothBehavior == null) {
-            initBehavior();
-        }
-        smoothBehavior.onScrollChanged(view, x, y, dx, dy, accuracy);
-    }
+	@Override
+	public void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy) {
+		if (smoothBehavior == null) {
+			initBehavior();
+		}
+		smoothBehavior.onScrollChanged(view, x, y, dx, dy, accuracy);
+	}
 
-    @Override
-    public int getCurrentOffset() {
-        if (smoothBehavior == null) {
-            initBehavior();
-        }
-        return smoothBehavior.getCurrentOffset();
-    }
+	@Override
+	public int getCurrentOffset() {
+		if (smoothBehavior == null) {
+			initBehavior();
+		}
+		return smoothBehavior.getCurrentOffset();
+	}
 
-    @Override
-    public void handleFling() {
-        if (smoothBehavior == null) {
-            initBehavior();
-        }
-        smoothBehavior.handleFling();
-    }
+	@Override
+	public void handleFling() {
+		if (smoothBehavior == null) {
+			initBehavior();
+		}
+		smoothBehavior.handleFling();
+	}
 
-    private void initBehavior() {
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) getLayoutParams();
-        this.smoothBehavior = (SmoothBehavior) params.getBehavior();
-    }
+	@Override
+	public void onScrollValueChanged(int scrollY) {
+		if (smoothBehavior == null) {
+			initBehavior();
+		}
+		smoothBehavior.onScrollValueChanged(scrollY);
+	}
 
-    public static class SmoothBehavior extends BaseBehavior {
-        private static final String TAG = "SmoothBehavior";
+	private void initBehavior() {
+		CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) getLayoutParams();
+		this.smoothBehavior = (SmoothBehavior) params.getBehavior();
+	}
 
-        @Override
-        public void setScrollTarget(View target) {
-            vScrollTarget = target;
-        }
+	public static class SmoothBehavior extends BaseBehavior {
+		private static final String TAG = "SmoothBehavior";
 
-        @Override
-        public void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy) {
-            if (view == vScrollTarget) {
-                Logd(TAG, "onScrollChanged: dy:" + dy + ",mTotalScrollY:" + y+",mCurrentOffset:"+mCurrentOffset);
-                mTotalScrollY = y;
-                int translationOffset = Math.max(-423, -dy /*- y*/);
-                if (mTotalScrollY>=423) {
-                    translationOffset=-423;
-                }
-                LogUtil.Loge(TAG, "onScrollChanged: translationOffset:" + translationOffset);
-                syncOffset(translationOffset, dy, y);
-            }
-        }
+		@Override
+		public void setScrollTarget(View target) {
+			vScrollTarget = target;
+		}
 
-        @Override
-        public int getCurrentOffset() {
-            return mCurrentOffset;
-        }
-    }
+		@Override
+		public void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy) {
+			if (view == vScrollTarget) {
+				Logd(TAG, "onScrollChanged: dy:" + dy + ",mTotalScrollY:" + y + ",mCurrentOffset:" + mCurrentOffset);
+//                mTotalScrollY = y;
+				int translationOffset = Math.max(-423, -dy /*- y*/);
+//                if (mTotalScrollY>=423) {
+//                    translationOffset=-423;
+//                }
+				LogUtil.Loge(TAG, "onScrollChanged: translationOffset:" + translationOffset);
+				syncOffset(translationOffset, dy, y);
+			}
+		}
+
+		@Override
+		public int getCurrentOffset() {
+			return mCurrentOffset;
+		}
+
+		@Override
+		public void onScrollValueChanged(int scrollY) {
+			mTotalScrollY = scrollY;
+		}
+	}
 
 }
