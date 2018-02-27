@@ -1,4 +1,4 @@
-package com.ckr.collapsingrefresh.view.adapter;
+package com.ckr.collapsingrefresh.adapter;
 
 import android.content.Context;
 import android.view.View;

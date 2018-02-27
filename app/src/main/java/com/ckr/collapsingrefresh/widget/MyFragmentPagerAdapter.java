@@ -12,11 +12,11 @@ import java.util.List;
  * Created by PC大佬 on 2018/2/9.
  */
 
-public class MyFragmentPagerAdpater extends FragmentPagerAdapter {
+public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
     List<BaseFragment> fragmentList;
     String[] titles;
 
-    public MyFragmentPagerAdpater(FragmentManager fm, List<BaseFragment> fragmentList, String[] titles) {
+    public MyFragmentPagerAdapter(FragmentManager fm, List<BaseFragment> fragmentList, String[] titles) {
         super(fm);
         this.fragmentList = fragmentList;
         this.titles = titles;

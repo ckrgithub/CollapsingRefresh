@@ -1,0 +1,30 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.ckr.collapsingrefresh.view.MainFragment">
+
+
+    <com.ckr.collapsingrefresh.widget.CustomViewPager
+        android:id="@+id/viewPager"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.ckr.collapsingrefresh.widget.CustomViewPager>
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/tablayout_style"
+        app:tabGravity="fill"
+        app:tabIndicatorHeight="0dp"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="#f00"
+        app:tabTextColor="#333">
+
+    </android.support.design.widget.TabLayout>
+
+</FrameLayout>

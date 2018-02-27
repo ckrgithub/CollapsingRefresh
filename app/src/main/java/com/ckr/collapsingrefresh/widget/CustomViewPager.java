@@ -14,15 +14,10 @@ public class CustomViewPager extends ViewPager {
 
     public CustomViewPager(Context context) {
         super(context);
-        init();
-    }
-
-    private void init() {
     }
 
     public CustomViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public void setScanScroll(boolean isCanScroll) {
@@ -31,14 +26,11 @@ public class CustomViewPager extends ViewPager {
 
     @Override
     public void scrollTo(int x, int y) {
-//        if (isCanScroll){
         super.scrollTo(x, y);
-//        }
     }
 
     @Override
     public void setCurrentItem(int item) {
-        // TODO Auto-generated method stub
         super.setCurrentItem(item, false);
     }
 
@@ -49,7 +41,6 @@ public class CustomViewPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent arg0) {
-        // TODO Auto-generated method stub
         if (isCanScroll) {
             return super.onTouchEvent(arg0);
         } else {
@@ -59,7 +50,6 @@ public class CustomViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent arg0) {
-        // TODO Auto-generated method stub
         if (isCanScroll) {
             return super.onInterceptTouchEvent(arg0);
         } else {

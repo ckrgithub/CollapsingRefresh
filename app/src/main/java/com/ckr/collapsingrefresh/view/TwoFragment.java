@@ -6,7 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 
 import com.ckr.collapsingrefresh.R;
 import com.ckr.collapsingrefresh.model.AlbumList;
-import com.ckr.collapsingrefresh.view.adapter.MyAdapter;
+import com.ckr.collapsingrefresh.adapter.MyAdapter;
 import com.ckr.smoothappbarlayout.SmoothRecyclerView;
 import com.ckr.smoothappbarlayout.base.LogUtil;
 import com.ckr.smoothappbarlayout.base.OnSmoothScrollListener;

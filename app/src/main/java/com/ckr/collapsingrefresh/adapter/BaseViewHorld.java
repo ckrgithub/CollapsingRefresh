@@ -1,4 +1,4 @@
-package com.ckr.collapsingrefresh.view.adapter;
+package com.ckr.collapsingrefresh.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

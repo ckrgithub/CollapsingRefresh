@@ -145,6 +145,10 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 	 */
 	static final String TRACE_SCROLL_TAG = "RV Scroll";
 
+	/**
+	 * {@link AppBarLayout.Behavior}中onStopNestedScroll,onFlingFinished
+	 * {@link android.support.design.widget.HeaderBehavior}中onInterceptTouchEvent,fling
+	 */
 	private class FlingRunnable implements Runnable {
 		private final AppBarLayout mLayout;
 		private final View scrollTarget;

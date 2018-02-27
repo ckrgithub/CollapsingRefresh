@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.ckr.collapsingrefresh.R;
 import com.ckr.collapsingrefresh.util.ScreenUtil;
-import com.ckr.collapsingrefresh.widget.CustomViewPager;
 import com.ckr.collapsingrefresh.widget.MyFragmentPagerAdapter;
 import com.ckr.smoothappbarlayout.SmoothAppBarLayout;
 
@@ -28,7 +27,7 @@ import butterknife.BindView;
 /**
  * Created by PC大佬 on 2018/2/9.
  */
-public class ViewPagerFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener, ViewPager.OnPageChangeListener {
+public class NativeFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener, ViewPager.OnPageChangeListener {
     @BindView(R.id.viewPager)
     ViewPager viewPager;
     @BindView(R.id.statusBarPaddingView)
@@ -36,7 +35,7 @@ public class ViewPagerFragment extends BaseFragment implements AppBarLayout.OnOf
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
     @BindView(R.id.appBarLayout)
-    SmoothAppBarLayout appBarLayout;
+    AppBarLayout appBarLayout;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindColor(R.color.color_red)
@@ -53,16 +52,16 @@ public class ViewPagerFragment extends BaseFragment implements AppBarLayout.OnOf
     private List<BaseFragment> fragmentList;
     private int totalHeight;
 
-    public static ViewPagerFragment newInstance() {
+    public static NativeFragment newInstance() {
         Bundle args = new Bundle();
-        ViewPagerFragment fragment = new ViewPagerFragment();
+        NativeFragment fragment = new NativeFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     protected int getContentLayoutId() {
-        return R.layout.fragment_view_pager;
+        return R.layout.fragment_native;
     }
 
     @Override
@@ -94,8 +93,8 @@ public class ViewPagerFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private void initFragment() {
         fragmentList = new ArrayList<>();
-        fragmentList.add(OneFragment.newInstance(appBarLayout));
-        fragmentList.add(TwoFragment.newInstance(appBarLayout));
+        fragmentList.add(ThreeFragment.newInstance());
+        fragmentList.add(ThreeFragment.newInstance());
     }
 
     private void initTabLayout() {

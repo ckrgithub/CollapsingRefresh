@@ -3,10 +3,11 @@ package com.ckr.collapsingrefresh.view;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import com.ckr.collapsingrefresh.R;
-import com.ckr.collapsingrefresh.model.AlbumList;
 import com.ckr.collapsingrefresh.adapter.MyAdapter;
+import com.ckr.collapsingrefresh.model.AlbumList;
 import com.ckr.smoothappbarlayout.SmoothRecyclerView;
 import com.ckr.smoothappbarlayout.base.LogUtil;
 import com.ckr.smoothappbarlayout.base.OnSmoothScrollListener;
@@ -21,20 +22,18 @@ import butterknife.BindView;
  * Created by PC大佬 on 2018/2/9.
  */
 
-public class OneFragment extends BaseFragment {
+public class ThreeFragment extends BaseFragment {
     private static final String TAG = "OneFragment";
     @BindView(R.id.recyclerView)
-    SmoothRecyclerView recyclerView;
+    RecyclerView recyclerView;
     private MyAdapter mAdapter;
     @BindDimen(R.dimen.size_5)
     int paddingSize;
-    static OnSmoothScrollListener scrollListener;
     private boolean isVisible;
 
-    public static OneFragment newInstance(OnSmoothScrollListener onScrollListener) {
-        scrollListener = onScrollListener;
+    public static ThreeFragment newInstance() {
         Bundle args = new Bundle();
-        OneFragment fragment = new OneFragment();
+        ThreeFragment fragment = new ThreeFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,7 +46,6 @@ public class OneFragment extends BaseFragment {
     @Override
     protected void init() {
         LogUtil.Logd(TAG, "init: target:"+recyclerView);
-        recyclerView.setOnSmoothScrollListener(scrollListener);
         setAdapter();
     }
 
@@ -95,9 +93,5 @@ public class OneFragment extends BaseFragment {
 
     @Override
     public void refreshFragment() {
-        if (isVisible) {
-            scrollListener.setScrollTarget(recyclerView);
-            recyclerView.setCurrentScrollY();
-        }
     }
 }
