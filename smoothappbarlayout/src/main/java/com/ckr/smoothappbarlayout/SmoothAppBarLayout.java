@@ -133,6 +133,14 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 		smoothBehavior.onScrollValueChanged(scrollY);
 	}
 
+	@Override
+	public void onFlingFinished(float velocityY) {
+		if (smoothBehavior == null) {
+			initBehavior();
+		}
+		smoothBehavior.onFlingFinished(velocityY);
+	}
+
 	private void initBehavior() {
 		CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) getLayoutParams();
 		this.smoothBehavior = (SmoothBehavior) params.getBehavior();
@@ -168,6 +176,14 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 		@Override
 		public void onScrollValueChanged(int scrollY) {
 			mTotalScrollY = scrollY;
+		}
+
+		@Override
+		public void onFlingFinished(float velocityY) {
+			/*if ((mCurrentOffset==0*//*&&velocityY>0)||(mCurrentOffset==-423&&velocityY<0*//*)) {
+				return;
+			}*/
+			fling(child,vScrollTarget,Math.abs(mCurrentOffset),0,0,velocityY,false);
 		}
 	}
 
