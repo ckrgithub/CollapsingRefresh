@@ -132,26 +132,31 @@ public class SmoothRecyclerView extends RecyclerView {
 							}
 							break;
 						case MotionEvent.ACTION_UP:
-							isInterrupt = true;
 //                            int offset = listener.getCurrentOffset();
 //							Logd(TAG, "onTouchEvent: fling: offset:"+offset);
-							if (mVelocityTracker != null/*&&offset!=0*/) {
-								Logd(TAG, "onTouchEvent: fling: ACTION_UP:"+currentOffset);
-								mVelocityTracker.addMovement(e);
-								int minFlingVelocity = getMinFlingVelocity();
-								int maxFlingVelocity = getMaxFlingVelocity();
-								mVelocityTracker.computeCurrentVelocity(1000,maxFlingVelocity);
-								float yvel = -mVelocityTracker.getYVelocity(mPointId);
-								yvel+=yvel*(423+currentOffset)/141;
-								boolean fling = (Math.abs(yvel) > 0);
-								yvel = Math.max(-maxFlingVelocity, Math.min(yvel, maxFlingVelocity));
-								Logd(TAG, "onTouchEvent: fling: minFlingVelocity:" + minFlingVelocity + ",maxFlingVelocity:" + maxFlingVelocity + ",yvel：" + yvel);
-								if (fling) {
-									yvel = forwardDirection ? Math.abs(yvel) : -Math.abs(yvel);
-									Logd(TAG, "onTouchEvent: fling: forwardDirection:" + forwardDirection + ",yvel：" + yvel);
-									listener.onFlingFinished(yvel);
+							Logd(TAG, "onTouchEvent: fling: ACTION_UP:" + currentOffset + ",forwardDirection：" + forwardDirection);
+							if (forwardDirection && currentOffset == -423) {
+
+							} else {
+								isInterrupt = true;
+								if (mVelocityTracker != null/*&&offset!=0*/) {
+									mVelocityTracker.addMovement(e);
+									int minFlingVelocity = getMinFlingVelocity();
+									int maxFlingVelocity = getMaxFlingVelocity();
+									mVelocityTracker.computeCurrentVelocity(1000, maxFlingVelocity);
+									float yvel = -mVelocityTracker.getYVelocity(mPointId);
+//								yvel+=yvel*(423+currentOffset)/141;
+									boolean fling = (Math.abs(yvel) > 0);
+									yvel = Math.max(-maxFlingVelocity, Math.min(yvel, maxFlingVelocity));
+									Logd(TAG, "onTouchEvent: fling: minFlingVelocity:" + minFlingVelocity + ",maxFlingVelocity:" + maxFlingVelocity + ",yvel：" + yvel);
+									if (fling) {
+										yvel = forwardDirection ? Math.abs(yvel) : -Math.abs(yvel);
+										Logd(TAG, "onTouchEvent: fling: forwardDirection:" + forwardDirection + ",yvel：" + yvel);
+										listener.onFlingFinished(yvel);
+									}
 								}
 							}
+
 							break;
 						case MotionEvent.ACTION_POINTER_UP:
 							isInterrupt = true;
@@ -243,7 +248,7 @@ public class SmoothRecyclerView extends RecyclerView {
 		Logd(TAG, "onScrolled() called with: mTotalScrollY = [" + mTotalScrollY + "], dy = [" + dy + "]" + ",isFling:" + isFling);
 		mTotalScrollY += dy;
 		/*if (mTotalScrollY==0) {
-            if (listener != null) {
+			if (listener != null) {
                 listener.handleFling();
             }
         }*/

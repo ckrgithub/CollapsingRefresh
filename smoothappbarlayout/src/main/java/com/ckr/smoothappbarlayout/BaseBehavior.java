@@ -108,6 +108,9 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		Logd(TAG, "fling: run: startY:" + startY + ",minOffset:" + minOffset + ",maxOffset:" + maxOffset
 				+ ",velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset + ",mTotalScrollY:" + mTotalScrollY);
 		if (mFlingRunnable != null) {
+//			if (mScroller != null) {
+//				mScroller.abortAnimation();
+//			}
 			layout.removeCallbacks(mFlingRunnable);
 			mFlingRunnable = null;
 		}
@@ -116,8 +119,8 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		}
 		Log.d(TAG, "fling: getTop:" + child.getTop() + ",bottom:" + child.getBottom());
 		// TODO: 2018/2/22
-		mScroller.fling(0, startY, 0, Math.round(velocityY)
-				, 0, 0, 0, 423);
+		mScroller.fling(0, 0, 0, Math.round(velocityY)
+				, 0, 0, -423, 423);
 		boolean canScroll = mScroller.computeScrollOffset();
 		Logd(TAG, "fling: run: canScroller: " + canScroll);
 		if (canScroll) {
@@ -215,7 +218,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		private final boolean isFlingUp;
 		private final boolean accuracy;
 		private int mLastFlingX;
-		private int mLastFlingY;
+		private boolean isInterrupt;
 		private int mLastY = 0;
 
 		FlingRunnable(AppBarLayout layout, View target, boolean flingUp, boolean accuracy, int mCurrentOffset) {
@@ -223,7 +226,8 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 			scrollTarget = target;
 			isFlingUp = flingUp;
 			this.accuracy = accuracy;
-			this.mLastY = mCurrentOffset;
+			this.mLastY = 0;
+			isInterrupt = false;
 		}
 
 		@Override
@@ -231,18 +235,25 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 			if (mLayout != null && mScroller != null && vScrollTarget == scrollTarget) {
 				if (mScroller.computeScrollOffset()) {
 					isFling = true;
+//					if (mLastY == Integer.MIN_VALUE) {
+//						int currY = mScroller.getCurrY();
+//						mLastY = currY;
+//
+//					} else {
 					int currY = mScroller.getCurrY();
 					int y = mLastY - currY;//-7.-11,8,33
 					mLastY = currY;
 					Loge(TAG, "run: fling: currY:" + currY + ",y:" + y);
-					if (y != 0) {
-						if (isFlingUp) {
-							y=Math.abs(y);
-						}
+					if (y != 0 && !isInterrupt) {
 						setTopAndBottomOffset(y);
+					} else {
+						isInterrupt = true;
+//						mScroller.abortAnimation();
 					}
 					ViewCompat.postOnAnimation(mLayout, this);
+//					}
 				} else {
+					Log.d(TAG, "run: fling:  isFling=false");
 					isFling = false;
 //					onFlingFinished(mLayout);
 				}
@@ -380,8 +391,8 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 			if (velocityY == 0) {
 				return;
 			}
-			Logd(TAG, "NestedScrollingParent  onNestedScroll: velocityY =" + velocityY);
-			float velocityY = this.velocityY/2;
+			Logd(TAG, "NestedScrollingParent  fling: velocityY =" + velocityY);
+			float velocityY = this.velocityY * 423 / 1000;
 			this.velocityY = 0;
 			fling(child, vScrollTarget, 423, 0, 0
 					, velocityY, false);
@@ -549,7 +560,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 				newOffset = top + offset;
 			}
 			mCurrentOffset = newOffset;
-			Loge(TAG, "updateOffsets: newOffset:" + newOffset + ",mTotalScrollY:" + mTotalScrollY);
+			Logd(TAG, "fling: newOffset:" + newOffset + ",offset:" + offset);
 			if (newOffset != curOffset) {
 				curOffset = newOffset;
 				dispatchOffsetUpdates(child, newOffset);
