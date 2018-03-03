@@ -6,10 +6,13 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
+import android.view.View;
 import android.view.ViewConfiguration;
 
+import com.ckr.smoothappbarlayout.base.OnFlingCallBack;
 import com.ckr.smoothappbarlayout.base.OnSmoothScrollListener;
 
 import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
@@ -21,7 +24,7 @@ import static com.ckr.smoothappbarlayout.base.LogUtil.Logw;
  * Created by PC大佬 on 2018/2/9.
  */
 
-public class SmoothRecyclerView extends RecyclerView {
+public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack {
 	private static final String TAG = "SmoothRecyclerView";
 	private static final String ARG_CURRENT_SCROLLY = "arg_current_scroll_y";
 	private static final String ARG_SUPER = "arg_super";
@@ -42,20 +45,32 @@ public class SmoothRecyclerView extends RecyclerView {
 	public SmoothRecyclerView(Context context, @Nullable AttributeSet attrs) {
 		this(context, attrs, 0);
 	}
-
+private int mWidth;
+	private int mHeight;
 	public SmoothRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		final ViewConfiguration vc = ViewConfiguration.get(context);
 		mTouchSlop = vc.getScaledTouchSlop();
+		addOnLayoutChangeListener(new OnLayoutChangeListener() {
+			@Override
+			public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+				removeOnLayoutChangeListener(this);
+				mWidth = getWidth();
+				mHeight = getHeight();
+				Logd(TAG, "onLayoutChange: mWidth:" + mWidth + ",mHeight:" + mHeight);
+			}
+		});
 	}
 
 	private boolean forwardDirection;//滑动方向
 	private VelocityTracker mVelocityTracker;
+	private boolean eventAddedToVelocityTracker;
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
 		Logd(TAG, "onTouchEvent: mScrollState:" + mScrollState);
 		isInterrupt = false;
+		eventAddedToVelocityTracker = false;
 		MotionEvent motionEvent = MotionEvent.obtain(e);
 		int action = motionEvent.getActionMasked();
 		int actionIndex = motionEvent.getActionIndex();
@@ -126,20 +141,18 @@ public class SmoothRecyclerView extends RecyclerView {
 							break;
 						case MotionEvent.ACTION_CANCEL:
 							isInterrupt = true;
-							if (mVelocityTracker != null) {
-								mVelocityTracker.recycle();
-								mVelocityTracker = null;
-							}
+							resetTouch();
 							break;
 						case MotionEvent.ACTION_UP:
 //                            int offset = listener.getCurrentOffset();
 //							Logd(TAG, "onTouchEvent: fling: offset:"+offset);
 							Logd(TAG, "onTouchEvent: fling: ACTION_UP:" + currentOffset + ",forwardDirection：" + forwardDirection);
-							if (forwardDirection && currentOffset == -423) {
+							if (forwardDirection && currentOffset == 423) {
 
 							} else {
 								isInterrupt = true;
 								if (mVelocityTracker != null/*&&offset!=0*/) {
+									eventAddedToVelocityTracker = true;
 									mVelocityTracker.addMovement(e);
 									int minFlingVelocity = getMinFlingVelocity();
 									int maxFlingVelocity = getMaxFlingVelocity();
@@ -151,9 +164,11 @@ public class SmoothRecyclerView extends RecyclerView {
 									Logd(TAG, "onTouchEvent: fling: minFlingVelocity:" + minFlingVelocity + ",maxFlingVelocity:" + maxFlingVelocity + ",yvel：" + yvel);
 									if (fling) {
 										yvel = forwardDirection ? Math.abs(yvel) : -Math.abs(yvel);
+//										yvel = forwardDirection ? 1000 : -1000;
 										Logd(TAG, "onTouchEvent: fling: forwardDirection:" + forwardDirection + ",yvel：" + yvel);
 										listener.onFlingFinished(yvel);
 									}
+									resetTouch();
 								}
 							}
 
@@ -162,10 +177,12 @@ public class SmoothRecyclerView extends RecyclerView {
 							isInterrupt = true;
 							break;
 					}
-					if (mVelocityTracker != null) {
-						mVelocityTracker.addMovement(e);
-					}
+
 					if (isInterrupt) {
+						if (!eventAddedToVelocityTracker && mVelocityTracker != null) {
+							mVelocityTracker.addMovement(e);
+						}
+						motionEvent.recycle();
 						return true;
 					}
 
@@ -187,7 +204,16 @@ public class SmoothRecyclerView extends RecyclerView {
 				mLastY = (int) (e.getRawY() + 0.5f);
 				break;
 		}
+		if (!eventAddedToVelocityTracker && mVelocityTracker != null) {
+			mVelocityTracker.addMovement(e);
+		}
 		return super.onTouchEvent(e);
+	}
+
+	private void resetTouch() {
+		if (mVelocityTracker != null) {
+			mVelocityTracker.clear();
+		}
 	}
 
 	private void ensureVelocityTracker() {
@@ -204,6 +230,52 @@ public class SmoothRecyclerView extends RecyclerView {
 
 	public void setOnSmoothScrollListener(OnSmoothScrollListener listener) {
 		this.listener = listener;
+		listener.setFlinCallBack(this);
+	}
+
+	@Override
+	public void onFlingFinished(float velocityY) {
+		Log.d(TAG, "onFlingFinished: fling: velocityY:" + velocityY);
+		if (listener != null) {
+			int currentOffset = listener.getCurrentOffset();
+			if (velocityY > 0 && currentOffset == -423) {
+//				int height = getHeight();
+//				int mHeight = getMeasuredHeight();
+//				Log.d(TAG, "onFlingFinished: fling: height:"+height+",mHeight:"+mHeight);
+//				mLastFlingX = mLastFlingY = 0;
+//				mScroller.fling(0, 0, velocityX, velocityY,
+//						Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE);
+//				postOnAnimation();
+//				boolean fling = super.fling(0, (int) velocityY);
+//				Log.d(TAG, "onFlingFinished: fling: fling=" + fling + ",mScrollState:" + mScrollState);
+//				mScrollState = SCROLL_STATE_IDLE;
+			}
+		}
+	}
+	private int computeScrollDuration(int velocity, int dx) {
+		final int width = 0;
+		final int halfWidth = width / 2;
+		final float distanceRatio = Math.min(1f, 1.0f * Math.abs(dx) / width);
+		final float distance = halfWidth + halfWidth
+				* distanceInfluenceForSnapDuration(distanceRatio);
+		int duration;
+		velocity = Math.abs(velocity);
+		if (velocity > 0) {
+			duration = 4 * Math.round(1000 * Math.abs(distance / velocity));
+		} else {
+			final float pageWidth = width * 1.0f;
+			final float pageDelta = (float) Math.abs(dx) / (pageWidth);
+			duration = (int) ((pageDelta + 1) * 100);
+		}
+		duration = Math.min(duration, MAX_SETTLE_DURATION);
+		return duration;
+	}
+	private static final int MAX_SETTLE_DURATION = 600; // ms
+
+	private float distanceInfluenceForSnapDuration(float f) {
+		f -= 0.5f; // center the values about 0.
+		f *= 0.3f * Math.PI / 2.0f;
+		return (float) Math.sin(f);
 	}
 
 	@Override

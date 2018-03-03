@@ -29,6 +29,7 @@ import android.view.animation.Interpolator;
 import android.widget.OverScroller;
 
 import com.ckr.smoothappbarlayout.base.LogUtil;
+import com.ckr.smoothappbarlayout.base.OnFlingCallBack;
 import com.ckr.smoothappbarlayout.base.OnSmoothScrollListener;
 import com.ckr.smoothappbarlayout.base.Utils;
 
@@ -59,6 +60,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 	private int mTempTopBottomOffset = 0;
 	protected int mCurrentOffset;
 	private float velocityY;
+	protected OnFlingCallBack callBack;
 
 	public BaseBehavior() {
 	}
@@ -91,7 +93,14 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		}
 	}
 
-
+//	static final Interpolator sQuinticInterpolator = new AccelerateInterpolator();
+	static final Interpolator sQuinticInterpolator = new Interpolator() {
+		@Override
+		public float getInterpolation(float t) {
+			t -= 1.0f;
+			return t * t * t * t * t + 1.0f;
+		}
+	};
 	/**
 	 * {@link android.support.design.widget.HeaderBehavior}中fling()
 	 *
@@ -115,7 +124,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 			mFlingRunnable = null;
 		}
 		if (mScroller == null) {
-			mScroller = new OverScroller(layout.getContext());
+			mScroller = new OverScroller(layout.getContext(),sQuinticInterpolator);
 		}
 		Log.d(TAG, "fling: getTop:" + child.getTop() + ",bottom:" + child.getBottom());
 		// TODO: 2018/2/22
@@ -124,7 +133,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		boolean canScroll = mScroller.computeScrollOffset();
 		Logd(TAG, "fling: run: canScroller: " + canScroll);
 		if (canScroll) {
-			mFlingRunnable = new FlingRunnable(layout, target, velocityY < 0 ? true : false, flingUp, startY);
+			mFlingRunnable = new FlingRunnable(layout, target, velocityY < 0 ? true : false, flingUp, velocityY);
 			ViewCompat.postOnAnimation(layout, mFlingRunnable);
 			return true;
 		} else {
@@ -217,17 +226,18 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		private final View scrollTarget;
 		private final boolean isFlingUp;
 		private final boolean accuracy;
-		private int mLastFlingX;
+		private float velocityY;
 		private boolean isInterrupt;
 		private int mLastY = 0;
 
-		FlingRunnable(AppBarLayout layout, View target, boolean flingUp, boolean accuracy, int mCurrentOffset) {
+		FlingRunnable(AppBarLayout layout, View target, boolean flingUp, boolean accuracy, float velocityY) {
 			mLayout = layout;
 			scrollTarget = target;
 			isFlingUp = flingUp;
 			this.accuracy = accuracy;
 			this.mLastY = 0;
 			isInterrupt = false;
+			this.velocityY = velocityY;
 		}
 
 		@Override
@@ -255,7 +265,11 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 				} else {
 					Log.d(TAG, "run: fling:  isFling=false");
 					isFling = false;
+					callBack.onFlingFinished(velocityY);
 //					onFlingFinished(mLayout);
+					/*if (vScrollTarget instanceof RecyclerView) {
+						RecyclerView view= (RecyclerView) vScrollTarget;
+					}*/
 				}
 			}
 		}

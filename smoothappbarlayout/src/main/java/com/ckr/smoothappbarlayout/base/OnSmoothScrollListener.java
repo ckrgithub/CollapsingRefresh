@@ -36,4 +36,6 @@ public interface OnSmoothScrollListener {
 	void onScrollValueChanged(int scrollY);
 
 	  void onFlingFinished(float velocityY);
+
+	  void setFlinCallBack(OnFlingCallBack callBack);
 }
