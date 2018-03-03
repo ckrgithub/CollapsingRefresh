@@ -244,7 +244,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 					int y = mLastY - currY;//-7.-11,8,33
 					mLastY = currY;
 					Loge(TAG, "run: fling: currY:" + currY + ",y:" + y);
-					if (y != 0 && !isInterrupt) {
+					if (y != 0 /*&& !isInterrupt*/) {
 						setTopAndBottomOffset(y);
 					} else {
 						isInterrupt = true;
