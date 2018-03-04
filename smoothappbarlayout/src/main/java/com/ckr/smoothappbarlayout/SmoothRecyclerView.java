@@ -32,10 +32,8 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
 	private static final int VELOCITY_UNITS = 1000;//1000 provides pixels per second
 	private int mTotalScrollY;
 	private OnSmoothScrollListener listener;
-	private int mLastY;
 	private int mTouchSlop;
 	private int mScrollState;
-	private int mPointId;
 	private boolean isInterrupt;
 
 	public SmoothRecyclerView(Context context) {
@@ -45,8 +43,10 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
 	public SmoothRecyclerView(Context context, @Nullable AttributeSet attrs) {
 		this(context, attrs, 0);
 	}
-private int mWidth;
+
+	private int mWidth;
 	private int mHeight;
+
 	public SmoothRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		final ViewConfiguration vc = ViewConfiguration.get(context);
@@ -66,14 +66,77 @@ private int mWidth;
 	private VelocityTracker mVelocityTracker;
 	private boolean eventAddedToVelocityTracker;
 
+	private boolean mIsBeingDragged;
+	private int mActivePointerId = -1;
+	private int mLastMotionY;
+
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent ev) {
+		final int action = ev.getAction();
+		// Shortcut since we're being dragged
+		if (action == MotionEvent.ACTION_MOVE && mIsBeingDragged) {
+			return true;
+		}
+
+		switch (ev.getActionMasked()) {
+			case MotionEvent.ACTION_DOWN: {
+				mIsBeingDragged = false;
+				final int y = (int) (ev.getRawY()+0.5f);
+				mActivePointerId = ev.getPointerId(0);
+				mLastMotionY = y;
+				ensureVelocityTracker();
+				break;
+			}
+
+			case MotionEvent.ACTION_MOVE: {
+				final int activePointerId = mActivePointerId;
+				if (activePointerId == -1) {
+					// If we don't have a valid id, the touch down wasn't on content.
+					break;
+				}
+				final int pointerIndex = ev.findPointerIndex(activePointerId);
+				if (pointerIndex == -1) {
+					break;
+				}
+
+				final int y = (int) ev.getY(pointerIndex);
+				final int yDiff = Math.abs(y - mLastMotionY);
+//				if (yDiff > mTouchSlop) {
+//					mIsBeingDragged = true;
+//					mLastMotionY = y;
+//				}
+				mIsBeingDragged = true;
+				mLastMotionY = y;
+				break;
+			}
+
+			case MotionEvent.ACTION_CANCEL:
+			case MotionEvent.ACTION_UP: {
+				mIsBeingDragged = false;
+				mActivePointerId = -1;
+				if (mVelocityTracker != null) {
+					mVelocityTracker.recycle();
+					mVelocityTracker = null;
+				}
+				break;
+			}
+		}
+
+		if (mVelocityTracker != null) {
+			mVelocityTracker.addMovement(ev);
+		}
+
+//		return mIsBeingDragged;
+		return super.onInterceptTouchEvent(ev);
+	}
+
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
 		Logd(TAG, "onTouchEvent: mScrollState:" + mScrollState);
 		isInterrupt = false;
 		eventAddedToVelocityTracker = false;
-		MotionEvent motionEvent = MotionEvent.obtain(e);
-		int action = motionEvent.getActionMasked();
-		int actionIndex = motionEvent.getActionIndex();
+		int action = e.getActionMasked();
+//		int actionIndex = e.getActionIndex();
 		if (listener != null) {
 			int currentOffset = listener.getCurrentOffset();
 			int abs = Math.abs(currentOffset);
@@ -89,58 +152,72 @@ private int mWidth;
 			}
 			Logd(TAG, "onTouchEvent: state:" + state + ",abs:" + abs + ",mTotalScrollY：" + mTotalScrollY);
 			if (state > 0) {
+//				if (mScrollState == SCROLL_STATE_DRAGGING) {
 				if (mScrollState != SCROLL_STATE_SETTLING) {
 					switch (action) {
 						case MotionEvent.ACTION_DOWN:
-							isInterrupt = true;
-							mPointId = e.getPointerId(0);
-							mLastY = (int) (e.getRawY() + 0.5f);
+//							isInterrupt = true;
+							mActivePointerId = e.getPointerId(0);
+							mLastMotionY = (int) (e.getRawY() + 0.5f);
 							ensureVelocityTracker();
 							break;
-						case MotionEvent.ACTION_POINTER_DOWN:
-							isInterrupt = true;
-							mPointId = e.getPointerId(actionIndex);
-							mLastY = (int) (e.getRawY() + 0.5f);
-							break;
+//						case MotionEvent.ACTION_POINTER_DOWN:
+//							isInterrupt = true;
+//							mPointId = e.getPointerId(actionIndex);
+//							mLastY = (int) (e.getRawY() + 0.5f);
+//							break;
 						case MotionEvent.ACTION_MOVE:
-							int index = e.findPointerIndex(mPointId);
-							if (index < 0) {
+							int index = e.findPointerIndex(mActivePointerId);
+							if (index == -1) {
 								return false;
 							}
+//							isInterrupt = true;
 							int y = (int) (e.getRawY() + 0.5f);
-							int dy = mLastY - y;
+							int dy = mLastMotionY - y;
 							if (dy > 0) {
 								forwardDirection = true;
 							} else {
 								forwardDirection = false;
 							}
-							mLastY = y;
-							if (state == 2) {
-								if (!forwardDirection) {
-									Loge(TAG, "onTouchEvent: isInterrupt  canScrollDown ,拦截" + ",dy:" + dy + ",isFling:" + isFling);
-									isInterrupt = true;
+							if (!mIsBeingDragged /*&& Math.abs(dy) > mTouchSlop*/) {
+								mIsBeingDragged = true;
+//								if (dy > 0) {
+//									dy -= mTouchSlop;
+//								} else {
+//									dy += mTouchSlop;
+//								}
+							}
+							if (mIsBeingDragged) {
+								mLastMotionY = y;
+								if (state == 2) {
+									if (!forwardDirection) {
+										Loge(TAG, "onTouchEvent: isInterrupt  canScrollDown ,拦截" + ",dy:" + dy + ",isFling:" + isFling);
+										isInterrupt = true;
+										if (mTotalScrollY == 0) {
+											listener.onScrollChanged(this,
+													computeHorizontalScrollOffset(), 0,
+													0, dy,
+													getLayoutManager().findViewByPosition(0) != null);
+										}
+									}
+								} else {
 									if (mTotalScrollY == 0) {
+										Loge(TAG, "onTouchEvent: isInterrupt = true,拦截" + ",dy:" + dy + ",isFling:" + isFling);
+										isInterrupt = true;
 										listener.onScrollChanged(this,
 												computeHorizontalScrollOffset(), 0,
 												0, dy,
 												getLayoutManager().findViewByPosition(0) != null);
-									}
-								}
-							} else {
-								if (mTotalScrollY == 0) {
-									Loge(TAG, "onTouchEvent: isInterrupt = true,拦截" + ",dy:" + dy + ",isFling:" + isFling);
-									isInterrupt = true;
-									listener.onScrollChanged(this,
-											computeHorizontalScrollOffset(), 0,
-											0, dy,
-											getLayoutManager().findViewByPosition(0) != null);
-								} else {
+									} else {
 
+									}
 								}
 							}
 							break;
 						case MotionEvent.ACTION_CANCEL:
-							isInterrupt = true;
+//							isInterrupt = true;
+							mIsBeingDragged = false;
+							mActivePointerId=-1;
 							resetTouch();
 							break;
 						case MotionEvent.ACTION_UP:
@@ -151,14 +228,13 @@ private int mWidth;
 
 							} else {
 								isInterrupt = true;
-								if (mVelocityTracker != null/*&&offset!=0*/) {
+								if (mVelocityTracker != null) {
 									eventAddedToVelocityTracker = true;
 									mVelocityTracker.addMovement(e);
 									int minFlingVelocity = getMinFlingVelocity();
 									int maxFlingVelocity = getMaxFlingVelocity();
-									mVelocityTracker.computeCurrentVelocity(1000, maxFlingVelocity);
-									float yvel = -mVelocityTracker.getYVelocity(mPointId);
-//								yvel+=yvel*(423+currentOffset)/141;
+									mVelocityTracker.computeCurrentVelocity(4000, maxFlingVelocity);
+									float yvel = -mVelocityTracker.getYVelocity(mActivePointerId);
 									boolean fling = (Math.abs(yvel) > 0);
 									yvel = Math.max(-maxFlingVelocity, Math.min(yvel, maxFlingVelocity));
 									Logd(TAG, "onTouchEvent: fling: minFlingVelocity:" + minFlingVelocity + ",maxFlingVelocity:" + maxFlingVelocity + ",yvel：" + yvel);
@@ -171,10 +247,6 @@ private int mWidth;
 									resetTouch();
 								}
 							}
-
-							break;
-						case MotionEvent.ACTION_POINTER_UP:
-							isInterrupt = true;
 							break;
 					}
 
@@ -182,7 +254,6 @@ private int mWidth;
 						if (!eventAddedToVelocityTracker && mVelocityTracker != null) {
 							mVelocityTracker.addMovement(e);
 						}
-						motionEvent.recycle();
 						return true;
 					}
 
@@ -191,19 +262,19 @@ private int mWidth;
 			}
 
 		}
-		switch (action) {
-			case MotionEvent.ACTION_DOWN:
-				mPointId = e.getPointerId(0);
-				mLastY = (int) (e.getRawY() + 0.5f);
-				break;
-			case MotionEvent.ACTION_POINTER_DOWN:
-				mPointId = e.getPointerId(actionIndex);
-				mLastY = (int) (e.getRawY() + 0.5f);
-				break;
-			case MotionEvent.ACTION_MOVE:
-				mLastY = (int) (e.getRawY() + 0.5f);
-				break;
-		}
+//		switch (action) {
+//			case MotionEvent.ACTION_DOWN:
+//				mActivePointerId = e.getPointerId(0);
+//				mLastY = (int) (e.getRawY() + 0.5f);
+//				break;
+//			case MotionEvent.ACTION_POINTER_DOWN:
+//				mPointId = e.getPointerId(actionIndex);
+//				mLastY = (int) (e.getRawY() + 0.5f);
+//				break;
+//			case MotionEvent.ACTION_MOVE:
+//				mLastY = (int) (e.getRawY() + 0.5f);
+//				break;
+//		}
 		if (!eventAddedToVelocityTracker && mVelocityTracker != null) {
 			mVelocityTracker.addMovement(e);
 		}
@@ -252,6 +323,7 @@ private int mWidth;
 			}
 		}
 	}
+
 	private int computeScrollDuration(int velocity, int dx) {
 		final int width = 0;
 		final int halfWidth = width / 2;
@@ -270,6 +342,7 @@ private int mWidth;
 		duration = Math.min(duration, MAX_SETTLE_DURATION);
 		return duration;
 	}
+
 	private static final int MAX_SETTLE_DURATION = 600; // ms
 
 	private float distanceInfluenceForSnapDuration(float f) {
@@ -333,12 +406,12 @@ private int mWidth;
 
 	@Override
 	public boolean fling(int velocityX, int velocityY) {
-		int minFlingVelocity = getMinFlingVelocity();
-		boolean fling = (Math.abs(velocityY) > minFlingVelocity || Math.abs(velocityX) > minFlingVelocity);
-		if (!fling) {
-			Logd(TAG, "fling: 拦截:" + minFlingVelocity);
-			return true;
-		}
+//		int minFlingVelocity = getMinFlingVelocity();
+//		boolean fling = (Math.abs(velocityY) > minFlingVelocity || Math.abs(velocityX) > minFlingVelocity);
+//		if (!fling) {
+//			Logd(TAG, "fling: 拦截:" + minFlingVelocity);
+//			return true;
+//		}
 		Loge(TAG, "fling onScrollChanged, velocityX = [" + velocityX + "], velocityY:" + velocityY + "]" + ",mTotalScrollY：" + mTotalScrollY);
 		//make more smooth
 		if (velocityY > 0) {

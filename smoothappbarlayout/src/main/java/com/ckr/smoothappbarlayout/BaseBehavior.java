@@ -93,7 +93,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		}
 	}
 
-//	static final Interpolator sQuinticInterpolator = new AccelerateInterpolator();
+	//	static final Interpolator sQuinticInterpolator = new AccelerateInterpolator();
 	static final Interpolator sQuinticInterpolator = new Interpolator() {
 		@Override
 		public float getInterpolation(float t) {
@@ -101,6 +101,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 			return t * t * t * t * t + 1.0f;
 		}
 	};
+
 	/**
 	 * {@link android.support.design.widget.HeaderBehavior}中fling()
 	 *
@@ -124,7 +125,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 			mFlingRunnable = null;
 		}
 		if (mScroller == null) {
-			mScroller = new OverScroller(layout.getContext(),sQuinticInterpolator);
+			mScroller = new OverScroller(layout.getContext(), sQuinticInterpolator);
 		}
 		Log.d(TAG, "fling: getTop:" + child.getTop() + ",bottom:" + child.getBottom());
 		// TODO: 2018/2/22
@@ -405,8 +406,9 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 			if (velocityY == 0) {
 				return;
 			}
-			Logd(TAG, "NestedScrollingParent  fling: velocityY =" + velocityY);
-			float velocityY = this.velocityY * 423 / 1000;
+			float velocityY = this.velocityY*3 / 10;
+			Logd(TAG, "NestedScrollingParent  fling: velocityY =" + this.velocityY + ",/:" + velocityY);
+//			float velocityY = this.velocityY * 423 / 1000;
 			this.velocityY = 0;
 			fling(child, vScrollTarget, 423, 0, 0
 					, velocityY, false);
