@@ -143,11 +143,11 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 	}
 
 	@Override
-	public void setFlinCallBack(OnFlingCallBack callBack) {
+	public void setFlingCallBack(OnFlingCallBack callBack) {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		smoothBehavior.setFlinCallBack(callBack);
+		smoothBehavior.setFlingCallBack(callBack);
 	}
 
 	private void initBehavior() {
@@ -196,7 +196,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 		}
 
 		@Override
-		public void setFlinCallBack(OnFlingCallBack callBack) {
+		public void setFlingCallBack(OnFlingCallBack callBack) {
 			this.callBack=callBack;
 		}
 	}
