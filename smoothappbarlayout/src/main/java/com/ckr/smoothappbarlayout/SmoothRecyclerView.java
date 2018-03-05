@@ -62,6 +62,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
                 * 39.37f // inch/meter
                 * ppi
                 * 0.84f; // look and feel tuning
+        Logd(TAG, "SmoothRecyclerView: mPhysicalCoeff:"+mPhysicalCoeff+",mFlingFriction:"+mFlingFriction+",DECELERATION_RATE:"+DECELERATION_RATE);
         addOnLayoutChangeListener(new OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
@@ -350,10 +351,10 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
     public void onFlingFinished(float velocityY, int dy, View target) {
         Logd(TAG, "onFlingFinished: fling: velocityY:" + velocityY);
         if (listener != null) {
-//			int scrollExtent = computeVerticalScrollExtent();
-//			int scrollOffset = computeVerticalScrollOffset();
-//			int scrollRange = computeVerticalScrollRange();
-//			Log.d(TAG, "onFlingFinished: fling:  scrollExtent:"+scrollExtent+",scrollOffset:"+scrollOffset+",scrollRange:"+scrollRange);
+			int scrollExtent = computeVerticalScrollExtent();
+			int scrollOffset = computeVerticalScrollOffset();
+			int scrollRange = computeVerticalScrollRange();
+			Log.d(TAG, "onFlingFinished: fling:  scrollExtent:"+scrollExtent+",scrollOffset:"+scrollOffset+",scrollRange:"+scrollRange);
             int currentOffset = listener.getCurrentOffset();
             Logd(TAG, "onFlingFinished: fling:  currentOffset:" + currentOffset + ",fDistance:" + fDistance);
             if (velocityY > 0 && currentOffset == -423) {
@@ -465,7 +466,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
             }
         }*/
         if (listener != null) {
-            listener.onScrollValueChanged(mTotalScrollY);
+            listener.onScrollValueChanged(mTotalScrollY,false);
         }
     }
 
@@ -481,6 +482,9 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
 //		}
         Loge(TAG, "fling onScrollChanged, velocityX = [" + velocityX + "], velocityY:" + velocityY + "]" + ",mTotalScrollY：" + mTotalScrollY);
         //make more smooth
+        if (listener != null) {
+            listener.onScrollValueChanged(mTotalScrollY,true);
+        }
         if (velocityY > 0) {
             return super.fling(velocityX, velocityY);
         } else {

@@ -127,11 +127,11 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 	}
 
 	@Override
-	public void onScrollValueChanged(int scrollY) {
+	public void onScrollValueChanged(int scrollY,boolean onStartNestedFling) {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		smoothBehavior.onScrollValueChanged(scrollY);
+		smoothBehavior.onScrollValueChanged(scrollY,onStartNestedFling);
 	}
 
 	@Override
@@ -183,8 +183,11 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 		}
 
 		@Override
-		public void onScrollValueChanged(int scrollY) {
+		public void onScrollValueChanged(int scrollY,boolean onStartNestedFling) {
 			mTotalScrollY = scrollY;
+			if (onStartNestedFling) {
+				flagScrollY=scrollY;
+			}
 		}
 
 		@Override
