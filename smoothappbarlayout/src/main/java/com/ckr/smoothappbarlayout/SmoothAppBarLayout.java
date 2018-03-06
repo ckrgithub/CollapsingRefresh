@@ -160,12 +160,12 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 
 		@Override
 		public void setScrollTarget(View target) {
-			vScrollTarget = target;
+			mScrollTarget = target;
 		}
 
 		@Override
 		public void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy) {
-			if (view == vScrollTarget) {
+			if (view == mScrollTarget) {
 				Logd(TAG, "onScrollChanged: dy:" + dy + ",mTotalScrollY:" + y + ",mCurrentOffset:" + mCurrentOffset);
 //                mTotalScrollY = y;
 				int translationOffset = Math.max(-423, -dy /*- y*/);
@@ -195,7 +195,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 			/*if ((mCurrentOffset==0*//*&&velocityY>0)||(mCurrentOffset==-423&&velocityY<0*//*)) {
 				return;
 			}*/
-			fling(child,vScrollTarget,Math.abs(mCurrentOffset),0,0,velocityY,false);
+			fling(mAppBarLayout, mScrollTarget,Math.abs(mCurrentOffset),0,0,velocityY,false);
 		}
 
 		@Override
