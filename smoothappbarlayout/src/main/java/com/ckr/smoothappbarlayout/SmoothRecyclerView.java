@@ -29,28 +29,16 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
     private static final String TAG = "SmoothRecyclerView";
     private static final String ARG_CURRENT_SCROLLY = "arg_current_scroll_y";
     private static final String ARG_SUPER = "arg_super";
+    private static final int EXTRA_VELOCITY_Y = 2000;//2000 to lift speed
     private static final int VELOCITY_UNITS = 1000;//1000 provides pixels per second
     private int mTotalScrollY;
     private OnSmoothScrollListener listener;
     private int mTouchSlop;
     private int mScrollState;
     private boolean isInterrupt;
+    private OnUpdateListener updateListener;
     public double fDistance;
     public double flingDistance;
-    private int mWidth;
-    private int mHeight;
-    // A context-specific coefficient adjusted to physical values.
-    private float mPhysicalCoeff;
-    private boolean forwardDirection;//滑动方向
-    private VelocityTracker mVelocityTracker;
-    private boolean eventAddedToVelocityTracker;
-    private boolean mIsBeingDragged;
-    private int mActivePointerId = -1;
-    private int mLastMotionY;
-    private static float DECELERATION_RATE = (float) (Math.log(0.78) / Math.log(0.9));
-    private static final float INFLEXION = 0.35f; // Tension lines cross at (INFLEXION, 1)
-    // Fling friction
-    private float mFlingFriction = ViewConfiguration.getScrollFriction();
 
     public SmoothRecyclerView(Context context) {
         this(context, null);
@@ -59,6 +47,11 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
     public SmoothRecyclerView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
+
+    private int mWidth;
+    private int mHeight;
+    // A context-specific coefficient adjusted to physical values.
+    private float mPhysicalCoeff;
 
     public SmoothRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -69,6 +62,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
                 * 39.37f // inch/meter
                 * ppi
                 * 0.84f; // look and feel tuning
+        Logd(TAG, "SmoothRecyclerView: mPhysicalCoeff:"+mPhysicalCoeff+",mFlingFriction:"+mFlingFriction+",DECELERATION_RATE:"+DECELERATION_RATE);
         addOnLayoutChangeListener(new OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
@@ -80,6 +74,13 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
         });
     }
 
+    private boolean forwardDirection;//滑动方向
+    private VelocityTracker mVelocityTracker;
+    private boolean eventAddedToVelocityTracker;
+
+    private boolean mIsBeingDragged;
+    private int mActivePointerId = -1;
+    private int mLastMotionY;
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -147,6 +148,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
         isInterrupt = false;
         eventAddedToVelocityTracker = false;
         int action = e.getActionMasked();
+//		int actionIndex = e.getActionIndex();
         if (listener != null) {
             int currentOffset = listener.getCurrentOffset();
             int abs = Math.abs(currentOffset);
@@ -166,15 +168,22 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
                 if (mScrollState != SCROLL_STATE_SETTLING) {
                     switch (action) {
                         case MotionEvent.ACTION_DOWN:
+//							isInterrupt = true;
                             mActivePointerId = e.getPointerId(0);
                             mLastMotionY = (int) (e.getRawY() + 0.5f);
                             ensureVelocityTracker();
                             break;
+//						case MotionEvent.ACTION_POINTER_DOWN:
+//							isInterrupt = true;
+//							mPointId = e.getPointerId(actionIndex);
+//							mLastY = (int) (e.getRawY() + 0.5f);
+//							break;
                         case MotionEvent.ACTION_MOVE:
                             int index = e.findPointerIndex(mActivePointerId);
                             if (index == -1) {
                                 return false;
                             }
+//							isInterrupt = true;
                             int y = (int) (e.getRawY() + 0.5f);
                             int dy = mLastMotionY - y;
                             if (dy > 0) {
@@ -184,6 +193,11 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
                             }
                             if (!mIsBeingDragged /*&& Math.abs(dy) > mTouchSlop*/) {
                                 mIsBeingDragged = true;
+//								if (dy > 0) {
+//									dy -= mTouchSlop;
+//								} else {
+//									dy += mTouchSlop;
+//								}
                             }
                             if (mIsBeingDragged) {
                                 mLastMotionY = y;
@@ -219,8 +233,11 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
                             resetTouch();
                             break;
                         case MotionEvent.ACTION_UP:
+//                            int offset = listener.getCurrentOffset();
+//							Logd(TAG, "onTouchEvent: fling: offset:"+offset);
                             Logd(TAG, "onTouchEvent: fling: ACTION_UP:" + currentOffset + ",forwardDirection：" + forwardDirection);
                             if (forwardDirection && currentOffset == 423) {
+
                             } else if (mTotalScrollY == 0) {
                                 isInterrupt = true;
                                 if (mVelocityTracker != null) {
@@ -232,15 +249,18 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
                                     float yvel = -mVelocityTracker.getYVelocity(mActivePointerId);
                                     float absY = Math.abs(yvel);
                                     boolean fling = (absY > 0);
+//									yvel = Math.max(-maxFlingVelocity, Math.min(yvel, maxFlingVelocity));
                                     Logd(TAG, "onTouchEvent: fling: minFlingVelocity:" + minFlingVelocity + ",maxFlingVelocity:" + maxFlingVelocity + ",yvel：" + yvel);
                                     yvel = Math.abs(yvel) < 2000 ? 2000 * yvel / absY : yvel;
                                     if (fling) {
                                         yvel = forwardDirection ? Math.abs(yvel) : -Math.abs(yvel);
+//										yvel = forwardDirection ? 1000 : -1000;
                                         flingDistance = getSplineFlingDistance((int) yvel);
                                         fDistance = flingDistance - currentOffset - 423;
                                         int flingDuration = getSplineFlingDuration((int) yvel);
                                         Logd(TAG, "onTouchEvent: fling: forwardDirection:" + forwardDirection + ",yvel：" + yvel
                                                 + ",flingDistance:" + flingDistance + ",flingDuration:" + flingDuration + ",fDistance:" + fDistance);
+//                                        onFlingFinished(yvel,0,this);
                                         listener.onFlingFinished(yvel);
                                     }
                                     resetTouch();
@@ -261,6 +281,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
             }
 
         }
+//		}
         if (!eventAddedToVelocityTracker && mVelocityTracker != null) {
             mVelocityTracker.addMovement(e);
         }
@@ -268,7 +289,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
     }
 
     /**
-     * {@link android.widget.OverScroller}
+     * {@link android.widget.OverScroller}中getSplineFlingDistance
      *
      * @param velocity
      * @return
@@ -279,40 +300,28 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
         return mFlingFriction * mPhysicalCoeff * Math.exp(DECELERATION_RATE / decelMinusOne * l);
     }
 
-    /**
-     * {@link android.widget.OverScroller}
-     *
-     * @param velocity
-     * @return
-     */
     private int getSplineFlingDuration(int velocity) {
         final double l = getSplineDeceleration(velocity);
         final double decelMinusOne = DECELERATION_RATE - 1.0;
         return (int) (1000.0 * Math.exp(l / decelMinusOne));
     }
 
-    /**
-     * {@link android.widget.OverScroller}
-     *
-     * @param velocity
-     * @return
-     */
+    private static float DECELERATION_RATE = (float) (Math.log(0.78) / Math.log(0.9));
+    private static final float INFLEXION = 0.35f; // Tension lines cross at (INFLEXION, 1)
+    // Fling friction
+    private float mFlingFriction = ViewConfiguration.getScrollFriction();
+
     private double getSplineDeceleration(int velocity) {
         return Math.log(INFLEXION * Math.abs(velocity) / (mFlingFriction * mPhysicalCoeff));
     }
-
-    /**
-     * {@link android.widget.OverScroller}
-     *
-     * @param distance
-     * @return
-     */
     private int getVelocityWithDistance(double distance) {
+
         final double decelMinusOne = DECELERATION_RATE - 1.0;
         double l = Math.log(distance / (mFlingFriction * mPhysicalCoeff)) * decelMinusOne / DECELERATION_RATE;
         int velocity = (int) (Math.exp(l) * (mFlingFriction * mPhysicalCoeff) / INFLEXION);
         return velocity;
     }
+
 
     private void resetTouch() {
         if (mVelocityTracker != null) {
@@ -337,10 +346,23 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
         listener.setFlingCallBack(this);
     }
 
+    public void setUpdateListener(OnUpdateListener mListener) {
+        Logd(TAG, "setUpdateListener: mListener:" + mListener);
+        this.updateListener = mListener;
+    }
+
+    public interface OnUpdateListener {
+        void updateScroll(float velocityY, int dy, View target);
+    }
+
     @Override
     public void onFlingFinished(float velocityY, int dy, View target) {
         Logd(TAG, "onFlingFinished: fling: velocityY:" + velocityY);
         if (listener != null) {
+//			int scrollExtent = computeVerticalScrollExtent();
+//			int scrollOffset = computeVerticalScrollOffset();
+//			int scrollRange = computeVerticalScrollRange();
+//			Log.d(TAG, "onFlingFinished: fling:  scrollExtent:"+scrollExtent+",scrollOffset:"+scrollOffset+",scrollRange:"+scrollRange);
             int currentOffset = listener.getCurrentOffset();
             Logd(TAG, "onFlingFinished: fling:  currentOffset:" + currentOffset + ",fDistance:" + fDistance);
             if (velocityY > 0 && currentOffset == -423) {
@@ -360,9 +382,53 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
                         Logd(TAG, "onFlingFinished: fling: fling=" + fling + ",flingY:" + flingY);
                         mScrollState = SCROLL_STATE_IDLE;
                     }
+//                    recyclerView.smoothScrollBy(0, (int) fDistance);
                 }
+               /* if (updateListener != null) {
+                    Logd(TAG, "onFlingFinished: updateScroll: velocityY:" + velocityY+",target:"+target);
+
+                    updateListener.updateScroll(velocityY, dy, target);
+                }*/
+//				this.smoothScrollBy(0,300);
+//				int height = getHeight();
+//				int mHeight = getMeasuredHeight();
+//				Log.d(TAG, "onFlingFinished: fling: height:"+height+",mHeight:"+mHeight);
+//				mLastFlingX = mLastFlingY = 0;
+//				mScroller.fling(0, 0, velocityX, velocityY,
+//						Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE);
+//				postOnAnimation();
+//				boolean fling = super.fling(0, (int) velocityY);
+//				Log.d(TAG, "onFlingFinished: fling: fling=" + fling + ",mScrollState:" + mScrollState);
+//				mScrollState = SCROLL_STATE_IDLE;
             }
         }
+    }
+
+    private int computeScrollDuration(int velocity, int dx) {
+        final int width = 0;
+        final int halfWidth = width / 2;
+        final float distanceRatio = Math.min(1f, 1.0f * Math.abs(dx) / width);
+        final float distance = halfWidth + halfWidth
+                * distanceInfluenceForSnapDuration(distanceRatio);
+        int duration;
+        velocity = Math.abs(velocity);
+        if (velocity > 0) {
+            duration = 4 * Math.round(1000 * Math.abs(distance / velocity));
+        } else {
+            final float pageWidth = width * 1.0f;
+            final float pageDelta = (float) Math.abs(dx) / (pageWidth);
+            duration = (int) ((pageDelta + 1) * 100);
+        }
+        duration = Math.min(duration, MAX_SETTLE_DURATION);
+        return duration;
+    }
+
+    private static final int MAX_SETTLE_DURATION = 600; // ms
+
+    private float distanceInfluenceForSnapDuration(float f) {
+        f -= 0.5f; // center the values about 0.
+        f *= 0.3f * Math.PI / 2.0f;
+        return (float) Math.sin(f);
     }
 
     @Override
@@ -383,6 +449,10 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
 
     @Override
     public void onScrollStateChanged(int state) {
+//		super.onScrollStateChanged(state);
+//		SCROLL_STATE_IDLE://0
+//		SCROLL_STATE_DRAGGING://1
+//		SCROLL_STATE_SETTLING://2
         mScrollState = state;
         switch (state) {
             case SCROLL_STATE_IDLE:
@@ -402,6 +472,11 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
         super.onScrolled(dx, dy);
         Logd(TAG, "onScrolled() called with: mTotalScrollY = [" + mTotalScrollY + "], dy = [" + dy + "]" + ",isFling:" + isFling);
         mTotalScrollY += dy;
+        /*if (mTotalScrollY==0) {
+            if (listener != null) {
+                listener.handleFling();
+            }
+        }*/
         if (listener != null) {
             listener.onScrollValueChanged(mTotalScrollY,false);
         }
@@ -411,7 +486,14 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
 
     @Override
     public boolean fling(int velocityX, int velocityY) {
+//		int minFlingVelocity = getMinFlingVelocity();
+//		boolean fling = (Math.abs(velocityY) > minFlingVelocity || Math.abs(velocityX) > minFlingVelocity);
+//		if (!fling) {
+//			Logd(TAG, "fling: 拦截:" + minFlingVelocity);
+//			return true;
+//		}
         Loge(TAG, "fling onScrollChanged, velocityX = [" + velocityX + "], velocityY:" + velocityY + "]" + ",mTotalScrollY：" + mTotalScrollY);
+        //make more smooth
         if (listener != null) {
             listener.onScrollValueChanged(mTotalScrollY,true);
         }
