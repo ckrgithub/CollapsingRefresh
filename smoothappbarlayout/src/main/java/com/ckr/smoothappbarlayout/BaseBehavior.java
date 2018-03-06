@@ -288,7 +288,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
                         callBack.onFlingFinished(velocityY, 0,scrollTarget);
                     }*/
 //					onFlingFinished(mLayout);
-                    /*if (vScrollTarget instanceof RecyclerView) {
+					/*if (vScrollTarget instanceof RecyclerView) {
                         RecyclerView view= (RecyclerView) vScrollTarget;
 					}*/
 				}
@@ -396,7 +396,8 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 	// TODO: 2017/11/3  dyConsumed是recyclerview的dy,
 	boolean isInterrupt;
 	boolean onStop;
-public int flagScrollY;
+	public int flagScrollY;
+
 	@Override
 	public void onNestedScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
 		Loge(TAG, "NestedScrollingParent,onNestedScroll, dyConsumed = [" + dyConsumed + "]" + ", dyUnconsumed = [" + dyUnconsumed + "]" + ",type0:" + type);
@@ -431,7 +432,7 @@ public int flagScrollY;
 			flingDistance = getSplineFlingDistance((int) velocityY);
 			int flingDuration = getSplineFlingDuration((int) velocityY);
 			Logd(TAG, "NestedScrollingParent  fling: velocityY =" + velocityY + ",flagScrollY:" + flagScrollY
-					+ ",flingDistance:" + flingDistance+ ",flingDuration:" + flingDuration);
+					+ ",flingDistance:" + flingDistance + ",flingDuration:" + flingDuration);
 			/*if (target instanceof RecyclerView) {
 				RecyclerView recyclerView = (RecyclerView) target;
 				int scrollExtent = recyclerView.computeVerticalScrollExtent();
@@ -440,10 +441,15 @@ public int flagScrollY;
 				Log.d(TAG, "onFlingFinished: fling:  scrollExtent:" + scrollExtent + ",scrollOffset:" + scrollOffset + ",scrollRange:" + scrollRange);
 			}*/
 //			float flingY = (float) (getVelocityWithDistance(flingDistance - flagScrollY)*velocityY/Math.abs(velocityY));
-			float flingY = (float) ((flingDistance - flagScrollY)*velocityY/flingDistance);
-			Logd(TAG, "onNestedScroll: fling:  flingY:"+flingY);
+			float flingY = (float) ((flingDistance - flagScrollY) * velocityY / flingDistance);
+			int subVelocity = getVelocityWithDistance(flagScrollY);
+			int subVelocity2 = getVelocityWithDistance(flingDistance - flagScrollY);
+			int sumVelocity = getVelocityWithDistance(flingDistance);
+			Logd(TAG, "onFlingFinished: fling:  subVelocity:" + subVelocity + ",subV2:" + subVelocity2 + ",sumVelocity:" + sumVelocity);
+
+			Logd(TAG, "onNestedScroll: fling:  flingY:" + flingY);
 			fling(child, vScrollTarget, 423, 0, 0
-					, flingY, true);
+					, -Math.abs(subVelocity2), true);
 		} else {
 			onStop = false;
 		}
@@ -460,12 +466,15 @@ public int flagScrollY;
 		final double decelMinusOne = DECELERATION_RATE - 1.0;
 		return mFlingFriction * mPhysicalCoeff * Math.exp(DECELERATION_RATE / decelMinusOne * l);
 	}
-int getVelocityWithDistance(double flingDistance){
-	double v = flingDistance / mFlingFriction / mPhysicalCoeff;
-	double l = Math.log(v) * (DECELERATION_RATE - 1.0) / DECELERATION_RATE;
-	int velocity = (int) (Math.exp(l) * mFlingFriction * mPhysicalCoeff / INFLEXION);
-	return velocity;
-}
+
+	private int getVelocityWithDistance(double distance) {
+
+		final double decelMinusOne = DECELERATION_RATE - 1.0;
+		double l = Math.log(distance / (mFlingFriction * mPhysicalCoeff)) * decelMinusOne / DECELERATION_RATE;
+		int velocity = (int) (Math.exp(l) * (mFlingFriction * mPhysicalCoeff) / INFLEXION);
+		return velocity;
+	}
+
 	private int getSplineFlingDuration(int velocity) {
 		final double l = getSplineDeceleration(velocity);
 		final double decelMinusOne = DECELERATION_RATE - 1.0;
