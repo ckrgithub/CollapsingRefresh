@@ -77,13 +77,15 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
 		if (action == MotionEvent.ACTION_MOVE && mIsBeingDragged) {
 			return true;
 		}
-
+		ensureVelocityTracker();
+		if (mVelocityTracker != null) {
+			mVelocityTracker.addMovement(ev);
+		}
 		switch (ev.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN: {
 				mIsBeingDragged = false;
 				mLastMotionY = (int) (ev.getRawY() + 0.5f);
 				mActivePointerId = ev.getPointerId(0);
-				ensureVelocityTracker();
 				break;
 			}
 
@@ -92,7 +94,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
 				if (pointerIndex == -1) {
 					break;
 				}
-				mLastMotionY  = (int) (ev.getRawY() + 0.5f);
+				mLastMotionY = (int) (ev.getRawY() + 0.5f);
 				mIsBeingDragged = true;
 				break;
 			}
@@ -105,10 +107,6 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
 			}
 		}
 
-		if (mVelocityTracker != null) {
-			mVelocityTracker.addMovement(ev);
-		}
-
 		return super.onInterceptTouchEvent(ev);
 	}
 
@@ -117,6 +115,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
 		isInterruptFling = false;
 		eventAddedToVelocityTracker = false;
 		int action = e.getActionMasked();
+		ensureVelocityTracker();
 		if (mSmoothScrollListener != null) {
 			int currentOffset = mSmoothScrollListener.getCurrentOffset();
 			int abs = Math.abs(currentOffset);
@@ -138,7 +137,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
 						case MotionEvent.ACTION_DOWN:
 							mActivePointerId = e.getPointerId(0);
 							mLastMotionY = (int) (e.getRawY() + 0.5f);
-							ensureVelocityTracker();
+
 							break;
 						case MotionEvent.ACTION_MOVE:
 							int index = e.findPointerIndex(mActivePointerId);
@@ -152,7 +151,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
 							} else {
 								forwardDirection = false;
 							}
-							if (!mIsBeingDragged ) {
+							if (!mIsBeingDragged) {
 								mIsBeingDragged = true;
 							}
 							if (mIsBeingDragged) {
@@ -213,9 +212,9 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
 												+ ",mTotalFlingDistance:" + mTotalFlingDistance + ",flingDuration:" + flingDuration + ",mDiffFlingDistance:" + mDiffFlingDistance);
 										mSmoothScrollListener.onFlingFinished(yvel);
 									}
-									resetTouch();
 								}
 							}
+							resetTouch();
 							break;
 					}
 
