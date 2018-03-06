@@ -16,7 +16,6 @@
 
 package com.ckr.smoothappbarlayout;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.hardware.SensorManager;
 import android.support.design.widget.AppBarLayout;
@@ -26,7 +25,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.OverScroller;
 
@@ -66,9 +64,11 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 	private float mPhysicalCoeff;
 	private double flingDistance;
 
+	boolean isInterrupt;
+	boolean onStop;
+	public int flagScrollY;
 
 	public BaseBehavior() {
-
 	}
 
 	public BaseBehavior(Context context, AttributeSet attrs) {
@@ -104,7 +104,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 				* 0.84f; // look and feel tuning
 	}
 
-	//	static final Interpolator sQuinticInterpolator = new AccelerateInterpolator();
 	static final Interpolator sQuinticInterpolator = new Interpolator() {
 		@Override
 		public float getInterpolation(float t) {
@@ -129,9 +128,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		Logd(TAG, "fling: run: startY:" + startY + ",minOffset:" + minOffset + ",maxOffset:" + maxOffset
 				+ ",velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset + ",mTotalScrollY:" + mTotalScrollY);
 		if (mFlingRunnable != null) {
-//			if (mScroller != null) {
-//				mScroller.abortAnimation();
-//			}
 			layout.removeCallbacks(mFlingRunnable);
 			mFlingRunnable = null;
 		}
@@ -149,77 +145,8 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 			ViewCompat.postOnAnimation(layout, mFlingRunnable);
 			return true;
 		} else {
-//			onFlingFinished(layout);
 			return false;
 		}
-	}
-
-	protected void onFlingFinished(AppBarLayout layout) {
-		snapToChildIfNeeded(layout);
-	}
-
-	private void snapToChildIfNeeded(AppBarLayout layout) {
-		int childCount = layout.getChildCount();
-//		for (int i = 0; i < childCount; i++) {
-//			View childAt = layout.getChildAt(0);
-//			int top = -childAt.getTop();
-//			int bottom = -childAt.getBottom();
-//			Log.d(TAG, "run: top:" + top + ",bottom:" + bottom+",childAt:"+childAt);
-//		}
-		View childAt = layout.getChildAt(0);
-		int top = -childAt.getTop();
-		int bottom = -childAt.getBottom();
-		bottom += ViewCompat.getMinimumHeight(layout);
-		int newOffset = mCurrentOffset < (top + bottom) / 2 ? bottom : top;
-		Log.d(TAG, "run: top:" + top + ",bottom:" + bottom + ",mCurrentOffset:" + mCurrentOffset
-				+ ",newOffset:" + newOffset);
-		animateOffsetTo(layout, (int) clamp(newOffset, -423, 0), 0);
-	}
-
-	private void animateOffsetTo(AppBarLayout layout, int clamp, int velocityY) {
-		velocityY = Math.abs(velocityY);
-		int duration;
-		if (velocityY > 0) {
-			duration = 3 * Math.round(1000 * (Math.abs(clamp) / velocityY));
-		} else {
-			float ratio = clamp / layout.getHeight();
-			duration = (int) ((ratio + 1) * 150);
-		}
-		animateOffsetWithDuration(layout, clamp, duration);
-	}
-
-	private ValueAnimator mOffsetAnimator;
-	static final Interpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
-	private static final int MAX_OFFSET_ANIMATION_DURATION = 600; // ms
-
-	private void animateOffsetWithDuration(AppBarLayout layout, int clamp, int duration) {
-		if (mOffsetAnimator == null) {
-			mOffsetAnimator = new ValueAnimator();
-			mOffsetAnimator.setInterpolator(DECELERATE_INTERPOLATOR);
-			mOffsetAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-				@Override
-				public void onAnimationUpdate(ValueAnimator animation) {
-					int animatedValue = (int) animation.getAnimatedValue();
-					Logd(TAG, "onAnimationUpdate:  run:  animatedValue:" + animatedValue);
-					setTopAndBottomOffset(animatedValue);
-				}
-			});
-		} else {
-			mOffsetAnimator.cancel();
-		}
-		Logd(TAG, "run: clamp：" + clamp + ",duration:" + duration + ",mCurrentOffset:" + mCurrentOffset);
-		mOffsetAnimator.setDuration(Math.min(duration, MAX_OFFSET_ANIMATION_DURATION));
-		mOffsetAnimator.setIntValues(mCurrentOffset, clamp);
-		mOffsetAnimator.start();
-	}
-
-	public static float clamp(float value, float min, float max) {
-		if (value < min) {
-			return min;
-		} else if (value > max) {
-			return max;
-		}
-		return value;
 	}
 
 	private boolean autoScroll;
@@ -304,24 +231,8 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		if (consumed) {
 			if (velocityY < 0) {
 				this.velocityY = velocityY;
-
-//				handleFling();
-//            if (velocityY < -VELOCITY_UNITS) {
-//                flingHandle(child, target, velocityY);
-                /*final int targetScroll = child.getTop();
-                if (targetScroll != 0) {
-                    int startY = mTotalScrollY > -targetScroll ? mTotalScrollY : mTotalScrollY -targetScroll;
-                    fling(child, target, startY, targetScroll, 0, -velocityY, false);
-                }*/
-			} /*else if (velocityY > 0) {
-                final int targetScroll = child.getTop();
-                if (targetScroll != 423) {
-                    fling(child, target, targetScroll, -targetScroll, 423, velocityY, true);
-                }
-            }*/
-			// TODO: 2017/11/7
+			}
 		}
-//        return super.onNestedFling(coordinatorLayout, child, target, velocityX, velocityY, consumed);
 		return true;
 	}
 
@@ -362,7 +273,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		Logw(TAG, "NestedScrollingParent,onNestedPreScroll: dx:" + dx + ",dy:" + dy + ",consumed[0]" + consumed[0] + ",consumed[1]" + consumed[1] + ",mTotalScrollY：" + mTotalScrollY);
 		// TODO: 2017/11/7
 		isInterrupt = true;
-		if (dy != 0 /*&& !mSkipNestedPreScroll*/) {
+		if (dy != 0 ) {
 			int min, max;
 			if (dy < 0) {
 				// We're scrolling down
@@ -383,20 +294,8 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 				dy = Math.max(-423, -dy);
 				setTopAndBottomOffset(dy);
 			}
-			/*int top = child.getTop();
-			if (dy == top) {
-                return;
-            }*/
-
 		}
-//                super.onNestedPreScroll(coordinatorLayout,child,target,dx,dy,consumed);
-
 	}
-
-	// TODO: 2017/11/3  dyConsumed是recyclerview的dy,
-	boolean isInterrupt;
-	boolean onStop;
-	public int flagScrollY;
 
 	@Override
 	public void onNestedScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
@@ -406,21 +305,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		}
 		if (noHandle) {
 			return;
-		}
-//        LogUtil.Logw(TAG, "onNestedScroll: mScrollY:" + dyUnconsumed);
-//        LogUtil.Loge(TAG, "onNestedScroll: setTopAndBottomOffset");
-		// TODO: 2017/11/7
-	   /* if (dyConsumed != 0) {//向上拖动时，调整appBarLayout的top
-			setTopAndBottomOffset(dyConsumed + dyUnconsumed);
-        } else if (dyUnconsumed != 0) {//向下拖动时，调整appBarLayout的top
-            setTopAndBottomOffset(-dyUnconsumed);
-        }*/
-
-		if (dyUnconsumed != 0) {//向下拖动时，调整appBarLayout的top
-//            setTopAndBottomOffset(-dyUnconsumed);
-//            if (dyUnconsumed < 0) {
-//                super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type);
-//            }
 		}
 		if (dyConsumed == 0) {
 			onStop = true;
@@ -433,14 +317,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 			int flingDuration = getSplineFlingDuration((int) velocityY);
 			Logd(TAG, "NestedScrollingParent  fling: velocityY =" + velocityY + ",flagScrollY:" + flagScrollY
 					+ ",flingDistance:" + flingDistance + ",flingDuration:" + flingDuration);
-			/*if (target instanceof RecyclerView) {
-				RecyclerView recyclerView = (RecyclerView) target;
-				int scrollExtent = recyclerView.computeVerticalScrollExtent();
-				int scrollOffset = recyclerView.computeVerticalScrollOffset();
-				int scrollRange = recyclerView.computeVerticalScrollRange();
-				Log.d(TAG, "onFlingFinished: fling:  scrollExtent:" + scrollExtent + ",scrollOffset:" + scrollOffset + ",scrollRange:" + scrollRange);
-			}*/
-//			float flingY = (float) (getVelocityWithDistance(flingDistance - flagScrollY)*velocityY/Math.abs(velocityY));
 			float flingY = (float) ((flingDistance - flagScrollY) * velocityY / flingDistance);
 			int subVelocity = getVelocityWithDistance(flagScrollY);
 			int subVelocity2 = getVelocityWithDistance(flingDistance - flagScrollY);
