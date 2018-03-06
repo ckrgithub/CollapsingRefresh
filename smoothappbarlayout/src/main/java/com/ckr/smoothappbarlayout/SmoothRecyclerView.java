@@ -202,7 +202,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
 									float absY = Math.abs(yvel);
 									boolean fling = (absY > minFlingVelocity);
 									Logd(TAG, "onTouchEvent: fling: minFlingVelocity:" + minFlingVelocity + ",maxFlingVelocity:" + maxFlingVelocity + ",yvel：" + yvel);
-									yvel = Math.abs(yvel) < 2000 ? 2000 * yvel / absY : yvel;
+//									yvel = Math.abs(yvel) < 2000 ? 2000 * yvel / absY : yvel;
 									if (fling) {
 										yvel = forwardDirection ? Math.abs(yvel) : -Math.abs(yvel);
 										mTotalFlingDistance = getSplineFlingDistance((int) yvel);
