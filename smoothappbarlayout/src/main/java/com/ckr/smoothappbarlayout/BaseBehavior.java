@@ -69,7 +69,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 	boolean onStop;
 	public int flagScrollY;
 	private int lastScrollY;
-	private boolean noHandle;
 
 	public BaseBehavior() {
 
@@ -155,7 +154,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 
 
 	/**
-	 * {@link AppBarLayout.Behavior}中onStopNestedScroll,onFlingFinished
+	 * {@link AppBarLayout.Behavior}中onStopNestedScroll,onFling
 	 * {@link android.support.design.widget.HeaderBehavior}中onInterceptTouchEvent,fling
 	 */
 	private class FlingRunnable implements Runnable {
@@ -271,9 +270,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		if (isFling) {//正在执行滚动动画时拦截
 			return;
 		}
-		if (noHandle) {
-			return;
-		}
 //        LogUtil.Logw(TAG, "onNestedScroll: mScrollY:" + dyUnconsumed);
 //        LogUtil.Loge(TAG, "onNestedScroll: setTopAndBottomOffset");
 		// TODO: 2017/11/7
@@ -305,14 +301,14 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 				int scrollExtent = recyclerView.computeVerticalScrollExtent();
 				int scrollOffset = recyclerView.computeVerticalScrollOffset();
 				int scrollRange = recyclerView.computeVerticalScrollRange();
-				Log.d(TAG, "onFlingFinished: fling:  scrollExtent:" + scrollExtent + ",scrollOffset:" + scrollOffset + ",scrollRange:" + scrollRange);
+				Log.d(TAG, "onFling: fling:  scrollExtent:" + scrollExtent + ",scrollOffset:" + scrollOffset + ",scrollRange:" + scrollRange);
 			}*/
 //			float flingY = (float) (getVelocityWithDistance(flingDistance - flagScrollY)*velocityY/Math.abs(velocityY));
 			float flingY = (float) ((flingDistance - flagScrollY) * velocityY / flingDistance);
 			int subVelocity = getVelocityWithDistance(flagScrollY);
 			int subVelocity2 = getVelocityWithDistance(flingDistance - flagScrollY);
 			int sumVelocity = getVelocityWithDistance(flingDistance);
-			Logd(TAG, "onFlingFinished: fling:  subVelocity:" + subVelocity + ",subV2:" + subVelocity2 + ",sumVelocity:" + sumVelocity);
+			Logd(TAG, "onFling: fling:  subVelocity:" + subVelocity + ",subV2:" + subVelocity2 + ",sumVelocity:" + sumVelocity);
 
 			Logd(TAG, "onNestedScroll: fling:  flingY:" + flingY);
 			fling(child, mScrollTarget, 423, 0, 0
@@ -388,15 +384,14 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 				boolean canScrollUp = Utils.canScrollUp(mScrollTarget);
 				Loge(TAG, "setCurrentScrollY: canScrollUp:" + canScrollUp);
 				if (!canScrollUp) {
-					noHandle = true;
+//					noHandle = true;
 				}
 			}
 		}
 	}
 
-	protected void syncOffset(int newOffset, int dy, final int mTotalScrollY) {
-		Logd(TAG, "syncOffset: newOffset:" + newOffset + ",dy:" + dy
-				+ ",mTotalScrollY:" + mTotalScrollY);
+	protected void syncOffset(int newOffset, int dy) {
+		Logd(TAG, "syncOffset: newOffset:" + newOffset + ",dy:" + dy);
 		if (isFling) {
 			LogUtil.Logi(TAG, "syncOffset: isFling");
 			return;
@@ -406,28 +401,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 			isInterrupt = false;
 			return;
 		}
-		Loge(TAG, "syncOffset: noHandle:" + noHandle + ",lastScrollY:" + lastScrollY);
-		if (lastScrollY != 0) {
-			int top = mAppBarLayout.getTop();
-			if (top != -423) {
-				if (mTotalScrollY <= lastScrollY) {
-					lastScrollY = mTotalScrollY;
-					noHandle = true;
-					return;
-				} else {
-					newOffset = -mTotalScrollY + lastScrollY;
-					newOffset = newOffset * 2;
-					lastScrollY = mTotalScrollY;
-					noHandle = false;
-				}
-			} else {
-				noHandle = false;
-			}
-		} else {
-			noHandle = false;
-		}
-		Loge(TAG, "run: mScrollY:" + newOffset + ",dy:" + dy
-				+ ",mTotalScrollY:" + mTotalScrollY);
+		Loge(TAG, "run: mScrollY:" + newOffset + ",dy:" + dy);
 		setTopAndBottomOffset(newOffset);
 	}
 

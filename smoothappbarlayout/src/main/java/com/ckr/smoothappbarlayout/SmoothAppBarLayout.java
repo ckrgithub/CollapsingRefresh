@@ -103,11 +103,11 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 	}
 
 	@Override
-	public void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy) {
+	public void onScrolled(View view,int dx, int dy) {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		smoothBehavior.onScrollChanged(view, x, y, dx, dy, accuracy);
+		smoothBehavior.onScrolled(view,dx, dy);
 	}
 
 	@Override
@@ -127,11 +127,11 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 	}
 
 	@Override
-	public void onFlingFinished(float velocityY) {
+	public void onFling(float velocityY) {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		smoothBehavior.onFlingFinished(velocityY);
+		smoothBehavior.onFling(velocityY);
 	}
 
 	@Override
@@ -156,16 +156,12 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 		}
 
 		@Override
-		public void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy) {
+		public void onScrolled(View view,int dx, int dy) {
 			if (view == mScrollTarget) {
-				Logd(TAG, "onScrollChanged: dy:" + dy + ",mTotalScrollY:" + y + ",mCurrentOffset:" + mCurrentOffset);
-//                mTotalScrollY = y;
-				int translationOffset = Math.max(-423, -dy /*- y*/);
-//                if (mTotalScrollY>=423) {
-//                    translationOffset=-423;
-//                }
-				LogUtil.Loge(TAG, "onScrollChanged: translationOffset:" + translationOffset);
-				syncOffset(translationOffset, dy, y);
+				Logd(TAG, "onScrolled: dy:" + dy + ",mCurrentOffset:" + mCurrentOffset);
+				int translationOffset = Math.max(-423, -dy);
+				LogUtil.Loge(TAG, "onScrolled: translationOffset:" + translationOffset);
+				syncOffset(translationOffset, dy);
 			}
 		}
 
@@ -183,7 +179,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 		}
 
 		@Override
-		public void onFlingFinished(float velocityY) {
+		public void onFling(float velocityY) {
 			/*if ((mCurrentOffset==0*//*&&velocityY>0)||(mCurrentOffset==-423&&velocityY<0*//*)) {
 				return;
 			}*/

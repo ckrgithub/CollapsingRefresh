@@ -6,12 +6,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.ckr.collapsingrefresh.R;
-import com.ckr.collapsingrefresh.widget.CustomViewPager;
 import com.ckr.collapsingrefresh.widget.MyFragmentPagerAdapter;
 
 import java.util.ArrayList;
@@ -28,7 +24,7 @@ public class MainFragment extends BaseFragment implements ViewPager.OnPageChange
     TabLayout tabLayout;
     private FragmentManager fragmentManager;
     private ArrayList<BaseFragment> fragmentList;
-    private static final String[] TITLES = {"改造", "原生"};
+    private static final String[] TITLES = {"改造"/*, "原生"*/};
     private int mCurrentPage;
     private Bundle saveState;
 

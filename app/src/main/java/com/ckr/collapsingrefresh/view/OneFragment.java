@@ -96,8 +96,8 @@ public class OneFragment extends BaseFragment {
     @Override
     public void refreshFragment() {
         if (isVisible) {
-            scrollListener.setScrollTarget(recyclerView);
-            recyclerView.setCurrentScrollY();
+//            scrollListener.setScrollTarget(recyclerView);
+//            recyclerView.setCurrentScrollY();
         }
     }
 }
