@@ -274,12 +274,6 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		}
 	}
 
-	public void setCurrentScrollY() {
-		if (mSmoothScrollListener != null) {
-			mSmoothScrollListener.setCurrentScrollY(mTotalScrollY);
-		}
-	}
-
 	public void setOnSmoothScrollListener(OnSmoothScrollListener listener) {
 		this.mSmoothScrollListener = listener;
 		listener.setFlingListener(this);

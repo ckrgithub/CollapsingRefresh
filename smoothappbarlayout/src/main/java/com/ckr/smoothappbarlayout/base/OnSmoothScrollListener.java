@@ -23,10 +23,6 @@ import android.view.View;
  */
 public interface OnSmoothScrollListener {
 
-	void setScrollTarget(View target);
-
-	void setCurrentScrollY(int scrollY);
-
 	void onScrolled(View view, int dx, int dy);
 
 	int getCurrentOffset();

@@ -31,7 +31,6 @@ import android.widget.OverScroller;
 import com.ckr.smoothappbarlayout.base.LogUtil;
 import com.ckr.smoothappbarlayout.base.OnFlingListener;
 import com.ckr.smoothappbarlayout.base.OnSmoothScrollListener;
-import com.ckr.smoothappbarlayout.base.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -68,7 +67,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 	boolean isInterrupt;
 	boolean onStop;
 	public int flagScrollY;
-	private int lastScrollY;
 
 	public BaseBehavior() {
 
@@ -368,23 +366,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 				AppBarLayout.OnOffsetChangedListener listener = ref != null ? (AppBarLayout.OnOffsetChangedListener) ref.get() : null;
 				if (listener != null) {
 					listener.onOffsetChanged(layout, translationOffset);
-				}
-			}
-		}
-	}
-
-
-	@Override
-	public void setCurrentScrollY(int scrollY) {
-		lastScrollY = scrollY;
-		mTotalScrollY = scrollY;
-		int top = mAppBarLayout.getTop();
-		if (top != -423) {
-			if (lastScrollY != 0) {
-				boolean canScrollUp = Utils.canScrollUp(mScrollTarget);
-				Loge(TAG, "setCurrentScrollY: canScrollUp:" + canScrollUp);
-				if (!canScrollUp) {
-//					noHandle = true;
 				}
 			}
 		}

@@ -39,7 +39,6 @@ import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
  */
 @CoordinatorLayout.DefaultBehavior(SmoothAppBarLayout.SmoothBehavior.class)
 public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollListener {
-	private static final String TAG = "SmartAppBarLayout";
 	protected final List<WeakReference<OnOffsetChangedListener>> mOffsetChangedListeners = new ArrayList<>();
 	private SmoothBehavior smoothBehavior;
 
@@ -84,22 +83,6 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 			} while (item != listener && item != null);
 			i.remove();
 		}
-	}
-
-	@Override
-	public void setScrollTarget(View target) {
-		if (smoothBehavior == null) {
-			initBehavior();
-		}
-		smoothBehavior.setScrollTarget(target);
-	}
-
-	@Override
-	public void setCurrentScrollY(int scrollY) {
-		if (smoothBehavior == null) {
-			initBehavior();
-		}
-		smoothBehavior.setCurrentScrollY(scrollY);
 	}
 
 	@Override
@@ -149,11 +132,6 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 
 	public static class SmoothBehavior extends BaseBehavior {
 		private static final String TAG = "SmoothBehavior";
-
-		@Override
-		public void setScrollTarget(View target) {
-			mScrollTarget = target;
-		}
 
 		@Override
 		public void onScrolled(View view,int dx, int dy) {
