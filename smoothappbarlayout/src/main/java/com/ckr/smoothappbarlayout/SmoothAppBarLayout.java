@@ -119,14 +119,6 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 	}
 
 	@Override
-	public void handleFling() {
-		if (smoothBehavior == null) {
-			initBehavior();
-		}
-		smoothBehavior.handleFling();
-	}
-
-	@Override
 	public void onScrollValueChanged(int scrollY,boolean onStartNestedFling) {
 		if (smoothBehavior == null) {
 			initBehavior();
