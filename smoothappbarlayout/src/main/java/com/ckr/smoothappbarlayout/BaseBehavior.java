@@ -29,7 +29,7 @@ import android.view.animation.Interpolator;
 import android.widget.OverScroller;
 
 import com.ckr.smoothappbarlayout.base.LogUtil;
-import com.ckr.smoothappbarlayout.base.OnFlingCallBack;
+import com.ckr.smoothappbarlayout.base.OnFlingListener;
 import com.ckr.smoothappbarlayout.base.OnSmoothScrollListener;
 import com.ckr.smoothappbarlayout.base.Utils;
 
@@ -60,7 +60,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 	private int mTempTopBottomOffset = 0;
 	protected int mCurrentOffset;
 	private float velocityY;
-	protected OnFlingCallBack callBack;
+	protected OnFlingListener callBack;
 	private float mPhysicalCoeff;
 	private double flingDistance;
 

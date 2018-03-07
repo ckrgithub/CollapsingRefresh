@@ -13,7 +13,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-import com.ckr.smoothappbarlayout.base.OnFlingCallBack;
+import com.ckr.smoothappbarlayout.base.OnFlingListener;
 import com.ckr.smoothappbarlayout.base.OnSmoothScrollListener;
 
 import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
@@ -25,7 +25,7 @@ import static com.ckr.smoothappbarlayout.base.LogUtil.Logw;
  * Created by PC大佬 on 2018/2/9.
  */
 
-public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack {
+public class SmoothRecyclerView extends RecyclerView implements OnFlingListener {
 	private static final String TAG = "SmoothRecyclerView";
 	private static final String ARG_SCROLL_DISTANCE = "arg_scroll_distance";
 	private static final String ARG_SUPER = "arg_super";
@@ -282,7 +282,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingCallBack 
 
 	public void setOnSmoothScrollListener(OnSmoothScrollListener listener) {
 		this.mSmoothScrollListener = listener;
-		listener.setFlingCallBack(this);
+		listener.setFlingListener(this);
 	}
 
 	@Override

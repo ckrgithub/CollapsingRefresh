@@ -6,6 +6,6 @@ import android.view.View;
  * Created by PC大佬 on 2018/3/3.
  */
 
-public interface OnFlingCallBack {
+public interface OnFlingListener {
 	void onFlingFinished(float velocityY, int dy , View target);
 }

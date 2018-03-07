@@ -31,9 +31,9 @@ public interface OnSmoothScrollListener {
 
 	int getCurrentOffset();
 
-	void onScrollValueChanged(int scrollY,boolean onStartNestedFling);
+	void onScrollValueChanged(int scrollY, boolean onStartNestedFling);
 
-	  void onFling(float velocityY);
+	void onFling(float velocityY);
 
-	  void setFlingCallBack(OnFlingCallBack callBack);
+	void setFlingListener(OnFlingListener onFlingListener);
 }

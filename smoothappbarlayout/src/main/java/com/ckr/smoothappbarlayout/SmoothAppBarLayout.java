@@ -23,7 +23,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.ckr.smoothappbarlayout.base.LogUtil;
-import com.ckr.smoothappbarlayout.base.OnFlingCallBack;
+import com.ckr.smoothappbarlayout.base.OnFlingListener;
 import com.ckr.smoothappbarlayout.base.OnSmoothScrollListener;
 
 import java.lang.ref.WeakReference;
@@ -135,11 +135,11 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 	}
 
 	@Override
-	public void setFlingCallBack(OnFlingCallBack callBack) {
+	public void setFlingListener(OnFlingListener callBack) {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		smoothBehavior.setFlingCallBack(callBack);
+		smoothBehavior.setFlingListener(callBack);
 	}
 
 	private void initBehavior() {
@@ -187,7 +187,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 		}
 
 		@Override
-		public void setFlingCallBack(OnFlingCallBack callBack) {
+		public void setFlingListener(OnFlingListener callBack) {
 			this.callBack=callBack;
 		}
 	}
