@@ -23,13 +23,19 @@ import android.view.View;
  */
 public interface OnSmoothScrollListener {
 
-	void onScrolled(View view, int dx, int dy);
+	void setScrollTarget(View target);
+
+	void setCurrentScrollY(int scrollY);
+
+	void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy);
 
 	int getCurrentOffset();
 
+	void handleFling();
+
 	void onScrollValueChanged(int scrollY, boolean onStartNestedFling);
 
-	void onFling(float velocityY);
+	  void onFlingFinished(float velocityY);
 
-	void setFlingListener(OnFlingListener onFlingListener);
+	  void setFlingCallBack(OnFlingCallBack callBack);
 }

@@ -99,8 +99,8 @@ public class TwoFragment extends BaseFragment {
     public void refreshFragment() {
         LogUtil.Logd(TAG, "refreshFragment: isVisible:" + isVisible);
         if (isVisible) {
-//            scrollListener.setScrollTarget(recyclerView);
-//            recyclerView.setCurrentScrollY();
+            scrollListener.setScrollTarget(recyclerView);
+            recyclerView.setCurrentScrollY();
         }
     }
 }

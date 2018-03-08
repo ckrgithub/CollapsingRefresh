@@ -7,6 +7,8 @@ import android.view.View;
 
 import com.ckr.smoothappbarlayout.base.LogUtil;
 
+import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
+
 
 /**
  * Created by PC大佬 on 2018/2/9.
@@ -29,51 +31,60 @@ public class SmoothCoordinatorLayout extends CoordinatorLayout {
 
     @Override
     public void onMeasureChild(View child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
-        LogUtil.Logd(TAG, "onMeasureChild() called with: child = [" + child + "], parentWidthMeasureSpec = [" + parentWidthMeasureSpec
+        Logd(TAG, "onMeasureChild() called with: child = [" + child + "], parentWidthMeasureSpec = [" + parentWidthMeasureSpec
                 + "], widthUsed = [" + widthUsed + "], parentHeightMeasureSpec = [" + parentHeightMeasureSpec + "], heightUsed = [" + heightUsed + "]");
         super.onMeasureChild(child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec, heightUsed);
     }
 
     @Override
     public void onLayoutChild(View child, int layoutDirection) {
-        LogUtil.Logd(TAG, "onLayoutChild() called with: child = [" + child + "], layoutDirection = [" + layoutDirection + "]");
+        Logd(TAG, "onLayoutChild() called with: child = [" + child + "], layoutDirection = [" + layoutDirection + "]");
         super.onLayoutChild(child, layoutDirection);
     }
 
     @Override
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
+        Logd(TAG, "NestedScrollingParent  onStartNestedScroll: ");
         return super.onStartNestedScroll(child, target, nestedScrollAxes);
     }
 
     @Override
     public void onNestedScrollAccepted(View child, View target, int nestedScrollAxes) {
+        Logd(TAG, "NestedScrollingParent  onNestedScrollAccepted: ");
+        // TODO: 2018/3/8  
+        super.onNestedScrollAccepted(child,target,nestedScrollAxes);
     }
 
     @Override
     public void onStopNestedScroll(View target) {
+        Logd(TAG, "NestedScrollingParent  onStopNestedScroll: ");
+        // TODO: 2018/3/8
+        super.onStopNestedScroll(target);
     }
 
     @Override
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+        Logd(TAG, "NestedScrollingParent  onNestedScroll: ");
         super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
     }
 
     @Override
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-        // TODO: 2017/11/7  
+        Logd(TAG, "NestedScrollingParent  onNestedFling: dx:" + dx + ",dy:" + dy);
+        // TODO: 2017/11/7
         super.onNestedPreScroll(target,dx,dy,consumed);
 
     }
 
     @Override
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
-        LogUtil.Logd(TAG, "onNestedFling: velocityY:" + velocityY + ",velocityX:" + velocityX);
+        Logd(TAG, "NestedScrollingParent  onNestedFling: velocityY:" + velocityY + ",velocityX:" + velocityX);
         return super.onNestedFling(target, velocityX, velocityY, consumed);
     }
 
     @Override
     public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-        LogUtil.Logd(TAG, "onNestedPreFling: onNestedPreFling,velocityY:" + velocityY + ",velocityX:" + velocityX);
+        Logd(TAG, "NestedScrollingParent  onNestedPreFling,velocityY:" + velocityY + ",velocityX:" + velocityX);
         return super.onNestedPreFling(target, velocityX, velocityY);
     }
 }

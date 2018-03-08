@@ -23,7 +23,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.ckr.smoothappbarlayout.base.LogUtil;
-import com.ckr.smoothappbarlayout.base.OnFlingListener;
+import com.ckr.smoothappbarlayout.base.OnFlingCallBack;
 import com.ckr.smoothappbarlayout.base.OnSmoothScrollListener;
 
 import java.lang.ref.WeakReference;
@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
+import static com.ckr.smoothappbarlayout.base.LogUtil.Loge;
 
 
 /**
@@ -86,11 +87,27 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 	}
 
 	@Override
-	public void onScrolled(View view,int dx, int dy) {
+	public void setScrollTarget(View target) {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		smoothBehavior.onScrolled(view,dx, dy);
+		smoothBehavior.setScrollTarget(target);
+	}
+
+	@Override
+	public void setCurrentScrollY(int scrollY) {
+		if (smoothBehavior == null) {
+			initBehavior();
+		}
+		smoothBehavior.setCurrentScrollY(scrollY);
+	}
+
+	@Override
+	public void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy) {
+		if (smoothBehavior == null) {
+			initBehavior();
+		}
+		smoothBehavior.onScrollChanged(view, x, y, dx, dy, accuracy);
 	}
 
 	@Override
@@ -102,6 +119,14 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 	}
 
 	@Override
+	public void handleFling() {
+		if (smoothBehavior == null) {
+			initBehavior();
+		}
+		smoothBehavior.handleFling();
+	}
+
+	@Override
 	public void onScrollValueChanged(int scrollY,boolean onStartNestedFling) {
 		if (smoothBehavior == null) {
 			initBehavior();
@@ -110,19 +135,19 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 	}
 
 	@Override
-	public void onFling(float velocityY) {
+	public void onFlingFinished(float velocityY) {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		smoothBehavior.onFling(velocityY);
+		smoothBehavior.onFlingFinished(velocityY);
 	}
 
 	@Override
-	public void setFlingListener(OnFlingListener callBack) {
+	public void setFlingCallBack(OnFlingCallBack callBack) {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		smoothBehavior.setFlingListener(callBack);
+		smoothBehavior.setFlingCallBack(callBack);
 	}
 
 	private void initBehavior() {
@@ -134,12 +159,17 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 		private static final String TAG = "SmoothBehavior";
 
 		@Override
-		public void onScrolled(View view,int dx, int dy) {
+		public void setScrollTarget(View target) {
+			mScrollTarget = target;
+		}
+
+		@Override
+		public void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy) {
 			if (view == mScrollTarget) {
-				Logd(TAG, "onScrolled: dy:" + dy + ",mCurrentOffset:" + mCurrentOffset);
-				int translationOffset = Math.max(-423, -dy);
-				LogUtil.Loge(TAG, "onScrolled: translationOffset:" + translationOffset);
-				syncOffset(translationOffset, dy);
+				Logd(TAG, "onScrollChanged: dy:" + dy + ",y:" + y + ",mCurrentOffset:" + mCurrentOffset);
+				int translationOffset = Math.max(-423, -dy );
+				Loge(TAG, "onScrollChanged: translationOffset:" + translationOffset);
+				syncOffset(translationOffset, y);
 			}
 		}
 
@@ -157,15 +187,12 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 		}
 
 		@Override
-		public void onFling(float velocityY) {
-			/*if ((mCurrentOffset==0*//*&&velocityY>0)||(mCurrentOffset==-423&&velocityY<0*//*)) {
-				return;
-			}*/
-			fling(mAppBarLayout, mScrollTarget,Math.abs(mCurrentOffset),0,0,velocityY,false);
+		public void onFlingFinished(float velocityY) {
+			fling(mAppBarLayout, mScrollTarget,velocityY);
 		}
 
 		@Override
-		public void setFlingListener(OnFlingListener callBack) {
+		public void setFlingCallBack(OnFlingCallBack callBack) {
 			this.callBack=callBack;
 		}
 	}
