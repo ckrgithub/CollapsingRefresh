@@ -33,9 +33,11 @@ public interface OnSmoothScrollListener {
 
 	void handleFling();
 
-	void onScrollValueChanged(int scrollY, boolean onStartNestedFling);
+	void onScrollValueChanged(View view,int scrollY, boolean onStartNestedFling);
 
-	  void onFlingFinished(float velocityY);
+	  void onFlingFinished(View view,float velocityY);
+
+	  void onDispatchFling(View view,int mScrollState);
 
 	  void setFlingCallBack(OnFlingCallBack callBack);
 }

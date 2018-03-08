@@ -22,7 +22,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.ckr.smoothappbarlayout.base.LogUtil;
 import com.ckr.smoothappbarlayout.base.OnFlingCallBack;
 import com.ckr.smoothappbarlayout.base.OnSmoothScrollListener;
 
@@ -127,19 +126,27 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 	}
 
 	@Override
-	public void onScrollValueChanged(int scrollY,boolean onStartNestedFling) {
+	public void onScrollValueChanged(View view,int scrollY,boolean onStartNestedFling) {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		smoothBehavior.onScrollValueChanged(scrollY,onStartNestedFling);
+		smoothBehavior.onScrollValueChanged(view,scrollY,onStartNestedFling);
 	}
 
 	@Override
-	public void onFlingFinished(float velocityY) {
+	public void onFlingFinished(View view,float velocityY) {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		smoothBehavior.onFlingFinished(velocityY);
+		smoothBehavior.onFlingFinished(view,velocityY);
+	}
+
+	@Override
+	public void onDispatchFling(View view, int mScrollState) {
+		if (smoothBehavior == null) {
+			initBehavior();
+		}
+		smoothBehavior.onDispatchFling(view,mScrollState);
 	}
 
 	@Override
@@ -169,7 +176,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 				Logd(TAG, "onScrollChanged: dy:" + dy + ",y:" + y + ",mCurrentOffset:" + mCurrentOffset);
 				int translationOffset = Math.max(-423, -dy );
 				Loge(TAG, "onScrollChanged: translationOffset:" + translationOffset);
-				syncOffset(translationOffset, y);
+				syncOffset(view,translationOffset, y);
 			}
 		}
 
@@ -179,7 +186,10 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 		}
 
 		@Override
-		public void onScrollValueChanged(int scrollY,boolean onStartNestedFling) {
+		public void onScrollValueChanged(View view,int scrollY,boolean onStartNestedFling) {
+			if (mScrollTarget!=view) {
+				return;
+			}
 			mTotalScrollY = scrollY;
 			if (onStartNestedFling) {
 				flagScrollY=scrollY;
@@ -187,8 +197,18 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 		}
 
 		@Override
-		public void onFlingFinished(float velocityY) {
-			fling(mAppBarLayout, mScrollTarget,velocityY);
+		public void onFlingFinished(View view,float velocityY) {
+			fling(mAppBarLayout, view,velocityY, false);
+		}
+
+		@Override
+		public void onDispatchFling(View view, int mScrollState) {
+			if (mScrollTarget!=view) {
+				return;
+			}
+			if (mScrollState==0) {
+				dispatchFling(mAppBarLayout,mScrollTarget);
+			}
 		}
 
 		@Override
