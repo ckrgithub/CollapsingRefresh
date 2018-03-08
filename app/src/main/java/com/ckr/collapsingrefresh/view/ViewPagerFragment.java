@@ -7,13 +7,11 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ckr.collapsingrefresh.R;
 import com.ckr.collapsingrefresh.util.ScreenUtil;
-import com.ckr.collapsingrefresh.widget.CustomViewPager;
 import com.ckr.collapsingrefresh.widget.MyFragmentPagerAdapter;
 import com.ckr.smoothappbarlayout.SmoothAppBarLayout;
 
@@ -24,6 +22,8 @@ import butterknife.BindArray;
 import butterknife.BindColor;
 import butterknife.BindDimen;
 import butterknife.BindView;
+
+import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
 
 /**
  * Created by PC大佬 on 2018/2/9.
@@ -114,7 +114,7 @@ public class ViewPagerFragment extends BaseFragment implements AppBarLayout.OnOf
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        Log.d(TAG, "onOffsetChanged: vertical:" + verticalOffset);
+        Logd(TAG, "onOffsetChanged: vertical:" + verticalOffset);
     }
 
     @Override
