@@ -754,6 +754,9 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
             if (skipIndex == i) continue;
             sumX += e.getX(i);
             sumY += e.getY(i);
+            // TODO: 2018/3/9
+//            sumX += e.getRawX();
+//            sumY += e.getRawY();
         }
         final int div = pointerUp ? count - 1 : count;
         final float touchX = sumX / div;
@@ -857,29 +860,45 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
                 }
                 if (mIsBeingDragged) {
                     final float spinner = dy + mTouchSpinner;
+                    int currentOffset = mOnPullListener.getCurrentOffset();
+                    Log.d(TAG, "dispatchTouchEvent333: isHeader:" + getViceState().isHeader() + ",isFooter:" + getViceState().isFooter()
+                            + ",spinner:" + spinner+ ",mLastSpinner:" + mLastSpinner+",dy:"+dy+",mTouchSpinner:"+mTouchSpinner+",mTouchY："+mTouchY+",currentOffset:"+currentOffset);
                     if ((mRefreshContent != null)
                             && (getViceState().isHeader() && (spinner < 0 || mLastSpinner < 0))
-                            || (getViceState().isFooter() && (spinner > 0 || mLastSpinner > 0))) {
+                            || (getViceState().isFooter() && (spinner > 0 || mLastSpinner > 0))
+                            ||currentOffset!=0) {
+                        Log.d(TAG, "dispatchTouchEvent333: 进入,mSpinner:"+mSpinner);
                         long time = e.getEventTime();
                         if (mFalsifyEvent == null) {
+//                            mFalsifyEvent = MotionEvent.obtain(time, time, MotionEvent.ACTION_DOWN, e.getRawX(), e.getRawY(), 0);
                             mFalsifyEvent = MotionEvent.obtain(time, time, MotionEvent.ACTION_DOWN, mTouchX + dx, mTouchY, 0);
                             super.dispatchTouchEvent(mFalsifyEvent);
                         }
                         MotionEvent em = MotionEvent.obtain(time, time, MotionEvent.ACTION_MOVE, mTouchX + dx, mTouchY + spinner, 0);
-                        super.dispatchTouchEvent(em);
-                        if ((getViceState().isHeader() && spinner < 0) || (getViceState().isFooter() && spinner > 0)) {
+                        boolean consume = super.dispatchTouchEvent(em);
+                        if (mSpinner != 0) {
+                            moveSpinnerInfinitely(0);
+                        }
+                        // TODO: 2018/3/9
+                        /*if ((getViceState().isHeader() && spinner < 0) || (getViceState().isFooter() && spinner > 0)) {
                             mLastSpinner = (int) spinner;
                             if (mSpinner != 0) {
                                 moveSpinnerInfinitely(0);
                             }
                             return true;
-                        }
+                        }*/
                         mLastSpinner = (int) spinner;
                         mFalsifyEvent = null;
-                        MotionEvent ec = MotionEvent.obtain(time, time, MotionEvent.ACTION_CANCEL, mTouchX, mTouchY + spinner, 0);
-                        super.dispatchTouchEvent(ec);
+//                        MotionEvent ec = MotionEvent.obtain(time, time, MotionEvent.ACTION_CANCEL, mTouchX, mTouchY + spinner, 0);
+//                        super.dispatchTouchEvent(ec);
+                        return true;
+                        // TODO: 2018/3/8
+//                        long time = e.getEventTime();
+//                        return super.dispatchTouchEvent(e);
                     }
-                    if (getViceState().isDraging()) {
+
+                    Log.d(TAG, "dispatchTouchEvent444: isDraging:"+getViceState().isDraging());
+                    if (getViceState().isDraging()&&currentOffset==0) {
                         moveSpinnerInfinitely(spinner);
                         return true;
                     }
@@ -900,6 +919,14 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
                 break;
         }
         return super.dispatchTouchEvent(e);
+    }
+    OnPullListener mOnPullListener;
+    public void setOnPullListener(OnPullListener mOnPullListener){
+        this.mOnPullListener=mOnPullListener;
+    }
+
+    public interface OnPullListener{
+        int getCurrentOffset();
     }
 
     /**
@@ -2058,7 +2085,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
     /**
      * 完成刷新
      */
-    // TODO: 2017/9/9 刷新时间差小于1000毫秒有bug 
+    // TODO: 2017/9/9 刷新时间差小于1000毫秒有bug
     @Override
     public SmartRefreshLayout finishRefresh(boolean success) {
         long passTime = System.currentTimeMillis() - mLastRefreshingTime;
@@ -2070,7 +2097,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
     /**
      * 完成刷新
      */
-    // TODO: 2017/9/9 有bug，view.postDelayed()不执行 
+    // TODO: 2017/9/9 有bug，view.postDelayed()不执行
     @Override
     public SmartRefreshLayout finishRefresh(int delayed, final boolean success) {
         Log.d(TAG, "finishRefresh() called with: delayed = [" + delayed + "], success = [" + success + "]");

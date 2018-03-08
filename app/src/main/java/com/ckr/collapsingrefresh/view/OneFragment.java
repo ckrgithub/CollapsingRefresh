@@ -1,15 +1,20 @@
 package com.ckr.collapsingrefresh.view;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 
 import com.ckr.collapsingrefresh.R;
-import com.ckr.collapsingrefresh.model.AlbumList;
 import com.ckr.collapsingrefresh.adapter.MyAdapter;
+import com.ckr.collapsingrefresh.model.AlbumList;
+import com.ckr.smartrefresh.SmartRefreshLayout;
+import com.ckr.smartrefresh.api.RefreshLayout;
+import com.ckr.smartrefresh.listener.OnRefreshLoadmoreListener;
 import com.ckr.smoothappbarlayout.SmoothRecyclerView;
-import com.ckr.smoothappbarlayout.base.LogUtil;
-import com.ckr.smoothappbarlayout.base.OnSmoothScrollListener;
+import com.ckr.smoothappbarlayout.base.OnSmartListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,26 +22,44 @@ import java.util.List;
 import butterknife.BindDimen;
 import butterknife.BindView;
 
+import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
+
 /**
  * Created by PC大佬 on 2018/2/9.
  */
 
-public class OneFragment extends BaseFragment {
+public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListener, AppBarLayout.OnOffsetChangedListener, SmartRefreshLayout.OnPullListener {
     private static final String TAG = "OneFragment";
     @BindView(R.id.recyclerView)
     SmoothRecyclerView recyclerView;
-    private MyAdapter mAdapter;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout smartRefreshLayout;
     @BindDimen(R.dimen.size_5)
     int paddingSize;
-    static OnSmoothScrollListener scrollListener;
+    private MyAdapter mAdapter;
+    static OnSmartListener scrollListener;
     private boolean isVisible;
+    private static Handler handler = new Handler(Looper.myLooper());
+    private int verticalOffset;
 
-    public static OneFragment newInstance(OnSmoothScrollListener onScrollListener) {
+
+    public static OneFragment newInstance(OnSmartListener onScrollListener) {
         scrollListener = onScrollListener;
         Bundle args = new Bundle();
         OneFragment fragment = new OneFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (handler != null) {
+            handler = null;
+        }
+        if (scrollListener != null) {
+            scrollListener.removeOnOffsetChangedListener(this);
+        }
     }
 
     @Override
@@ -46,8 +69,11 @@ public class OneFragment extends BaseFragment {
 
     @Override
     protected void init() {
-        LogUtil.Logd(TAG, "init: target:"+recyclerView);
+        Logd(TAG, "init: target:"+recyclerView);
+        scrollListener.addOnOffsetChangedListener(this);
         recyclerView.setOnSmoothScrollListener(scrollListener);
+        smartRefreshLayout.setOnRefreshLoadmoreListener(this);
+        smartRefreshLayout.setOnPullListener(this);
         setAdapter();
     }
 
@@ -99,5 +125,44 @@ public class OneFragment extends BaseFragment {
             scrollListener.setScrollTarget(recyclerView);
             recyclerView.setCurrentScrollY();
         }
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                smartRefreshLayout.finishRefresh();
+            }
+        }, 5000);
+    }
+
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                smartRefreshLayout.finishLoadmore();
+            }
+        }, 5000);
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        this.verticalOffset = verticalOffset;
+        Logd(TAG, "onOffsetChanged: verticalOffset:" + this.verticalOffset);
+        if (verticalOffset != 0) {
+            boolean enableRefresh = smartRefreshLayout.isEnableRefresh();
+            if (enableRefresh) {
+                smartRefreshLayout.setEnableRefresh(false);
+            }
+        } else {
+            smartRefreshLayout.setEnableRefresh(true);
+        }
+    }
+
+    @Override
+    public int getCurrentOffset() {
+        return verticalOffset;
     }
 }

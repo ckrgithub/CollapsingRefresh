@@ -89,7 +89,7 @@ public class ViewPagerFragment extends BaseFragment implements AppBarLayout.OnOf
         }
         this.totalHeight = (int) getResources().getDimension(R.dimen.mine_info_height);
         totalScrollRange = totalHeight - minHeight;
-        appBarLayout.addOnOffsetChangedListener(this);
+//        appBarLayout.addOnOffsetChangedListener(this);
     }
 
     private void initFragment() {

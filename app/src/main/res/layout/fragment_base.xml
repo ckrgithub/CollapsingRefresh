@@ -1,17 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ckr.smartrefresh.SmartRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/refreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:orientation="vertical">
+    app:srlDisableContentWhenLoading="true"
+    app:srlDisableContentWhenRefresh="true"
+    app:srlEnableAutoLoadmore="false"
+    app:srlEnableHeaderTranslationContent="true"
+    app:srlEnableLoadmore="true">
+
+    <com.ckr.smartrefresh.header.ClassicsHeader
+        android:id="@+id/classicsHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srlClassicsSpinnerStyle="Translate"/>
 
     <com.ckr.smoothappbarlayout.SmoothRecyclerView
         android:id="@+id/recyclerView"
-        android:paddingTop="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingBottom="5dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:paddingBottom="5dp"
-        android:clipToPadding="false"
+        android:paddingTop="0dp"/>
+
+    <com.ckr.smartrefresh.footer.ClassicsFooter
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</LinearLayout>
+        android:layout_height="wrap_content"
+        app:srlClassicsSpinnerStyle="Translate"/>
+</com.ckr.smartrefresh.SmartRefreshLayout>

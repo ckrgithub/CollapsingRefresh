@@ -23,7 +23,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.ckr.smoothappbarlayout.base.OnFlingCallBack;
-import com.ckr.smoothappbarlayout.base.OnSmoothScrollListener;
+import com.ckr.smoothappbarlayout.base.OnSmartListener;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import static com.ckr.smoothappbarlayout.base.LogUtil.Loge;
  * Created by PC大佬 on 2018/2/9.
  */
 @CoordinatorLayout.DefaultBehavior(SmoothAppBarLayout.SmoothBehavior.class)
-public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollListener {
+public class SmoothAppBarLayout extends AppBarLayout implements OnSmartListener {
 	protected final List<WeakReference<OnOffsetChangedListener>> mOffsetChangedListeners = new ArrayList<>();
 	private SmoothBehavior smoothBehavior;
 
