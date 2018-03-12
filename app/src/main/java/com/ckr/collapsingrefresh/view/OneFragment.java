@@ -134,7 +134,7 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
             public void run() {
                 smartRefreshLayout.finishRefresh();
             }
-        }, 5000);
+        }, 2000);
     }
 
     @Override
@@ -144,7 +144,7 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
             public void run() {
                 smartRefreshLayout.finishLoadmore();
             }
-        }, 5000);
+        }, 2000);
     }
 
     @Override

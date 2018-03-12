@@ -218,7 +218,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 	@Override
 	public boolean onNestedFling(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target,
 								 float velocityX, float velocityY, boolean consumed) {
-		Loge(TAG, "NestedScrollingParent,onNestedFling: fling: [" + velocityX + "], velocityY = [" + velocityY + "], consumed = [" + consumed + "]"
+		Loge(TAG, "flagOrder: NestedScrollingParent,onNestedFling: fling: [" + velocityX + "], velocityY = [" + velocityY + "], consumed = [" + consumed + "]"
 				+ "，mTotalScrollY：" + mTotalScrollY);
 		if (mScrollTarget != target) {
 			return true;
@@ -234,12 +234,12 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 	@Override
 	public void handleFling() {
 		Logd(TAG, "handleFling: velocity:" + velocityY);
-		if (velocityY == 0) {
-			return;
-		}
-		float velocityY = this.velocityY;
-		this.velocityY = 0;
-		flingHandle(mAppBarLayout, mScrollTarget, velocityY);
+//		if (velocityY == 0) {
+//			return;
+//		}
+//		float velocityY = this.velocityY;
+//		this.velocityY = 0;
+//		flingHandle(mAppBarLayout, mScrollTarget, velocityY);
 	}
 
 	private void flingHandle(AppBarLayout child, View target, float velocityY) {
@@ -253,14 +253,17 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 
 	@Override
 	public boolean onNestedPreFling(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, float velocityX, float velocityY) {
-		Logd(TAG, "NestedScrollingParent,onNestedPreFling, fling = [" + velocityX + "], velocityY = [" + velocityY + "]");
+		Logd(TAG, "flagOrder NestedScrollingParent,onNestedPreFling, fling = [" + velocityX + "], velocityY = [" + velocityY + "]");
 		return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
 	}
 
 	@Override
 	public boolean onStartNestedScroll(CoordinatorLayout parent, AppBarLayout child, View directTargetChild, View target, int nestedScrollAxes, int type) {
-		Logd(TAG, "NestedScrollingParent, onStartNestedScroll = [" + target + "]");
+		Logd(TAG, "flagOrder:NestedScrollingParent, onStartNestedScroll = [" + target + "]");
 		mScrollTarget = target;
+//		if (this.velocityY>0) {
+//			this.velocityY=0;
+//		}
 		return super.onStartNestedScroll(parent, child, directTargetChild, target, nestedScrollAxes, type);
 	}
 
@@ -296,7 +299,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 
 	@Override
 	public void onNestedScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
-		Loge(TAG, "NestedScrollingParent,onNestedScroll, dyConsumed = [" + dyConsumed + "]" + ", dyUnconsumed = [" + dyUnconsumed + "]" + ",target:" + target);
+		Loge(TAG, "flagOrder:NestedScrollingParent,onNestedScroll, dyConsumed = [" + dyConsumed + "]" + ", dyUnconsumed = [" + dyUnconsumed + "]" + ",target:" + target);
 		if (isFling) {//正在执行滚动动画时拦截
 			return;
 		}
@@ -315,7 +318,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 		if (this.velocityY == 0) {
 			return;
 		}
-		Logd(TAG, "NestedScrollingParent  dispatchFling: mTotalScrollY:"+mTotalScrollY);
+		Logd(TAG, "flagOrder NestedScrollingParent  dispatchFling: mTotalScrollY:" + mTotalScrollY);
 		float velocityY = this.velocityY;
 		this.velocityY = 0;
 		flingDistance = getSplineFlingDistance((int) velocityY);
@@ -492,10 +495,13 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 
 		public void onViewLayout() {
 			// Now grab the intended top
-			Logd(TAG, "onViewLayout: ");
+			Logd(TAG, "onViewLayout: " + mCurrentOffset);
 			mLayoutTop = mView.getTop();
 			// And offset it as needed
-			updateOffsets();
+//			updateOffsets();
+			if (mCurrentOffset != 0) {//底部上啦事件冲突
+				setTopAndBottomOffset(mCurrentOffset);
+			}
 		}
 
 		private void updateOffsets() {
