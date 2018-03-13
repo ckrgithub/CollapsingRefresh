@@ -43,8 +43,8 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="48dp"
-                    android:src="@mipmap/icon_girl" />
+                    android:layout_marginTop="50dp"
+                    android:src="@mipmap/ic_portrait" />
 
                 <TextView
                     android:id="@+id/userName"
@@ -71,7 +71,7 @@
 
                 <LinearLayout
                     android:id="@+id/num"
-                    android:layout_width="250dp"
+                    android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
@@ -91,7 +91,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="关注"
+                            android:text="Stars"
                             android:textColor="#fff"
                             android:textSize="11sp" />
 
@@ -101,7 +101,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="45"
+                            android:text="57"
                             android:textColor="#fff"
                             android:textSize="11sp" />
                     </LinearLayout>
@@ -123,7 +123,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="粉丝"
+                            android:text="Followers"
                             android:textColor="#fff"
                             android:textSize="11sp" />
 
@@ -133,7 +133,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="10"
+                            android:text="6"
                             android:textColor="#fff"
                             android:textSize="11sp" />
                     </LinearLayout>
@@ -155,7 +155,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="推荐"
+                            android:text="Following"
                             android:textColor="#fff"
                             android:textSize="11sp" />
 
@@ -165,7 +165,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="132"
+                            android:text="11"
                             android:textColor="#fff"
                             android:textSize="11sp" />
                     </LinearLayout>
