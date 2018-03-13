@@ -16,7 +16,7 @@ import com.ckr.smartrefresh.listener.OnOffsetListener;
 import com.ckr.smartrefresh.listener.OnRefreshLoadmoreListener;
 import com.ckr.smoothappbarlayout.SmoothRecyclerView;
 import com.ckr.smoothappbarlayout.listener.OnSmartListener;
-import com.ckr.smoothappbarlayout.utils.LogUtil;
+import com.ckr.smartrefresh.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
 import butterknife.BindDimen;
 import butterknife.BindView;
 
-import static com.ckr.smoothappbarlayout.utils.LogUtil.Logd;
+import static com.ckr.smartrefresh.util.LogUtil.Logd;
 
 /**
  * Created by PC大佬 on 2018/2/9.
@@ -165,7 +165,7 @@ public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListen
 
     @Override
     public int getTotalRange() {
-        return 0;
+        return scrollListener==null?0:scrollListener.getTotalRange();
     }
 
     @Override
