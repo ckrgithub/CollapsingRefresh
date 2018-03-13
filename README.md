@@ -2,7 +2,7 @@
 CollapsingToolbarLayout+ViewPager+RecyclerView的刷新功能。
 
 ## 效果演示
-| ![](screenRecorder/Screenshot_2.gif) |
+![](screenRecorder/Screenshot_2.gif)
 
 ## Demo
 [下载 APK](apk/app-debug.apk)
