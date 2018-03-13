@@ -1,10 +1,8 @@
 # CollapsingRefresh
-AppBarLayout+ViewPager+RecyclerView的刷新功能。
+CollapsingToolbarLayout+ViewPager+RecyclerView的刷新功能。
 
 ## 效果演示
-| 图一     | 图二    | 图三    |
-| ------------ | ------------------------- | ----------- |
-| ![](screenRecorder/Screenshot_1.gif) | ![](screenRecorder/Screenshot_2.gif) |
+| ![](screenRecorder/Screenshot_2.gif) |
 
 ## Demo
 [下载 APK](apk/app-debug.apk)
