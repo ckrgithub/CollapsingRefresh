@@ -1,5 +1,5 @@
-# PageRecyclerView
-PageRecyclerView实现翻页功能及无限轮播。
+# CollapsingRefresh
+AppBarLayout+ViewPager+RecyclerView的刷新功能。
 
 ## 效果演示
 | 无限轮播     | 水平网格分页    | 添加数据    |
