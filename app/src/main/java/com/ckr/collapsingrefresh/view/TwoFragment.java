@@ -136,7 +136,9 @@ public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListen
 			handler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					smartRefreshLayout.finishRefresh();
+					if (smartRefreshLayout != null) {
+						smartRefreshLayout.finishRefresh();
+					}
 				}
 			}, 2000);
 		}
@@ -148,7 +150,9 @@ public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListen
 			handler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					smartRefreshLayout.finishLoadmore();
+					if (smartRefreshLayout != null) {
+						smartRefreshLayout.finishLoadmore();
+					}
 				}
 			}, 2000);
 		}

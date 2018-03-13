@@ -22,7 +22,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -50,6 +49,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static com.ckr.smartrefresh.util.LogUtil.Loge;
 
 /**
  * 刷新内容包装
@@ -73,14 +73,14 @@ public class RefreshContentWrapper implements RefreshContent {
     private RefreshScrollBoundaryAdapter mBoundaryAdapter = new RefreshScrollBoundaryAdapter();
 
     public RefreshContentWrapper(View view) {
-        Log.e(TAG, "RefreshContentWrapper: view:" + view);
+        Loge(TAG, "RefreshContentWrapper: view:" + view);
         this.mContentView = mRealContentView = view;
         this.mContentView.setTag(TAG_REFRESH_CONTENT_WRAPPER.hashCode(), TAG_REFRESH_CONTENT_WRAPPER);
     }
 
     public RefreshContentWrapper(Context context) {
         this.mContentView = mRealContentView = new View(context);
-        Log.e(TAG, "RefreshContentWrapper: context:" + context + ",mContentView:" + mContentView);
+        Loge(TAG, "RefreshContentWrapper: context:" + context + ",mContentView:" + mContentView);
         this.mContentView.setTag(TAG_REFRESH_CONTENT_WRAPPER.hashCode(), TAG_REFRESH_CONTENT_WRAPPER);
     }
 
@@ -247,7 +247,7 @@ public class RefreshContentWrapper implements RefreshContent {
 //                MeasureSpec.AT_MOST);
 
         if (mContentView != null) {
-            Log.e(TAG, "measure: mContentView != null");
+            Loge(TAG, "measure: mContentView != null");
             mContentView.measure(widthSpec, heightSpec);
         }
 //        mContentView.measure(widthSpec, heightSpec);
