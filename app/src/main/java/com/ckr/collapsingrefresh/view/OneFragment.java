@@ -93,7 +93,7 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
         AlbumList albumList = new AlbumList();
         albumList.setTitle("风继续吹");
         try {
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 12; i++) {
                 AlbumList clone = (AlbumList) albumList.clone();
                 clone.setUserName("item  " + i);
                 if (i % 2 == 0) {

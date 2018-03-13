@@ -94,7 +94,7 @@ public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListen
         AlbumList albumList = new AlbumList();
         albumList.setTitle("约定");
         try {
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 8; i++) {
                 AlbumList clone = (AlbumList) albumList.clone();
                 clone.setUserName("item  " + i);
                 if (i % 2 == 0) {
