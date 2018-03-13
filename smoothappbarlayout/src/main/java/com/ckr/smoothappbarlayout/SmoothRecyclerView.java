@@ -117,14 +117,15 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		ensureVelocityTracker();
 		if (mSmoothScrollListener != null) {
 			int currentOffset = mSmoothScrollListener.getCurrentOffset();
+			int totalScrollRange = mSmoothScrollListener.getTotalRange();
 			int abs = Math.abs(currentOffset);
 			int state = 0;
-			if (abs < 423) {
+			if (abs < totalScrollRange) {
 				state = 1;
 			} else {
 				boolean canScrollDown = canScrollVertically(-1);
 				Logw(TAG, "onTouchEvent: canScrollDown:" + canScrollDown);
-				if ((abs == 423 && !canScrollDown)) {
+				if ((abs == totalScrollRange && !canScrollDown)) {
 					state = 2;
 				}
 			}
@@ -202,7 +203,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 										yvel = forwardDirection ? Math.abs(yvel) : -Math.abs(yvel);
 										if (forwardDirection) {
 											mTotalFlingDistance = getSplineFlingDistance((int) yvel);
-											mDiffFlingDistance = mTotalFlingDistance - currentOffset - 423;
+											mDiffFlingDistance = mTotalFlingDistance - currentOffset - totalScrollRange;
 //                                        int flingDuration = getSplineFlingDuration((int) yvel);
 											Logd(TAG, "onTouchEvent: fling: forwardDirection:" + forwardDirection + ",yvel：" + yvel
 													+ ",mTotalFlingDistance:" + mTotalFlingDistance + ",mDiffFlingDistance:" + mDiffFlingDistance);
@@ -305,8 +306,9 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		Logd(TAG, "onFlingFinished: fling: velocityY:" + velocityY);
 		if (mSmoothScrollListener != null) {
 			int currentOffset = mSmoothScrollListener.getCurrentOffset();
+			int totalScrollRange = mSmoothScrollListener.getTotalRange();
 			Logd(TAG, "onFlingFinished: fling:  currentOffset:" + currentOffset + ",mDiffFlingDistance:" + mDiffFlingDistance);
-			if (velocityY > 0 && currentOffset == -423) {
+			if (velocityY > 0 && currentOffset == -totalScrollRange) {
 				if (target instanceof RecyclerView) {
 					SmoothRecyclerView recyclerView = (SmoothRecyclerView) target;
 					double fDistance = recyclerView.mDiffFlingDistance;

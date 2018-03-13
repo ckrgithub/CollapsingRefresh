@@ -29,6 +29,8 @@ public interface OnSmoothScrollListener {
 
 	void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy);
 
+	int getTotalRange();
+
 	int getCurrentOffset();
 
 	void onScrollValueChanged(View view, int scrollY, boolean onStartNestedFling);
