@@ -29,7 +29,7 @@ import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
  * Created by PC大佬 on 2018/2/9.
  */
 
-public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListener, AppBarLayout.OnOffsetChangedListener, SmartRefreshLayout.OnPullListener {
+public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListener, AppBarLayout.OnOffsetChangedListener, SmartRefreshLayout.OnOffsetListener {
     private static final String TAG = "TwoFragment";
     @BindView(R.id.recyclerView)
     SmoothRecyclerView recyclerView;

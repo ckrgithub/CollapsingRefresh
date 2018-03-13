@@ -16,7 +16,5 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         application = this;
-        //自定义缓存路径
-//        PicassoUtil.configPicasso();
     }
 }

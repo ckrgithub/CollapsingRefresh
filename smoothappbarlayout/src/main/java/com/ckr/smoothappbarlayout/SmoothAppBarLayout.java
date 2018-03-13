@@ -118,14 +118,6 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmartListener 
 	}
 
 	@Override
-	public void handleFling() {
-		if (smoothBehavior == null) {
-			initBehavior();
-		}
-		smoothBehavior.handleFling();
-	}
-
-	@Override
 	public void onScrollValueChanged(View view,int scrollY,boolean onStartNestedFling) {
 		if (smoothBehavior == null) {
 			initBehavior();

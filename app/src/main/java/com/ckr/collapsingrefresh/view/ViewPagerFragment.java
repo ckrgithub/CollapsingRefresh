@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ckr.collapsingrefresh.R;
-import com.ckr.collapsingrefresh.util.ScreenUtil;
+import com.ckr.collapsingrefresh.util.StatusBarUtil;
 import com.ckr.collapsingrefresh.widget.MyFragmentPagerAdapter;
 import com.ckr.smoothappbarlayout.SmoothAppBarLayout;
 
@@ -75,7 +75,7 @@ public class ViewPagerFragment extends BaseFragment implements AppBarLayout.OnOf
     private void initView() {
         int minHeight = (int) getResources().getDimension(R.dimen.size_78);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            int statusBarHeight = ScreenUtil.getStatusBarHeight(getContext());
+            int statusBarHeight = StatusBarUtil.getStatusBarHeight(getContext());
             ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) toolbar.getLayoutParams();
             layoutParams.topMargin = statusBarHeight;
             toolbar.setLayoutParams(layoutParams);

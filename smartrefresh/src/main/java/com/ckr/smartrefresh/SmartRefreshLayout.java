@@ -836,8 +836,8 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 				//<editor-fold>
 				if (!mIsBeingDragged || overSmooth) {
 					int currentOffset = 0;
-					if (mOnPullListener != null) {
-						currentOffset = mOnPullListener.getCurrentOffset();
+					if (mOnOffsetListener != null) {
+						currentOffset = mOnOffsetListener.getCurrentOffset();
 					}
 					Log.d(TAG, "dispatchTouchEvent000: canLoadmore:" + mRefreshContent.canLoadmore() + ",canRefresh:" + mRefreshContent.canRefresh()
 							+ ", mSpinner:" + mSpinner + ",dy:" + dy + ",mTouchSlop:" + mTouchSlop);
@@ -889,8 +889,8 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 					final float spinner = dy + mTouchSpinner;
 
 					int currentOffset = 0;
-					if (mOnPullListener != null) {
-						currentOffset = mOnPullListener.getCurrentOffset();
+					if (mOnOffsetListener != null) {
+						currentOffset = mOnOffsetListener.getCurrentOffset();
 					}
 					Log.d(TAG, "dispatchTouchEvent333: isHeader:" + getViceState().isHeader() + ",isFooter:" + getViceState().isFooter()
 							+ ",spinner:" + spinner + ",mLastSpinner:" + mLastSpinner + ",dy:" + dy + ",mTouchSpinner:" + mTouchSpinner + ",mTouchY：" + mTouchY + ",currentOffset:" + currentOffset);
@@ -947,8 +947,8 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 			case MotionEvent.ACTION_CANCEL:
 				mIsBeingDragged = false;
 				int currentOffset = 0;
-				if (mOnPullListener != null) {
-					currentOffset = mOnPullListener.getCurrentOffset();
+				if (mOnOffsetListener != null) {
+					currentOffset = mOnOffsetListener.getCurrentOffset();
 				}
 				Log.d(TAG, "dispatchTouchEvent: action:" + e.getAction() + ",mFalsifyEvent:" + mFalsifyEvent + ",currentOffset：" + currentOffset + ",mSpinner：" + mSpinner);
 //				if (mFalsifyEvent != null) {
@@ -969,13 +969,13 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 		return super.dispatchTouchEvent(e);
 	}
 
-	OnPullListener mOnPullListener;
+	OnOffsetListener mOnOffsetListener;
 
-	public void setOnPullListener(OnPullListener mOnPullListener) {
-		this.mOnPullListener = mOnPullListener;
+	public void setOnPullListener(OnOffsetListener mOnOffsetListener) {
+		this.mOnOffsetListener = mOnOffsetListener;
 	}
 
-	public interface OnPullListener {
+	public interface OnOffsetListener {
 		int getCurrentOffset();
 	}
 

@@ -13,24 +13,24 @@ import com.ckr.collapsingrefresh.model.AlbumList;
  * Created by PC大佬 on 2018/2/9.
  */
 
-public class MyAdapter extends BaseAdpater<AlbumList, MyAdapter.MHorld> {
+public class MyAdapter extends BaseAdpater<AlbumList, MyAdapter.MyHolder> {
     public MyAdapter(Context context) {
         super(context);
     }
 
     @Override
-    protected MHorld getViewHorld(View itemView, int viewType) {
-        return new MHorld(itemView);
+    protected MyHolder getViewHolder(View itemView, int viewType) {
+        return new MyHolder(itemView);
     }
 
     @Override
-    protected void convert(MHorld horld, int position, AlbumList albumList) {
+    protected void convert(MyHolder holder, int position, AlbumList albumList) {
         int drawableId = albumList.getDrawableId();
         String userName = albumList.getUserName();
         String title = albumList.getTitle();
-        horld.imageView.setImageResource(drawableId);
-        horld.title.setText(title);
-        horld.userName.setText(userName);
+        holder.imageView.setImageResource(drawableId);
+        holder.title.setText(title);
+        holder.userName.setText(userName);
     }
 
     @Override
@@ -47,13 +47,13 @@ public class MyAdapter extends BaseAdpater<AlbumList, MyAdapter.MHorld> {
         }
     }
 
-    class MHorld extends BaseViewHorld {
+    class MyHolder extends BaseViewHolder {
 
         private ImageView imageView;
         private TextView title;
         private TextView userName;
 
-        public MHorld(View itemView) {
+        public MyHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             title = (TextView) itemView.findViewById(R.id.title);

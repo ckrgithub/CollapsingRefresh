@@ -232,26 +232,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 	}
 
 	@Override
-	public void handleFling() {
-		Logd(TAG, "handleFling: velocity:" + velocityY);
-//		if (velocityY == 0) {
-//			return;
-//		}
-//		float velocityY = this.velocityY;
-//		this.velocityY = 0;
-//		flingHandle(mAppBarLayout, mScrollTarget, velocityY);
-	}
-
-	private void flingHandle(AppBarLayout child, View target, float velocityY) {
-		final int targetScroll = child.getTop();
-		if (targetScroll != 0) {
-			int startY = mTotalScrollY > -targetScroll ? mTotalScrollY : mTotalScrollY - targetScroll;
-			Logd(TAG, "flingHandle: startY:" + startY);
-			fling(child, target, -velocityY, false);
-		}
-	}
-
-	@Override
 	public boolean onNestedPreFling(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, float velocityX, float velocityY) {
 		Logd(TAG, "flagOrder NestedScrollingParent,onNestedPreFling, fling = [" + velocityX + "], velocityY = [" + velocityY + "]");
 		return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);

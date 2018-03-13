@@ -31,13 +31,11 @@ public interface OnSmoothScrollListener {
 
 	int getCurrentOffset();
 
-	void handleFling();
+	void onScrollValueChanged(View view, int scrollY, boolean onStartNestedFling);
 
-	void onScrollValueChanged(View view,int scrollY, boolean onStartNestedFling);
+	void onFlingFinished(View view, float velocityY);
 
-	  void onFlingFinished(View view,float velocityY);
+	void onDispatchFling(View view, int mScrollState);
 
-	  void onDispatchFling(View view,int mScrollState);
-
-	  void setFlingCallBack(OnFlingCallBack callBack);
+	void setFlingCallBack(OnFlingCallBack callBack);
 }
