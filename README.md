@@ -46,10 +46,10 @@ CollapsingToolbarLayout+ViewPager+RecyclerView的刷新功能。
 
 ## 感谢
 [SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout)
+
 [smooth-app-bar-layout](https://github.com/henrytao-me/smooth-app-bar-layout)
 
 ## 更新日志
-----------
 * **1.0.1-beta(进行中)**
   * 重构代码
 
