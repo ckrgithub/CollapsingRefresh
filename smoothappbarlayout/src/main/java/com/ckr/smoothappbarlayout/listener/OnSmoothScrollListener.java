@@ -18,20 +18,18 @@ package com.ckr.smoothappbarlayout.listener;
 
 import android.view.View;
 
+import com.ckr.smartrefresh.listener.OnOffsetListener;
+
 /**
  * Created by PC大佬 on 2018/2/9.
  */
-public interface OnSmoothScrollListener {
+public interface OnSmoothScrollListener extends OnOffsetListener {
 
 	void setScrollTarget(View target);
 
 	void setCurrentScrollY(int scrollY);
 
 	void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy);
-
-	int getTotalRange();
-
-	int getCurrentOffset();
 
 	void onScrollValueChanged(View view, int scrollY, boolean onStartNestedFling);
 

@@ -7,7 +7,6 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -313,7 +312,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 					SmoothRecyclerView recyclerView = (SmoothRecyclerView) target;
 					double fDistance = recyclerView.mDiffFlingDistance;
 					double flingDistance = recyclerView.mTotalFlingDistance;
-					Log.d(TAG, "onFlingFinished: fling:  fDist:" + fDistance + ",mTotalFlingDistance:" + flingDistance);
+					Logd(TAG, "onFlingFinished: fling:  fDist:" + fDistance + ",mTotalFlingDistance:" + flingDistance);
 					int flingY = (int) (velocityY * Math.min(fDistance, flingDistance * 3 / 4f) / flingDistance);
 					int subVelocity = getVelocityWithDistance(fDistance);
 					int subVelocity2 = getVelocityWithDistance(flingDistance - fDistance);

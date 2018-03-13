@@ -54,6 +54,7 @@ import com.ckr.smartrefresh.impl.RefreshFooterWrapper;
 import com.ckr.smartrefresh.impl.RefreshHeaderWrapper;
 import com.ckr.smartrefresh.listener.OnLoadmoreListener;
 import com.ckr.smartrefresh.listener.OnMultiPurposeListener;
+import com.ckr.smartrefresh.listener.OnOffsetListener;
 import com.ckr.smartrefresh.listener.OnRefreshListener;
 import com.ckr.smartrefresh.listener.OnRefreshLoadmoreListener;
 import com.ckr.smartrefresh.util.DensityUtil;
@@ -971,12 +972,8 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 
 	OnOffsetListener mOnOffsetListener;
 
-	public void setOnPullListener(OnOffsetListener mOnOffsetListener) {
+	public void setOnOffsetListener(OnOffsetListener mOnOffsetListener) {
 		this.mOnOffsetListener = mOnOffsetListener;
-	}
-
-	public interface OnOffsetListener {
-		int getCurrentOffset();
 	}
 
 	/**

@@ -12,10 +12,11 @@ import com.ckr.collapsingrefresh.adapter.MyAdapter;
 import com.ckr.collapsingrefresh.model.AlbumList;
 import com.ckr.smartrefresh.SmartRefreshLayout;
 import com.ckr.smartrefresh.api.RefreshLayout;
+import com.ckr.smartrefresh.listener.OnOffsetListener;
 import com.ckr.smartrefresh.listener.OnRefreshLoadmoreListener;
 import com.ckr.smoothappbarlayout.SmoothRecyclerView;
-import com.ckr.smoothappbarlayout.utils.LogUtil;
 import com.ckr.smoothappbarlayout.listener.OnSmartListener;
+import com.ckr.smoothappbarlayout.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ import static com.ckr.smoothappbarlayout.utils.LogUtil.Logd;
  * Created by PC大佬 on 2018/2/9.
  */
 
-public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListener, AppBarLayout.OnOffsetChangedListener, SmartRefreshLayout.OnOffsetListener {
+public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListener, AppBarLayout.OnOffsetChangedListener, OnOffsetListener {
     private static final String TAG = "TwoFragment";
     @BindView(R.id.recyclerView)
     SmoothRecyclerView recyclerView;
@@ -74,7 +75,7 @@ public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListen
         scrollListener.addOnOffsetChangedListener(this);
         recyclerView.setOnSmoothScrollListener(scrollListener);
         smartRefreshLayout.setOnRefreshLoadmoreListener(this);
-        smartRefreshLayout.setOnPullListener(this);
+        smartRefreshLayout.setOnOffsetListener(this);
         setAdapter();
     }
 
@@ -160,6 +161,11 @@ public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListen
         } else {
             smartRefreshLayout.setEnableRefresh(true);
         }
+    }
+
+    @Override
+    public int getTotalRange() {
+        return 0;
     }
 
     @Override
