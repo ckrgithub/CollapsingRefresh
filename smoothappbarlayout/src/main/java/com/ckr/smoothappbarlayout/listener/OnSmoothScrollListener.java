@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ckr.smoothappbarlayout.base;
+package com.ckr.smoothappbarlayout.listener;
 
 import android.view.View;
 
@@ -37,5 +37,5 @@ public interface OnSmoothScrollListener {
 
 	void onDispatchFling(View view, int mScrollState);
 
-	void setFlingCallBack(OnFlingCallBack callBack);
+	void setOnFlingListener(OnFlingListener onFlingListener);
 }

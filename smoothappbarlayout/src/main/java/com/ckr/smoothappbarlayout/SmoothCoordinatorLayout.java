@@ -5,9 +5,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.ckr.smoothappbarlayout.base.LogUtil;
-
-import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
+import static com.ckr.smoothappbarlayout.utils.LogUtil.Logd;
 
 
 /**

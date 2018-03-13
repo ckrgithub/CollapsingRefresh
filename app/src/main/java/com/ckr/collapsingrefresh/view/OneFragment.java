@@ -14,7 +14,7 @@ import com.ckr.smartrefresh.SmartRefreshLayout;
 import com.ckr.smartrefresh.api.RefreshLayout;
 import com.ckr.smartrefresh.listener.OnRefreshLoadmoreListener;
 import com.ckr.smoothappbarlayout.SmoothRecyclerView;
-import com.ckr.smoothappbarlayout.base.OnSmartListener;
+import com.ckr.smoothappbarlayout.listener.OnSmartListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
 import butterknife.BindDimen;
 import butterknife.BindView;
 
-import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
+import static com.ckr.smoothappbarlayout.utils.LogUtil.Logd;
 
 /**
  * Created by PC大佬 on 2018/2/9.

@@ -1,4 +1,4 @@
-package com.ckr.smoothappbarlayout.base;
+package com.ckr.smoothappbarlayout.utils;
 
 import android.util.Log;
 

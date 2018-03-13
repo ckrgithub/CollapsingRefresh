@@ -27,17 +27,17 @@ import android.view.ViewConfiguration;
 import android.view.animation.Interpolator;
 import android.widget.OverScroller;
 
-import com.ckr.smoothappbarlayout.base.OnFlingCallBack;
-import com.ckr.smoothappbarlayout.base.OnSmoothScrollListener;
-import com.ckr.smoothappbarlayout.base.Utils;
+import com.ckr.smoothappbarlayout.listener.OnFlingListener;
+import com.ckr.smoothappbarlayout.listener.OnSmoothScrollListener;
+import com.ckr.smoothappbarlayout.utils.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 import static android.support.v4.view.ViewCompat.offsetTopAndBottom;
-import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
-import static com.ckr.smoothappbarlayout.base.LogUtil.Loge;
-import static com.ckr.smoothappbarlayout.base.LogUtil.Logw;
+import static com.ckr.smoothappbarlayout.utils.LogUtil.Logd;
+import static com.ckr.smoothappbarlayout.utils.LogUtil.Loge;
+import static com.ckr.smoothappbarlayout.utils.LogUtil.Logw;
 
 /**
  * Created by PC大佬 on 2018/2/9.
@@ -58,7 +58,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 	private int mTempTopBottomOffset = 0;
 	protected int mCurrentOffset;
 	private float velocityY;
-	protected OnFlingCallBack callBack;
+	protected OnFlingListener mOnFlingListener;
 	private float mPhysicalCoeff;
 	private double flingDistance;
 
@@ -178,9 +178,9 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 					int y = mLastY - currY;//-7.-11,8,33
 					mLastY = currY;
 					Loge(TAG, "run: fling: currY:" + currY + ",y:" + y + ",velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset);
-					if (mCurrentOffset == -423 && callBack != null && !autoScroll && velocityY > 0) {
+					if (mCurrentOffset == -423 && mOnFlingListener != null && !autoScroll && velocityY > 0) {
 						autoScroll = true;
-						callBack.onFlingFinished(velocityY, 0, scrollTarget);
+						mOnFlingListener.onFlingFinished(velocityY, 0, scrollTarget);
 					} else {
 						if (y != 0) {
 							setTopAndBottomOffset(y);

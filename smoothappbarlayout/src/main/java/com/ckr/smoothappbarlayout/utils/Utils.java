@@ -1,4 +1,4 @@
-package com.ckr.smoothappbarlayout.base;
+package com.ckr.smoothappbarlayout.utils;
 
 import android.content.Context;
 import android.view.View;

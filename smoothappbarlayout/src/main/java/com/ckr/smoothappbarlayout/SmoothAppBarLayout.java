@@ -22,16 +22,16 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.ckr.smoothappbarlayout.base.OnFlingCallBack;
-import com.ckr.smoothappbarlayout.base.OnSmartListener;
+import com.ckr.smoothappbarlayout.listener.OnFlingListener;
+import com.ckr.smoothappbarlayout.listener.OnSmartListener;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
-import static com.ckr.smoothappbarlayout.base.LogUtil.Loge;
+import static com.ckr.smoothappbarlayout.utils.LogUtil.Logd;
+import static com.ckr.smoothappbarlayout.utils.LogUtil.Loge;
 
 
 /**
@@ -142,11 +142,11 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmartListener 
 	}
 
 	@Override
-	public void setFlingCallBack(OnFlingCallBack callBack) {
+	public void setOnFlingListener(OnFlingListener onFlingListener) {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		smoothBehavior.setFlingCallBack(callBack);
+		smoothBehavior.setOnFlingListener(onFlingListener);
 	}
 
 	private void initBehavior() {
@@ -204,8 +204,8 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmartListener 
 		}
 
 		@Override
-		public void setFlingCallBack(OnFlingCallBack callBack) {
-			this.callBack=callBack;
+		public void setOnFlingListener(OnFlingListener onFlingListener) {
+			this.mOnFlingListener =onFlingListener;
 		}
 	}
 

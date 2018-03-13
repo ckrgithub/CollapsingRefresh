@@ -23,7 +23,7 @@ import butterknife.BindColor;
 import butterknife.BindDimen;
 import butterknife.BindView;
 
-import static com.ckr.smoothappbarlayout.base.LogUtil.Logd;
+import static com.ckr.smoothappbarlayout.utils.LogUtil.Logd;
 
 /**
  * Created by PC大佬 on 2018/2/9.

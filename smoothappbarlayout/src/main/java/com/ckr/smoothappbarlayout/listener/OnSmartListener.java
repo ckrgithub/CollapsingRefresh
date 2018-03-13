@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ckr.smoothappbarlayout.base;
+package com.ckr.smoothappbarlayout.listener;
 
 import android.support.design.widget.AppBarLayout;
 
