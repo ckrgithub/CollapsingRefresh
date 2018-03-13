@@ -50,10 +50,10 @@ CollapsingToolbarLayout+ViewPager+RecyclerView的刷新功能。
 [smooth-app-bar-layout](https://github.com/henrytao-me/smooth-app-bar-layout)
 
 ## 更新日志
-* **1.0.1-beta(进行中)**
+* **1.0.1-release(进行中)**
   * 重构代码
 
-* **1.0.1-alpha**
+* **1.0.1-beta**
   * 实现CollapsingToolbarLayout+ViewPager+RecyclerView的下拉刷新和上拉加载功能
 
 License
