@@ -47,7 +47,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 	private VelocityTracker mVelocityTracker;
 	private boolean eventAddedToVelocityTracker;
 	private int mActivePointerId = -1;
-	private float mLastMotionY;
+	private int mLastMotionY;
 
 	public SmoothRecyclerView(Context context) {
 		this(context, null);
@@ -109,8 +109,8 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		return super.onInterceptTouchEvent(ev);
 	}
 
-	private float getRawY(MotionEvent ev) {
-		return ev.getRawY() + 0.5f;
+	private int getRawY(MotionEvent ev) {
+		return (int) (ev.getRawY() + 0.5f);
 	}
 
 	private void addEventToVelocityTracker(MotionEvent ev) {
@@ -160,7 +160,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 							mLastMotionY = getRawY(e);
 							break;
 						case MotionEvent.ACTION_MOVE:
-							float y = getRawY(e);
+							int y = getRawY(e);
 							int dy = (int) (mLastMotionY - y);
 							if (dy > 0) {
 								forwardDirection = true;
