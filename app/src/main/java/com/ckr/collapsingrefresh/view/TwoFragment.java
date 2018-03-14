@@ -12,7 +12,7 @@ import com.ckr.collapsingrefresh.adapter.MyAdapter;
 import com.ckr.collapsingrefresh.model.AlbumList;
 import com.scwang.smartrefresh.SmartRefreshLayout;
 import com.scwang.smartrefresh.api.RefreshLayout;
-import com.scwang.smartrefresh.listener.OnOffsetListener;
+import com.scwang.smartrefresh.listener.OnCollapsingListener;
 import com.scwang.smartrefresh.listener.OnRefreshLoadmoreListener;
 import com.ckr.smoothappbarlayout.SmoothRecyclerView;
 import com.ckr.smoothappbarlayout.listener.OnSmartListener;
@@ -30,7 +30,7 @@ import static com.scwang.smartrefresh.util.LogUtil.Logd;
  * Created by PC大佬 on 2018/2/9.
  */
 
-public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListener, AppBarLayout.OnOffsetChangedListener, OnOffsetListener {
+public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListener, AppBarLayout.OnOffsetChangedListener, OnCollapsingListener {
 	private static final String TAG = "TwoFragment";
 	@BindView(R.id.recyclerView)
 	SmoothRecyclerView recyclerView;
@@ -75,7 +75,7 @@ public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListen
 		scrollListener.addOnOffsetChangedListener(this);
 		recyclerView.setOnSmoothScrollListener(scrollListener);
 		smartRefreshLayout.setOnRefreshLoadmoreListener(this);
-		smartRefreshLayout.setOnOffsetListener(this);
+		smartRefreshLayout.setOnCollapsingListener(this);
 		setAdapter();
 	}
 
@@ -173,8 +173,8 @@ public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListen
 	}
 
 	@Override
-	public int getTotalRange() {
-		return scrollListener == null ? 0 : scrollListener.getTotalRange();
+	public int getTotalCollapsedRange() {
+		return scrollListener == null ? 0 : scrollListener.getTotalCollapsedRange();
 	}
 
 	@Override

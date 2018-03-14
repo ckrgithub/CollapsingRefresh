@@ -3,7 +3,6 @@ package com.ckr.collapsingrefresh.view;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -23,12 +22,10 @@ import butterknife.BindColor;
 import butterknife.BindDimen;
 import butterknife.BindView;
 
-import static com.scwang.smartrefresh.util.LogUtil.Logd;
-
 /**
  * Created by PC大佬 on 2018/2/9.
  */
-public class ViewPagerFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener, ViewPager.OnPageChangeListener {
+public class ViewPagerFragment extends BaseFragment implements  ViewPager.OnPageChangeListener {
     @BindView(R.id.viewPager)
     ViewPager viewPager;
     @BindView(R.id.statusBarPaddingView)
@@ -89,7 +86,6 @@ public class ViewPagerFragment extends BaseFragment implements AppBarLayout.OnOf
         }
         this.totalHeight = (int) getResources().getDimension(R.dimen.mine_info_height);
         totalScrollRange = totalHeight - minHeight;
-//        appBarLayout.addOnOffsetChangedListener(this);
     }
 
     private void initFragment() {
@@ -111,11 +107,6 @@ public class ViewPagerFragment extends BaseFragment implements AppBarLayout.OnOf
     }
 
     private static final String TAG = "ViewPagerFragment";
-
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        Logd(TAG, "onOffsetChanged: vertical:" + verticalOffset);
-    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

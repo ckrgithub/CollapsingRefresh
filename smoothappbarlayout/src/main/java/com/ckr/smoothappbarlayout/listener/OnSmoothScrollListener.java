@@ -18,12 +18,12 @@ package com.ckr.smoothappbarlayout.listener;
 
 import android.view.View;
 
-import com.scwang.smartrefresh.listener.OnOffsetListener;
+import com.scwang.smartrefresh.listener.OnCollapsingListener;
 
 /**
  * Created by PC大佬 on 2018/2/9.
  */
-public interface OnSmoothScrollListener extends OnOffsetListener {
+public interface OnSmoothScrollListener extends OnCollapsingListener {
 
 	void setScrollTarget(View target);
 

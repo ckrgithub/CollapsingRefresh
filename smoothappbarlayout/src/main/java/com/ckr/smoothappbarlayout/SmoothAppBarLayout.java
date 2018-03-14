@@ -118,11 +118,11 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmartListener 
 	}
 
 	@Override
-	public int getTotalRange() {
+	public int getTotalCollapsedRange() {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		return smoothBehavior.getTotalRange();
+		return smoothBehavior.getTotalCollapsedRange();
 	}
 
 	@Override
@@ -181,7 +181,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmartListener 
 		}
 
 		@Override
-		public int getTotalRange() {
+		public int getTotalCollapsedRange() {
 			return mTotalScrollRange;
 		}
 
