@@ -43,7 +43,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginTop="52dp"
                     android:src="@mipmap/ic_portrait" />
 
                 <TextView
@@ -53,7 +53,7 @@
                     android:layout_below="@+id/iv_headPic"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="4dp"
-                    android:text="Test"
+                    android:text="ckrgithub"
                     android:textColor="#fff" />
 
                 <TextView
@@ -64,14 +64,14 @@
                     android:layout_centerHorizontal="true"
                     android:ellipsize="end"
                     android:lines="1"
-                    android:text="无"
+                    android:text="developer"
                     android:textColor="#fff"
                     android:textSize="11sp" />
 
 
                 <LinearLayout
                     android:id="@+id/num"
-                    android:layout_width="280dp"
+                    android:layout_width="260dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
@@ -101,7 +101,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="57"
+                            android:text="78"
                             android:textColor="#fff"
                             android:textSize="11sp" />
                     </LinearLayout>
@@ -133,7 +133,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="6"
+                            android:text="8"
                             android:textColor="#fff"
                             android:textSize="11sp" />
                     </LinearLayout>
@@ -155,7 +155,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="Following"
+                            android:text="Fork"
                             android:textColor="#fff"
                             android:textSize="11sp" />
 
@@ -165,7 +165,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="11"
+                            android:text="7"
                             android:textColor="#fff"
                             android:textSize="11sp" />
                     </LinearLayout>
