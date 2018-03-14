@@ -16,18 +16,15 @@
 
 package com.ckr.smoothappbarlayout.listener;
 
-import android.view.View;
-
-import com.scwang.smartrefresh.listener.OnCollapsingListener;
+import android.support.design.widget.AppBarLayout;
 
 /**
  * Created by PC大佬 on 2018/2/9.
  */
-public interface OnSmoothScrollListener extends OnCollapsingListener,OnScrollListener {
+public interface OnSmoothScrollListener extends OnScrollListener {
+	void addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener listener);
 
+	void removeOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener listener);
 
-	void onStartFling(View view, float velocityY);
-
-	void onDispatchFling(View view, int mScrollState);
 
 }

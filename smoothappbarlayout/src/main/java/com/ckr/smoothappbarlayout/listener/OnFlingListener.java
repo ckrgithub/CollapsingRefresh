@@ -7,5 +7,8 @@ import android.view.View;
  */
 
 public interface OnFlingListener {
-    void onStartFling(float velocityY, int dy, View target);
+    void onStartFling(View target,float velocityY);
+
+    void onDispatchFling(View view, int mScrollState);
+
 }

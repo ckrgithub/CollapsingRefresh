@@ -10,12 +10,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import com.ckr.collapsingrefresh.R;
 import com.ckr.collapsingrefresh.adapter.MyAdapter;
 import com.ckr.collapsingrefresh.model.AlbumList;
+import com.ckr.smoothappbarlayout.SmoothRecyclerView;
+import com.ckr.smoothappbarlayout.listener.OnSmoothScrollListener;
 import com.scwang.smartrefresh.SmartRefreshLayout;
 import com.scwang.smartrefresh.api.RefreshLayout;
 import com.scwang.smartrefresh.listener.OnCollapsingListener;
 import com.scwang.smartrefresh.listener.OnRefreshLoadmoreListener;
-import com.ckr.smoothappbarlayout.SmoothRecyclerView;
-import com.ckr.smoothappbarlayout.listener.OnSmartListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +38,13 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
 	@BindDimen(R.dimen.size_5)
 	int paddingSize;
 	private MyAdapter mAdapter;
-	static OnSmartListener scrollListener;
+	static OnSmoothScrollListener scrollListener;
 	private boolean isVisible;
 	private Handler handler = new Handler(Looper.myLooper());
 	private int verticalOffset;
 
 
-	public static OneFragment newInstance(OnSmartListener onScrollListener) {
+	public static OneFragment newInstance(OnSmoothScrollListener onScrollListener) {
 		scrollListener = onScrollListener;
 		Bundle args = new Bundle();
 		OneFragment fragment = new OneFragment();

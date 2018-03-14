@@ -2,11 +2,13 @@ package com.ckr.smoothappbarlayout.listener;
 
 import android.view.View;
 
+import com.scwang.smartrefresh.listener.OnCollapsingListener;
+
 /**
  * Created by Administrator on 2018/3/14.
  */
 
-public interface OnScrollListener {
+public interface OnScrollListener extends OnCollapsingListener,OnFlingListener{
 
     void setScrollTarget(View target);
 

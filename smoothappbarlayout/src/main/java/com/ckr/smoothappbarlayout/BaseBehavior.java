@@ -28,7 +28,7 @@ import android.view.animation.Interpolator;
 import android.widget.OverScroller;
 
 import com.ckr.smoothappbarlayout.listener.OnFlingListener;
-import com.ckr.smoothappbarlayout.listener.OnSmoothScrollListener;
+import com.ckr.smoothappbarlayout.listener.OnScrollListener;
 import com.ckr.smoothappbarlayout.utils.Utils;
 
 import java.lang.ref.WeakReference;
@@ -42,7 +42,7 @@ import static com.scwang.smartrefresh.util.LogUtil.Logw;
 /**
  * Created by PC大佬 on 2018/2/9.
  */
-public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSmoothScrollListener {
+public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnScrollListener {
 	private static final String TAG = "BaseBehavior";
 	protected AppBarLayout mAppBarLayout;
 	private DragCallback mDragCallbackListener;
@@ -180,7 +180,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 					Loge(TAG, "run: fling: currY:" + currY + ",y:" + y + ",velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset);
 					if (mCurrentOffset == -mTotalScrollRange && mOnFlingListener != null && !autoScroll && velocityY > 0) {
 						autoScroll = true;
-						mOnFlingListener.onStartFling(velocityY, 0, scrollTarget);
+						mOnFlingListener.onStartFling(scrollTarget,velocityY);
 					} else {
 						if (y != 0) {
 							setTopAndBottomOffset(y);

@@ -295,7 +295,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 	}
 
 	@Override
-	public void onStartFling(float velocityY, int dy, View target) {
+	public void onStartFling(View target,float velocityY) {
 		Logd(TAG, "onStartFling: fling: velocityY:" + velocityY);
 		if (mSmoothScrollListener != null) {
 			int currentOffset = mSmoothScrollListener.getCurrentOffset();
@@ -321,6 +321,11 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 				}
 			}
 		}
+	}
+
+	@Override
+	public void onDispatchFling(View view, int mScrollState) {
+
 	}
 
 	@Override
