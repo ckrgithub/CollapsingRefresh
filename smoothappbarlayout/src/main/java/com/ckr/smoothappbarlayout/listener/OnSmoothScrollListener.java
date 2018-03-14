@@ -29,7 +29,7 @@ public interface OnSmoothScrollListener extends OnOffsetListener {
 
 	void setCurrentScrollY(int scrollY);
 
-	void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy);
+	void onScrollChanged(View view, int y, int dy);
 
 	void onScrollValueChanged(View view, int scrollY, boolean onStartNestedFling);
 

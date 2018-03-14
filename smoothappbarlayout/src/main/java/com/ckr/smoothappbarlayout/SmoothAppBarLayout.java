@@ -102,11 +102,11 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmartListener 
 	}
 
 	@Override
-	public void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy) {
+	public void onScrollChanged(View view, int y, int dy) {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		smoothBehavior.onScrollChanged(view, x, y, dx, dy, accuracy);
+		smoothBehavior.onScrollChanged(view,  y,  dy);
 	}
 
 	@Override
@@ -171,7 +171,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmartListener 
 		}
 
 		@Override
-		public void onScrollChanged(View view, int x, int y, int dx, int dy, boolean accuracy) {
+		public void onScrollChanged(View view, int y, int dy) {
 			if (view == mScrollTarget) {
 				Logd(TAG, "onScrollChanged: dy:" + dy + ",y:" + y + ",mCurrentOffset:" + mCurrentOffset);
 				int translationOffset = Math.max(-mTotalScrollRange, -dy );

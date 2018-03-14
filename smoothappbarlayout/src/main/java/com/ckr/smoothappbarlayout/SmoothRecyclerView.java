@@ -159,20 +159,14 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 										Loge(TAG, "onTouchEvent: onScrollChanged  state:" + state + ",dy:" + dy);
 										isInterruptFling = true;
 										if (mTotalScrollY == 0) {
-											mSmoothScrollListener.onScrollChanged(this,
-													computeHorizontalScrollOffset(), 0,
-													0, dy,
-													getLayoutManager().findViewByPosition(0) != null);
+											mSmoothScrollListener.onScrollChanged(this,0,dy);
 										}
 									}
 								} else {
 									if (mTotalScrollY == 0) {
 										Loge(TAG, "onTouchEvent: onScrollChanged  state:" + state + ",dy:" + dy);
 										isInterruptFling = true;
-										mSmoothScrollListener.onScrollChanged(this,
-												computeHorizontalScrollOffset(), 0,
-												0, dy,
-												getLayoutManager().findViewByPosition(0) != null);
+										mSmoothScrollListener.onScrollChanged(this,0,dy);
 									}
 								}
 							}
