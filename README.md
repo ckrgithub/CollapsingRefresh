@@ -1,5 +1,5 @@
 # CollapsingRefresh
-CollapsingToolbarLayout+ViewPager+RecyclerView的刷新功能。最低支持api 16，recyclerView:26.1.0
+CollapsingToolbarLayout+ViewPager+RecyclerView的刷新功能。最低支持api 16，recyclerView:26.1.0。暂时不支持多点触摸刷新。
 
 ## 效果演示
 ![](screenRecorder/Screenshot_2.gif)
