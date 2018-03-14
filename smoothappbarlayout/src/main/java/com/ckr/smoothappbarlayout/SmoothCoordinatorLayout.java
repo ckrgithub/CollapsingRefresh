@@ -5,7 +5,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
-import static com.ckr.smartrefresh.util.LogUtil.Logd;
+import static com.scwang.smartrefresh.util.LogUtil.Logd;
 
 
 /**

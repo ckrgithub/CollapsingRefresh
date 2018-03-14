@@ -10,13 +10,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import com.ckr.collapsingrefresh.R;
 import com.ckr.collapsingrefresh.adapter.MyAdapter;
 import com.ckr.collapsingrefresh.model.AlbumList;
-import com.ckr.smartrefresh.SmartRefreshLayout;
-import com.ckr.smartrefresh.api.RefreshLayout;
-import com.ckr.smartrefresh.listener.OnOffsetListener;
-import com.ckr.smartrefresh.listener.OnRefreshLoadmoreListener;
+import com.scwang.smartrefresh.SmartRefreshLayout;
+import com.scwang.smartrefresh.api.RefreshLayout;
+import com.scwang.smartrefresh.listener.OnOffsetListener;
+import com.scwang.smartrefresh.listener.OnRefreshLoadmoreListener;
 import com.ckr.smoothappbarlayout.SmoothRecyclerView;
 import com.ckr.smoothappbarlayout.listener.OnSmartListener;
-import com.ckr.smartrefresh.util.LogUtil;
+import com.scwang.smartrefresh.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
 import butterknife.BindDimen;
 import butterknife.BindView;
 
-import static com.ckr.smartrefresh.util.LogUtil.Logd;
+import static com.scwang.smartrefresh.util.LogUtil.Logd;
 
 /**
  * Created by PC大佬 on 2018/2/9.

@@ -23,7 +23,7 @@ import butterknife.BindColor;
 import butterknife.BindDimen;
 import butterknife.BindView;
 
-import static com.ckr.smartrefresh.util.LogUtil.Logd;
+import static com.scwang.smartrefresh.util.LogUtil.Logd;
 
 /**
  * Created by PC大佬 on 2018/2/9.

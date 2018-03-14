@@ -30,8 +30,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.ckr.smartrefresh.util.LogUtil.Logd;
-import static com.ckr.smartrefresh.util.LogUtil.Loge;
+import static com.scwang.smartrefresh.util.LogUtil.Logd;
+import static com.scwang.smartrefresh.util.LogUtil.Loge;
 
 
 /**

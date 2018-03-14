@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ckr.smartrefresh.SmartRefreshLayout
+<com.scwang.smartrefresh.SmartRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/refreshLayout"
@@ -11,7 +11,7 @@
     app:srlEnableHeaderTranslationContent="true"
     app:srlEnableLoadmore="true">
 
-    <com.ckr.smartrefresh.header.ClassicsHeader
+    <com.scwang.smartrefresh.header.ClassicsHeader
         android:id="@+id/classicsHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,8 +27,8 @@
         android:paddingRight="5dp"
         android:paddingTop="0dp"/>
 
-    <com.ckr.smartrefresh.footer.ClassicsFooter
+    <com.scwang.smartrefresh.footer.ClassicsFooter
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:srlClassicsSpinnerStyle="Translate"/>
-</com.ckr.smartrefresh.SmartRefreshLayout>
+</com.scwang.smartrefresh.SmartRefreshLayout>
