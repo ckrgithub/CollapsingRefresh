@@ -23,19 +23,11 @@ import com.scwang.smartrefresh.listener.OnCollapsingListener;
 /**
  * Created by PC大佬 on 2018/2/9.
  */
-public interface OnSmoothScrollListener extends OnCollapsingListener {
+public interface OnSmoothScrollListener extends OnCollapsingListener,OnScrollListener {
 
-	void setScrollTarget(View target);
 
-	void setCurrentScrollY(int scrollY);
-
-	void onScrollChanged(View view, int y, int dy);
-
-	void onScrollValueChanged(View view, int scrollY, boolean onStartNestedFling);
-
-	void onFlingFinished(View view, float velocityY);
+	void onStartFling(View view, float velocityY);
 
 	void onDispatchFling(View view, int mScrollState);
 
-	void setOnFlingListener(OnFlingListener onFlingListener);
 }

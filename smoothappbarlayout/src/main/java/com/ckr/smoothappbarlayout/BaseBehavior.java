@@ -149,7 +149,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 
 
 	/**
-	 * {@link AppBarLayout.Behavior}中onStopNestedScroll,onFlingFinished
+	 * {@link AppBarLayout.Behavior}中onStopNestedScroll,onStartFling
 	 * {@link android.support.design.widget.HeaderBehavior}中onInterceptTouchEvent,fling
 	 */
 	private class FlingRunnable implements Runnable {
@@ -180,7 +180,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSm
 					Loge(TAG, "run: fling: currY:" + currY + ",y:" + y + ",velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset);
 					if (mCurrentOffset == -mTotalScrollRange && mOnFlingListener != null && !autoScroll && velocityY > 0) {
 						autoScroll = true;
-						mOnFlingListener.onFlingFinished(velocityY, 0, scrollTarget);
+						mOnFlingListener.onStartFling(velocityY, 0, scrollTarget);
 					} else {
 						if (y != 0) {
 							setTopAndBottomOffset(y);

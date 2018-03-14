@@ -201,7 +201,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 											Logd(TAG, "onTouchEvent: fling: forwardDirection:" + forwardDirection + ",yvel：" + yvel
 													+ ",mTotalFlingDistance:" + mTotalFlingDistance + ",mDiffFlingDistance:" + mDiffFlingDistance);
 										}
-										mSmoothScrollListener.onFlingFinished(this, yvel);
+										mSmoothScrollListener.onStartFling(this, yvel);
 									}
 								}
 							}
@@ -295,27 +295,27 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 	}
 
 	@Override
-	public void onFlingFinished(float velocityY, int dy, View target) {
-		Logd(TAG, "onFlingFinished: fling: velocityY:" + velocityY);
+	public void onStartFling(float velocityY, int dy, View target) {
+		Logd(TAG, "onStartFling: fling: velocityY:" + velocityY);
 		if (mSmoothScrollListener != null) {
 			int currentOffset = mSmoothScrollListener.getCurrentOffset();
 			int totalScrollRange = mSmoothScrollListener.getTotalCollapsedRange();
-			Logd(TAG, "onFlingFinished: fling:  currentOffset:" + currentOffset + ",mDiffFlingDistance:" + mDiffFlingDistance);
+			Logd(TAG, "onStartFling: fling:  currentOffset:" + currentOffset + ",mDiffFlingDistance:" + mDiffFlingDistance);
 			if (velocityY > 0 && currentOffset == -totalScrollRange) {
 				if (target instanceof RecyclerView) {
 					SmoothRecyclerView recyclerView = (SmoothRecyclerView) target;
 					double fDistance = recyclerView.mDiffFlingDistance;
 					double flingDistance = recyclerView.mTotalFlingDistance;
-					Logd(TAG, "onFlingFinished: fling:  fDist:" + fDistance + ",mTotalFlingDistance:" + flingDistance);
+					Logd(TAG, "onStartFling: fling:  fDist:" + fDistance + ",mTotalFlingDistance:" + flingDistance);
 					int flingY = (int) (velocityY * Math.min(fDistance, flingDistance * 3 / 4f) / flingDistance);
 					int subVelocity = getVelocityWithDistance(fDistance);
 					int subVelocity2 = getVelocityWithDistance(flingDistance - fDistance);
 					int sumVelocity = getVelocityWithDistance(flingDistance);
-					Logd(TAG, "onFlingFinished: fling:  subVelocity:" + subVelocity + ",subV2:" + subVelocity2 + ",sumVelocity:" + sumVelocity);
+					Logd(TAG, "onStartFling: fling:  subVelocity:" + subVelocity + ",subV2:" + subVelocity2 + ",sumVelocity:" + sumVelocity);
 					boolean b = Math.abs(flingY) > 0;
 					if (b) {
 						recyclerView.fling(0, (int) subVelocity);
-						Logd(TAG, "onFlingFinished: fling: ,flingY:" + flingY);
+						Logd(TAG, "onStartFling: fling: ,flingY:" + flingY);
 						mScrollState = SCROLL_STATE_IDLE;
 					}
 				}

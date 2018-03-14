@@ -7,5 +7,5 @@ import android.view.View;
  */
 
 public interface OnFlingListener {
-    void onFlingFinished(float velocityY, int dy, View target);
+    void onStartFling(float velocityY, int dy, View target);
 }

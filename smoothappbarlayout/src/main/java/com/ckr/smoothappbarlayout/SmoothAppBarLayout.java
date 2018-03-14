@@ -134,11 +134,11 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmartListener 
 	}
 
 	@Override
-	public void onFlingFinished(View view,float velocityY) {
+	public void onStartFling(View view, float velocityY) {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		smoothBehavior.onFlingFinished(view,velocityY);
+		smoothBehavior.onStartFling(view,velocityY);
 	}
 
 	@Override
@@ -202,7 +202,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmartListener 
 		}
 
 		@Override
-		public void onFlingFinished(View view,float velocityY) {
+		public void onStartFling(View view, float velocityY) {
 			fling(mAppBarLayout, view,velocityY, false);
 		}
 
