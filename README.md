@@ -1,5 +1,5 @@
 # CollapsingRefresh
-CollapsingToolbarLayout+ViewPager+RecyclerView的刷新功能。
+CollapsingToolbarLayout+ViewPager+RecyclerView的刷新功能。最低支持api 16，recyclerView:26.1.0
 
 ## 效果演示
 ![](screenRecorder/Screenshot_2.gif)
@@ -7,9 +7,10 @@ CollapsingToolbarLayout+ViewPager+RecyclerView的刷新功能。
 ## Demo
 [下载 APK](apk/app-debug.apk)
 
-## 布局引用
+## 功能及使用
+### 1.布局引用
 ```
-     <com.ckr.smartrefresh.SmartRefreshLayout
+     <com.scwang.smartrefresh.SmartRefreshLayout
 	    xmlns:android="http://schemas.android.com/apk/res/android"
 	    xmlns:app="http://schemas.android.com/apk/res-auto"
 	    android:id="@+id/refreshLayout"
@@ -21,7 +22,7 @@ CollapsingToolbarLayout+ViewPager+RecyclerView的刷新功能。
 	    app:srlEnableHeaderTranslationContent="true"
 	    app:srlEnableLoadmore="true">
 	
-	    <com.ckr.smartrefresh.header.ClassicsHeader
+	    <com.scwang.smartrefresh.header.ClassicsHeader
 	        android:id="@+id/classicsHeader"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
@@ -37,11 +38,11 @@ CollapsingToolbarLayout+ViewPager+RecyclerView的刷新功能。
 	        android:paddingRight="5dp"
 	        android:paddingTop="0dp"/>
 	
-	    <com.ckr.smartrefresh.footer.ClassicsFooter
+	    <com.scwang.smartrefresh.footer.ClassicsFooter
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        app:srlClassicsSpinnerStyle="Translate"/>
-	</com.ckr.smartrefresh.SmartRefreshLayout>
+	</com.scwang.smartrefresh.SmartRefreshLayout>
 ```
 
 ## 感谢
