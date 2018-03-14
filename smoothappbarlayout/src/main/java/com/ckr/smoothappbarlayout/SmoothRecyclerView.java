@@ -32,7 +32,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 	private int mTotalScrollY;
 	private int mScrollState;
 	private boolean mIsBeingDragged;
-	private boolean isInterruptFling;
+	private boolean isInterruptFling;//拦截touch事件
 	private boolean forwardDirection;//滑动方向
 
 	// A context-specific coefficient adjusted to physical values.
@@ -85,8 +85,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		switch (action) {
 			case MotionEvent.ACTION_DOWN: {
 				mIsBeingDragged = false;
-				mLastMotionY = calculateMultiPointTouch(ev, action);
-//				mLastMotionY = (int) (ev.getRawY() + 0.5f);
+				mLastMotionY = getRawY(ev);
 				mActivePointerId = ev.getPointerId(0);
 				break;
 			}
@@ -95,8 +94,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 				if (pointerIndex == -1) {
 					break;
 				}
-				mLastMotionY = calculateMultiPointTouch(ev, action);
-//				mLastMotionY = (int) (ev.getRawY() + 0.5f);
+				mLastMotionY = getRawY(ev);
 				mIsBeingDragged = true;
 				break;
 			}
@@ -111,20 +109,8 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		return super.onInterceptTouchEvent(ev);
 	}
 
-	private float calculateMultiPointTouch(MotionEvent ev, int action) {
-		boolean pointerUp = MotionEvent.ACTION_POINTER_UP == action;
-		int skipIndex = pointerUp ? ev.getActionIndex() : -1;
-
-		float sumY = 0;
-		int count = ev.getPointerCount();
-		for (int i = 0; i < count; i++) {
-			if (skipIndex == i) {
-				continue;
-			}
-			sumY += ev.getRawY() + 0.5f;
-		}
-		int div = pointerUp ? count - 1 : count;
-		return sumY / div;
+	private float getRawY(MotionEvent ev) {
+		return ev.getRawY() + 0.5f;
 	}
 
 	private void addEventToVelocityTracker(MotionEvent ev) {
@@ -139,6 +125,11 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		}
 	}
 
+	/**
+	 * see to {@link android.support.design.widget.HeaderBehavior}
+	 * @param e
+	 * @return
+	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
 		isInterruptFling = false;
@@ -166,36 +157,30 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 					switch (action) {
 						case MotionEvent.ACTION_DOWN:
 							mActivePointerId = e.getPointerId(0);
-							mLastMotionY = calculateMultiPointTouch(e, action);
-//							mLastMotionY = (int) (e.getRawY() + 0.5f);
+							mLastMotionY = getRawY(e);
 							break;
 						case MotionEvent.ACTION_MOVE:
-							float y = calculateMultiPointTouch(e, action);
+							float y = getRawY(e);
 							int dy = (int) (mLastMotionY - y);
 							if (dy > 0) {
 								forwardDirection = true;
 							} else {
 								forwardDirection = false;
 							}
-							if (!mIsBeingDragged) {
-								mIsBeingDragged = true;
-							}
-							if (mIsBeingDragged) {
-								mLastMotionY = y;
-								if (state == 2) {
-									if (!forwardDirection) {
-										Loge(TAG, "onTouchEvent: onScrollChanged  state:" + state + ",dy:" + dy+",currentOffset:"+currentOffset);
-										isInterruptFling = true;
-										if (mTotalScrollY == 0) {
-											mSmoothScrollListener.onScrollChanged(this, 0, dy);
-										}
-									}
-								} else {
+							mLastMotionY = y;
+							if (state == 2) {
+								if (!forwardDirection) {
+									isInterruptFling = true;
+									Loge(TAG, "onTouchEvent: onScrollChanged  state:" + state + ",dy:" + dy + ",currentOffset:" + currentOffset);
 									if (mTotalScrollY == 0) {
-										Loge(TAG, "onTouchEvent: onScrollChanged  state:" + state + ",dy:" + dy+",currentOffset:"+currentOffset);
-										isInterruptFling = true;
 										mSmoothScrollListener.onScrollChanged(this, 0, dy);
 									}
+								}
+							} else {
+								if (mTotalScrollY == 0) {
+									Loge(TAG, "onTouchEvent: onScrollChanged  state:" + state + ",dy:" + dy + ",currentOffset:" + currentOffset);
+									isInterruptFling = true;
+									mSmoothScrollListener.onScrollChanged(this, 0, dy);
 								}
 							}
 							break;
@@ -210,45 +195,39 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 							if (!forwardDirection && currentOffset == 0) {
 							} else if (mTotalScrollY == 0) {
 								isInterruptFling = true;
-								if (mVelocityTracker != null) {
-									eventAddedToVelocityTracker = true;
-									mVelocityTracker.addMovement(e);
-									int minFlingVelocity = getMinFlingVelocity();
-									int maxFlingVelocity = getMaxFlingVelocity();
-									mVelocityTracker.computeCurrentVelocity(VELOCITY_UNITS, maxFlingVelocity);
-									float yvel = -mVelocityTracker.getYVelocity(mActivePointerId);
-									float absY = Math.abs(yvel);
-									boolean fling = (absY > minFlingVelocity);
-									Logd(TAG, "onTouchEvent: fling: minFlingVelocity:" + minFlingVelocity + ",maxFlingVelocity:" + maxFlingVelocity + ",yvel：" + yvel);
-									if (fling) {
-										yvel = forwardDirection ? Math.abs(yvel) : -Math.abs(yvel);
-										if (forwardDirection) {
-											mTotalFlingDistance = getSplineFlingDistance((int) yvel);
-											mDiffFlingDistance = mTotalFlingDistance - currentOffset - totalScrollRange;
-//                                        int flingDuration = getSplineFlingDuration((int) yvel);
-											Logd(TAG, "onTouchEvent: fling: forwardDirection:" + forwardDirection + ",yvel：" + yvel
-													+ ",mTotalFlingDistance:" + mTotalFlingDistance + ",mDiffFlingDistance:" + mDiffFlingDistance);
-										}
-										mSmoothScrollListener.onStartFling(this, yvel);
+								eventAddedToVelocityTracker = true;
+								addEventToVelocityTracker(e);
+								int minFlingVelocity = getMinFlingVelocity();
+								int maxFlingVelocity = getMaxFlingVelocity();
+								mVelocityTracker.computeCurrentVelocity(VELOCITY_UNITS, maxFlingVelocity);
+								float yvel = -mVelocityTracker.getYVelocity(mActivePointerId);
+								float absY = Math.abs(yvel);
+								boolean fling = (absY > minFlingVelocity);
+								Logd(TAG, "onTouchEvent: fling: minFlingVelocity:" + minFlingVelocity + ",maxFlingVelocity:" + maxFlingVelocity + ",yvel：" + yvel);
+								if (fling) {
+									yvel = forwardDirection ? Math.abs(yvel) : -Math.abs(yvel);
+									if (forwardDirection) {
+										mTotalFlingDistance = getSplineFlingDistance((int) yvel);
+										mDiffFlingDistance = mTotalFlingDistance - currentOffset - totalScrollRange;
+										Logd(TAG, "onTouchEvent: fling: forwardDirection:" + forwardDirection + ",yvel：" + yvel
+												+ ",mTotalFlingDistance:" + mTotalFlingDistance + ",mDiffFlingDistance:" + mDiffFlingDistance);
 									}
+									mSmoothScrollListener.onStartFling(this, yvel);
 								}
 							}
 							resetTouch();
 							break;
 					}
-
 					if (isInterruptFling) {
-						if (!eventAddedToVelocityTracker && mVelocityTracker != null) {
-							mVelocityTracker.addMovement(e);
+						if (!eventAddedToVelocityTracker) {
+							addEventToVelocityTracker(e);
 						}
 						return true;
 					}
 				}
 			}
 		}
-		if (!eventAddedToVelocityTracker && mVelocityTracker != null) {
-			mVelocityTracker.addMovement(e);
-		}
+		addEventToVelocityTracker(e);
 		return super.onTouchEvent(e);
 	}
 
@@ -262,18 +241,6 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		final double l = getSplineDeceleration(velocity);
 		final double decelMinusOne = DECELERATION_RATE - 1.0;
 		return mFlingFriction * mPhysicalCoeff * Math.exp(DECELERATION_RATE / decelMinusOne * l);
-	}
-
-	/**
-	 * {@link android.widget.OverScroller}
-	 *
-	 * @param velocity
-	 * @return
-	 */
-	private int getSplineFlingDuration(int velocity) {
-		final double l = getSplineDeceleration(velocity);
-		final double decelMinusOne = DECELERATION_RATE - 1.0;
-		return (int) (1000.0 * Math.exp(l / decelMinusOne));
 	}
 
 	/**
