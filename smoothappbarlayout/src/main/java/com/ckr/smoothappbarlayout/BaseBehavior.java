@@ -60,7 +60,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	private float mPhysicalCoeff;
 	private double flingDistance;
 
-	boolean isNestedPreScroll;
 	public int flagScrollY;
 	private int lastScrollY;
 	protected int mTotalScrollRange;
@@ -223,8 +222,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 
 	@Override
 	public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, int dx, int dy, int[] consumed, int type) {
-		Logd(TAG, "NestedScrollingParent,onNestedPreScroll: dy:" + dy + ",syncOffset:" + isNestedPreScroll);
-		isNestedPreScroll = true;
+		Logd(TAG, "NestedScrollingParent,onNestedPreScroll: dy:" + dy + ",syncOffset:" );
 		if (dy != 0) {
 			if (dy < 0) {
 				// We're scrolling down
@@ -329,12 +327,8 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 			return;
 		}
 		Loge(TAG, "syncOffset: newOffset:" + newOffset
-				+ ",isFling：" + isFling + ",isNestedPreScroll：" + isNestedPreScroll + ",mCurrentOffset:" + mCurrentOffset);
+				+ ",isFling：" + isFling + ",mCurrentOffset:" + mCurrentOffset);
 		if (isFling) {
-			return;
-		}
-		if (isNestedPreScroll) {
-			isNestedPreScroll = false;
 			return;
 		}
 		if (mCurrentOffset == -mTotalScrollRange && newOffset < 0) {
