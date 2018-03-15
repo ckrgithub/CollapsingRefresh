@@ -216,7 +216,6 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 									mSmoothScrollListener.onStartFling(this, yvel);
 								}
 							}
-							forwardDirection=false;
 							resetTouch();
 							break;
 					}
@@ -231,7 +230,6 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 			}
 		}
 		addEventToVelocityTracker(e);
-//		forwardDirection=false;
 		return super.onTouchEvent(e);
 	}
 
@@ -348,6 +346,11 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		super.onScrolled(dx, dy);
 		mTotalScrollY += dy;
 		Logd(TAG, "onScrolled() called with: mTotalScrollY = [" + mTotalScrollY + "], dy = [" + dy + "]");
+		if (dy > 0) {
+			forwardDirection = true;
+		} else {
+			forwardDirection = false;
+		}
 		if (mSmoothScrollListener != null) {
 			mSmoothScrollListener.onScrollValueChanged(this, mTotalScrollY, false);
 		}

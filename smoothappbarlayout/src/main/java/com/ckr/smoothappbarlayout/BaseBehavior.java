@@ -62,12 +62,19 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	private float mPhysicalCoeff;
 	private double flingDistance;
 
-
 	boolean isInterrupt;
 	public int flagScrollY;
 	private int lastScrollY;
 	private boolean noHandle;
 	protected int mTotalScrollRange;
+
+	static final Interpolator sQuinticInterpolator = new Interpolator() {
+		@Override
+		public float getInterpolation(float t) {
+			t -= 1.0f;
+			return t * t * t * t * t + 1.0f;
+		}
+	};
 
 	public BaseBehavior() {
 
@@ -80,7 +87,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	@Override
 	public boolean onMeasureChild(CoordinatorLayout coordinatorLayout, AppBarLayout child, int parentWidthMeasureSpec, int widthUsed,
 								  int parentHeightMeasureSpec, int heightUsed) {
-		if (!mIsOnInit && coordinatorLayout != null && child != null) {
+		if (!mIsOnInit) {
 			mIsOnInit = true;
 			init(child);
 		}
@@ -105,27 +112,20 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				* 0.84f; // look and feel tuning
 	}
 
-	static final Interpolator sQuinticInterpolator = new Interpolator() {
-		@Override
-		public float getInterpolation(float t) {
-			t -= 1.0f;
-			return t * t * t * t * t + 1.0f;
-		}
-	};
-
 	/**
 	 * {@link android.support.design.widget.HeaderBehavior}中fling()
 	 *
 	 * @param layout
+	 * @param target
 	 * @param velocityY
 	 * @param isOverScroll
 	 * @return
 	 */
 	final boolean fling(AppBarLayout layout, View target, float velocityY, boolean isOverScroll) {
-		if (mScrollTarget != target) {
+		if (mScrollTarget != target) {//拦截非当前的滚动view的fling事件
 			return false;
 		}
-		Logd(TAG, "fling: run: ,velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset + ",mTotalScrollY:" + mTotalScrollY);
+		Logd(TAG, "fling: velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset + ",mTotalScrollY:" + mTotalScrollY);
 		if (mFlingRunnable != null) {
 			layout.removeCallbacks(mFlingRunnable);
 			mFlingRunnable = null;
@@ -133,11 +133,9 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		if (mScroller == null) {
 			mScroller = new OverScroller(layout.getContext(), sQuinticInterpolator);
 		}
-		// TODO: 2018/2/22
 		mScroller.fling(0, 0, 0, Math.round(velocityY)
 				, 0, 0, -mTotalScrollRange, mTotalScrollRange);
 		boolean canScroll = mScroller.computeScrollOffset();
-		Logd(TAG, "fling: run: canScroller: " + canScroll);
 		if (canScroll) {
 			mFlingRunnable = new FlingRunnable(layout, target, velocityY, isOverScroll);
 			ViewCompat.postOnAnimation(layout, mFlingRunnable);
@@ -149,8 +147,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 
 
 	/**
-	 * {@link AppBarLayout.Behavior}中onStopNestedScroll,onStartFling
-	 * {@link android.support.design.widget.HeaderBehavior}中onInterceptTouchEvent,fling
+	 * {@link android.support.design.widget.HeaderBehavior.FlingRunnable}
 	 */
 	private class FlingRunnable implements Runnable {
 		private final AppBarLayout mLayout;
