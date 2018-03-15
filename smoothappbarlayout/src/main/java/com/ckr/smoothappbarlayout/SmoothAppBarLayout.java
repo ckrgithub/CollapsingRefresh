@@ -170,7 +170,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 				Logd(TAG, "onScrollChanged: dy:" + dy + ",y:" + y + ",mCurrentOffset:" + mCurrentOffset);
 				int translationOffset = Math.max(-mTotalScrollRange, -dy);
 				Loge(TAG, "onScrollChanged: translationOffset:" + translationOffset);
-				syncOffset(view, translationOffset, y);
+				syncOffset(view, translationOffset);
 			}
 		}
 
