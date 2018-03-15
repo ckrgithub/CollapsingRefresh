@@ -94,14 +94,6 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 	}
 
 	@Override
-	public void setCurrentScrollY(int scrollY) {
-		if (smoothBehavior == null) {
-			initBehavior();
-		}
-		smoothBehavior.setCurrentScrollY(scrollY);
-	}
-
-	@Override
 	public void onScrollChanged(View view, int y, int dy) {
 		if (smoothBehavior == null) {
 			initBehavior();

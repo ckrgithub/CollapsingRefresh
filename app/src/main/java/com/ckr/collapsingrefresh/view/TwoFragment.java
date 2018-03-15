@@ -95,7 +95,7 @@ public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListen
 		AlbumList albumList = new AlbumList();
 		albumList.setTitle("约定");
 		try {
-			for (int i = 0; i < 8; i++) {
+			for (int i = 0; i < 12; i++) {
 				AlbumList clone = (AlbumList) albumList.clone();
 				clone.setUserName("item  " + i);
 				if (i % 2 == 0) {
@@ -124,10 +124,6 @@ public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListen
 	@Override
 	public void refreshFragment() {
 		LogUtil.Logd(TAG, "refreshFragment: isVisible:" + isVisible);
-		if (isVisible) {
-//			scrollListener.setScrollTarget(recyclerView);
-			recyclerView.setCurrentScrollY();
-		}
 	}
 
 	@Override

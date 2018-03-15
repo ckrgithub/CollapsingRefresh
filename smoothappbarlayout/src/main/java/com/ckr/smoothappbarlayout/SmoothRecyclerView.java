@@ -276,12 +276,6 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		}
 	}
 
-	public void setCurrentScrollY() {
-		if (mSmoothScrollListener != null) {
-			mSmoothScrollListener.setCurrentScrollY(mTotalScrollY);
-		}
-	}
-
 	public void setOnSmoothScrollListener(OnSmoothScrollListener listener) {
 		this.mSmoothScrollListener = listener;
 		listener.setOnFlingListener(this);
@@ -358,6 +352,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		}
 		if (mTotalScrollY == 0 && dy < 0) {
 			if (mSmoothScrollListener != null) {
+				Logd(TAG, "fling:: startDispatch");
 				mSmoothScrollListener.onDispatchFling(this, SCROLL_STATE_IDLE);
 			}
 		}
