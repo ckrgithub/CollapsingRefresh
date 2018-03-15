@@ -60,6 +60,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	private float mPhysicalCoeff;
 	private double flingDistance;
 
+	boolean isNestedPreScroll;
 	public int flagScrollY;
 	private int lastScrollY;
 	protected int mTotalScrollRange;
@@ -208,7 +209,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	@Override
 	public boolean onNestedFling(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target,
 								 float velocityX, float velocityY, boolean consumed) {
-		Loge(TAG, "NestedScrollingParent,onNestedFling: fling: velocityY = [" + velocityY + "], consumed = [" + consumed + "]");
+		Loge(TAG, "flagOrder: NestedScrollingParent,onNestedFling: fling: velocityY = [" + velocityY + "], consumed = [" + consumed + "]");
 		if (mScrollTarget != target) {
 			return true;
 		}
@@ -222,7 +223,8 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 
 	@Override
 	public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, int dx, int dy, int[] consumed, int type) {
-		Logd(TAG, "NestedScrollingParent,onNestedPreScroll: dy:" + dy + ",syncOffset:" );
+		Logw(TAG, "NestedScrollingParent,onNestedPreScroll: dy:" + dy + ",mTotalScrollY：" + mTotalScrollY);
+		isNestedPreScroll = true;
 		if (dy != 0) {
 			if (dy < 0) {
 				// We're scrolling down
@@ -250,7 +252,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 
 	@Override
 	public void onNestedScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
-		Loge(TAG, "NestedScrollingParent,onNestedScroll, dyConsumed = [" + dyConsumed + "]" + ", dyUnconsumed = [" + dyUnconsumed + "]" + ",target:" + target);
+		Loge(TAG, "flagOrder:NestedScrollingParent,onNestedScroll, dyConsumed = [" + dyConsumed + "]" + ", dyUnconsumed = [" + dyUnconsumed + "]" + ",target:" + target);
 	}
 
 	protected void dispatchFling(AppBarLayout child, View target) {
@@ -260,7 +262,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		if (this.velocityY == 0) {
 			return;
 		}
-		Logd(TAG, "NestedScrollingParent  dispatchFling: mTotalScrollY:" + mTotalScrollY);
+		Logd(TAG, "flagOrder NestedScrollingParent  dispatchFling: mTotalScrollY:" + mTotalScrollY);
 		float velocityY = this.velocityY;
 		this.velocityY = 0;
 		flingDistance = getSplineFlingDistance((int) velocityY);
@@ -322,13 +324,17 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		}
 	}
 
-	protected void syncOffset(View view, int newOffset) {
+	protected void syncOffset(View view, int newOffset/*, final int mTotalScrollY*/) {
+		Logd(TAG, "syncOffset: newOffset:" + newOffset + ",mTotalScrollY:" + mTotalScrollY
+				+ ",isFling：" + isFling + ",isNestedPreScroll：" + isNestedPreScroll + ",mCurrentOffset:" + mCurrentOffset);
 		if (mScrollTarget != view) {
 			return;
 		}
-		Loge(TAG, "syncOffset: newOffset:" + newOffset
-				+ ",isFling：" + isFling + ",mCurrentOffset:" + mCurrentOffset);
 		if (isFling) {
+			return;
+		}
+		if (isNestedPreScroll) {
+			isNestedPreScroll = false;
 			return;
 		}
 		if (mCurrentOffset == -mTotalScrollRange && newOffset < 0) {
@@ -336,6 +342,27 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		} else if (mCurrentOffset == 0 && newOffset > 0) {
 			return;
 		}
+//		Logd(TAG, "syncOffset: noHandle:" + noHandle + ",lastScrollY:" + lastScrollY);
+//		if (lastScrollY != 0) {
+//			int top = mAppBarLayout.getTop();
+//			if (top != -mTotalScrollRange) {
+//				if (mTotalScrollY <= lastScrollY) {
+//					lastScrollY = mTotalScrollY;
+//					noHandle = true;
+//					return;
+//				} else {
+//					newOffset = -mTotalScrollY + lastScrollY;
+//					newOffset = newOffset * 2;
+//					lastScrollY = mTotalScrollY;
+//					noHandle = false;
+//				}
+//			} else {
+//				noHandle = false;
+//			}
+//		} else {
+//			noHandle = false;
+//		}
+		Loge(TAG, "syncOffset: newOffset:" + newOffset );
 		setTopAndBottomOffset(newOffset);
 	}
 
