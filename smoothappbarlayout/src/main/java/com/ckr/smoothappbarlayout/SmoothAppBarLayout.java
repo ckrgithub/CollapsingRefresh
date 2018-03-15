@@ -167,7 +167,9 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 
 		@Override
 		public void setScrollTarget(View target) {
-			mScrollTarget = target;
+			if (mScrollTarget != target) {
+				mScrollTarget = target;
+			}
 		}
 
 		@Override

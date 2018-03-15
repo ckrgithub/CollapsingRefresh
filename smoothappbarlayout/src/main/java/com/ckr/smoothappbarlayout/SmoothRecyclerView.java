@@ -80,6 +80,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		if (action == MotionEvent.ACTION_MOVE && mIsBeingDragged) {
 			return true;
 		}
+		mSmoothScrollListener.setScrollTarget(this);
 		ensureVelocityTracker();
 		addEventToVelocityTracker(ev);
 		switch (action) {
@@ -100,7 +101,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 			}
 			case MotionEvent.ACTION_CANCEL:
 			case MotionEvent.ACTION_UP: {
-				mActivePointerId=-1;
+				mActivePointerId = -1;
 				mIsBeingDragged = false;
 				resetTouch();
 				break;
@@ -128,6 +129,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 
 	/**
 	 * see to {@link android.support.design.widget.HeaderBehavior}
+	 *
 	 * @param e
 	 * @return
 	 */
@@ -152,7 +154,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 				}
 			}
 			Logd(TAG, "onTouchEvent: action:" + action + ",state:" + state + ", mScrollState:" + mScrollState
-					+ ",abs:" + abs +",totalScrollRange:"+totalScrollRange+ ",mTotalScrollY：" + mTotalScrollY);
+					+ ",abs:" + abs + ",totalScrollRange:" + totalScrollRange + ",mTotalScrollY：" + mTotalScrollY);
 			if (state > 0) {
 				if (mScrollState != SCROLL_STATE_SETTLING) {
 					switch (action) {

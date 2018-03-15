@@ -45,7 +45,6 @@ import static com.scwang.smartrefresh.util.LogUtil.Logw;
 public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnScrollListener {
 	private static final String TAG = "BaseBehavior";
 	protected AppBarLayout mAppBarLayout;
-	private DragCallback mDragCallbackListener;
 	private boolean mIsOnInit = false;
 	volatile protected View mScrollTarget;
 	private Runnable mFlingRunnable;
@@ -96,15 +95,12 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 
 	private void init(final AppBarLayout child) {
 		this.mAppBarLayout = child;
-		if (mDragCallbackListener == null) {
-			mDragCallbackListener = new DragCallback() {
-				@Override
-				public boolean canDrag(AppBarLayout appBarLayout) {
-					return false;
-				}
-			};
-			setDragCallback(mDragCallbackListener);
-		}
+		setDragCallback(new DragCallback() {//不允许head布局拖动
+			@Override
+			public boolean canDrag(AppBarLayout appBarLayout) {
+				return false;
+			}
+		});
 		final float ppi = child.getResources().getDisplayMetrics().density * 160.0f;
 		mPhysicalCoeff = SensorManager.GRAVITY_EARTH // g (m/s^2)
 				* 39.37f // inch/meter
@@ -215,8 +211,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	@Override
 	public boolean onNestedFling(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target,
 								 float velocityX, float velocityY, boolean consumed) {
-		Loge(TAG, "flagOrder: NestedScrollingParent,onNestedFling: fling: [" + velocityX + "], velocityY = [" + velocityY + "], consumed = [" + consumed + "]"
-				+ "，mTotalScrollY：" + mTotalScrollY);
+		Loge(TAG, "flagOrder: NestedScrollingParent,onNestedFling: fling: velocityY = [" + velocityY + "], consumed = [" + consumed + "]");
 		if (mScrollTarget != target) {
 			return true;
 		}
@@ -228,19 +223,11 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		return true;
 	}
 
-	@Override
-	public boolean onNestedPreFling(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, float velocityX, float velocityY) {
-		Logd(TAG, "flagOrder NestedScrollingParent,onNestedPreFling, fling = [" + velocityX + "], velocityY = [" + velocityY + "]");
-		return super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY);
-	}
 
 	@Override
 	public boolean onStartNestedScroll(CoordinatorLayout parent, AppBarLayout child, View directTargetChild, View target, int nestedScrollAxes, int type) {
 		Logd(TAG, "flagOrder:NestedScrollingParent, onStartNestedScroll = [" + target + "]");
 		mScrollTarget = target;
-//		if (this.velocityY>0) {
-//			this.velocityY=0;
-//		}
 		return super.onStartNestedScroll(parent, child, directTargetChild, target, nestedScrollAxes, type);
 	}
 

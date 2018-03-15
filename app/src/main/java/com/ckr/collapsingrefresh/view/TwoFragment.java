@@ -125,7 +125,7 @@ public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListen
 	public void refreshFragment() {
 		LogUtil.Logd(TAG, "refreshFragment: isVisible:" + isVisible);
 		if (isVisible) {
-			scrollListener.setScrollTarget(recyclerView);
+//			scrollListener.setScrollTarget(recyclerView);
 			recyclerView.setCurrentScrollY();
 		}
 	}

@@ -123,7 +123,7 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
 	@Override
 	public void refreshFragment() {
 		if (isVisible) {
-			scrollListener.setScrollTarget(recyclerView);
+//			scrollListener.setScrollTarget(recyclerView);
 			recyclerView.setCurrentScrollY();
 		}
 	}
