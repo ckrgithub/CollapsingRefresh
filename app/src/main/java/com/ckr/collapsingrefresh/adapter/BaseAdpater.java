@@ -43,6 +43,28 @@ public abstract class BaseAdpater<T,E extends BaseViewHolder> extends RecyclerVi
         notifyDataSetChanged();
     }
 
+    public void updateItem(int start, T t) {
+        if (t == null) {
+            return;
+        }
+        if (start < 0 && start > data.size()) {
+            throw new ArrayIndexOutOfBoundsException(start);
+        }
+        data.add(start, t);
+        int len = data.size() - start;
+        notifyItemRangeChanged(start, len);
+    }
+
+    public void updateItem(T t) {
+        if (t == null) {
+            return;
+        }
+        int len = data.size();
+        data.add(t);
+        notifyItemRangeChanged(len, 1);
+    }
+
+
     @Override
     public E onCreateViewHolder(ViewGroup parent, int viewType) {
         return getViewHolder(LayoutInflater.from(mContext).inflate(getLayoutId(viewType), parent, false), viewType);

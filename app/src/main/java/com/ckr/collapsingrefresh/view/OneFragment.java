@@ -42,6 +42,7 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
 	private boolean isVisible;
 	private Handler handler = new Handler(Looper.myLooper());
 	private int verticalOffset;
+	private int num;
 
 
 	public static OneFragment newInstance(OnSmoothScrollListener onScrollListener) {
@@ -99,8 +100,10 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
 				clone.setUserName("item  " + i);
 				if (i % 2 == 0) {
 					clone.setDrawableId(R.mipmap.banner);
+					clone.setType(0);
 				} else {
 					clone.setDrawableId(R.mipmap.banner2);
+					clone.setType(1);
 				}
 				datas.add(clone);
 			}
@@ -132,6 +135,7 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
 				public void run() {
 					if (smartRefreshLayout != null) {
 						smartRefreshLayout.finishRefresh();
+						refreshUi();
 					}
 				}
 			}, 2000);
@@ -146,10 +150,41 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
 				public void run() {
 					if (smartRefreshLayout != null) {
 						smartRefreshLayout.finishLoadmore();
+						loadMoreUi();
 					}
 				}
 			}, 2000);
 		}
+	}
+
+	private void refreshUi() {
+		AlbumList albumList = new AlbumList();
+		albumList.setTitle("风继续吹");
+		if (num % 2 == 0) {
+			albumList.setDrawableId(R.mipmap.banner2);
+			albumList.setType(1);
+		} else {
+			albumList.setDrawableId(R.mipmap.banner);
+			albumList.setType(0);
+		}
+		albumList.setUserName("refresh  " + num);
+		num++;
+		mAdapter.updateItem(0, albumList);
+	}
+
+	private void loadMoreUi() {
+		AlbumList albumList = new AlbumList();
+		albumList.setTitle("风继续吹");
+		if (num % 2 == 0) {
+			albumList.setDrawableId(R.mipmap.banner);
+			albumList.setType(0);
+		} else {
+			albumList.setDrawableId(R.mipmap.banner2);
+			albumList.setType(1);
+		}
+		albumList.setUserName("loadMore  " + num);
+		num++;
+		mAdapter.updateItem(albumList);
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public class MyAdapter extends BaseAdpater<AlbumList, MyAdapter.MyHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        return position % 2;
+        return data.get(position).getType();
     }
 
     @Override

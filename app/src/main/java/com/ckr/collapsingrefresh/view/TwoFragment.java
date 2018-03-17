@@ -100,8 +100,10 @@ public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListen
 				clone.setUserName("item  " + i);
 				if (i % 2 == 0) {
 					clone.setDrawableId(R.mipmap.banner2);
+					albumList.setType(0);
 				} else {
 					clone.setDrawableId(R.mipmap.banner);
+					albumList.setType(1);
 				}
 				datas.add(clone);
 			}
