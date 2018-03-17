@@ -45,11 +45,11 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	private static final String TAG = "BaseBehavior";
 	protected AppBarLayout mAppBarLayout;
 	private boolean mIsOnInit = false;
-	protected View mScrollTarget;
+	protected View mScrollTarget;//可滚动的view
 	private Runnable mFlingRunnable;
 	private OverScroller mScroller;
-	protected int mTotalScrollY;
-	private boolean isFling;
+	protected int mTotalScrollY;//mScrollTarget总共滚动的距离
+	protected int mScrollYWhenPreFling;//mScrollTarget开始fling时的滚动距离
 	private static final int VELOCITY_UNITS = 1000;//1000 provides pixels per second
 
 	private ViewOffsetHelper mViewOffsetHelper;
@@ -61,7 +61,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	private double flingDistance;
 
 	boolean isNestedPreScroll;
-	public int flagScrollY;
+
 	protected int mTotalScrollRange;
 
 	static final Interpolator sQuinticInterpolator = new Interpolator() {
@@ -163,11 +163,10 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 			if (mLayout != null && mScroller != null && mScrollTarget == scrollTarget) {
 				final OverScroller mScroller = BaseBehavior.this.mScroller;
 				if (mScroller.computeScrollOffset()) {
-					isFling = true;
 					int currY = mScroller.getCurrY();
 					int y = mLastY - currY;//-7.-11,8,33
 					mLastY = currY;
-					Loge(TAG, "run: fling: currY:" + currY + ",y:" + y + ",velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset);
+					Loge(TAG, "run: syncOffset: currY:" + currY + ",y:" + y + ",velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset);
 					if (mCurrentOffset == -mTotalScrollRange && mOnFlingListener != null && !autoScroll && velocityY > 0) {
 						autoScroll = true;
 						mOnFlingListener.onStartFling(scrollTarget, velocityY);
@@ -193,7 +192,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 					ViewCompat.postOnAnimation(mLayout, this);
 				} else {
 					Logd(TAG, "run: fling:  isFling=false");
-					isFling = false;
 					autoScroll = false;
 					isOverScroll = false;
 				}
@@ -264,12 +262,12 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		float velocityY = this.velocityY;
 		this.velocityY = 0;
 		flingDistance = getSplineFlingDistance((int) velocityY);
-		Logd(TAG, "NestedScrollingParent  fling: velocityY =" + velocityY + ",flagScrollY:" + flagScrollY
+		Logd(TAG, "NestedScrollingParent  fling: velocityY =" + velocityY + ",mScrollYWhenPreFling:" + mScrollYWhenPreFling
 				+ ",flingDistance:" + flingDistance);
-		float flingY = (float) ((flingDistance - flagScrollY) * velocityY / flingDistance);
-		int subVelocity = getVelocityWithDistance(flagScrollY);
+		float flingY = (float) ((flingDistance - mScrollYWhenPreFling) * velocityY / flingDistance);
+		int subVelocity = getVelocityWithDistance(mScrollYWhenPreFling);
 		int subV = getVelocityWithDistance(-mTotalScrollRange);
-		int subVelocity2 = getVelocityWithDistance(flingDistance - flagScrollY);
+		int subVelocity2 = getVelocityWithDistance(flingDistance - mScrollYWhenPreFling);
 		int sumVelocity = getVelocityWithDistance(flingDistance);
 		Logd(TAG, "NestedScrollingParent: fling:  subVelocity:" + subVelocity + ",subVelocity2:" + subVelocity2 + ",sumVelocity:" + sumVelocity);
 		boolean isOverScroll = false;
@@ -323,16 +321,12 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	}
 
 	protected void syncOffset(View view, int newOffset) {
-		Logd(TAG, "syncOffset: NestedScrollingParent  newOffset:" + newOffset
-				+ ",isFling：" + isFling + ",isNestedPreScroll：" + isNestedPreScroll + ",mCurrentOffset:" + mCurrentOffset);
 		if (mScrollTarget != view) {
 			return;
 		}
-		if (isFling) {
-			return;
-		}
+		Logd(TAG, "syncOffset:   newOffset:" + newOffset
+				 + ",isNestedPreScroll：" + isNestedPreScroll + ",mCurrentOffset:" + mCurrentOffset);
 		if (isNestedPreScroll) {
-			Loge(TAG, "syncOffset: NestedScrollingParent  isNestedPreScroll=true");
 			isNestedPreScroll = false;
 			return;
 		}
@@ -341,7 +335,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		} else if (mCurrentOffset == 0 && newOffset > 0) {
 			return;
 		}
-		Loge(TAG, "syncOffset: newOffset:" + newOffset);
 		setTopAndBottomOffset(newOffset);
 	}
 
