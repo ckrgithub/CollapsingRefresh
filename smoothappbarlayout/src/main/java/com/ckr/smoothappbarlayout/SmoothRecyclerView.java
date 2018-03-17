@@ -341,7 +341,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 	public void onScrolled(int dx, int dy) {
 		super.onScrolled(dx, dy);
 		mTotalScrollY += dy;
-		Logd(TAG, "onScrolled() called with: mTotalScrollY = [" + mTotalScrollY + "], dy = [" + dy + "]");
+		Logd(TAG, "onScrolled() NestedScrollingParent: mTotalScrollY = [" + mTotalScrollY + "], dy = [" + dy + "]");
 		if (dy > 0) {
 			forwardDirection = true;
 		} else {
