@@ -845,7 +845,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
                         totalRange = mOnCollapsingListener.getTotalCollapsedRange();
                     }
                     Logd(TAG, "dispatchTouchEvent000: canLoadmore:" + mRefreshContent.canLoadmore() + ",canRefresh:" + mRefreshContent.canRefresh()
-                            + ", mSpinner:" + mSpinner + ",dy:" + dy + ",dx:" + dx + ",mTouchSlop:" + mTouchSlop);
+                            + ", mSpinner:" + mSpinner + ",dy:" + dy + ",dx:" + dx + ",currentOffset:" + currentOffset);
                     if (Math.abs(dy) >= mTouchSlop && Math.abs(dx) < Math.abs(dy) && (currentOffset == 0 || currentOffset == -totalRange)) {//滑动允许最大角度为45度
                         if (dy > 0 && (mSpinner < 0 || (mEnableRefresh && mRefreshContent.canRefresh()))) {
                             Loge(TAG, "dispatchTouchEvent111: mSpinner:" + mSpinner + ",dy:" + dy);
