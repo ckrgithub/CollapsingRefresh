@@ -1,18 +1,3 @@
-/*
- * Copyright 2016 "Henry Tao <hi@henrytao.me>"
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.ckr.smoothappbarlayout;
 
@@ -115,9 +100,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	 * @return
 	 */
 	final boolean fling(AppBarLayout layout, View target, float velocityY, boolean isOverScroll) {
-		if (mScrollTarget != target) {//拦截非当前的滚动view的fling事件
-			return false;
-		}
+		if (!isCurrentView(target)) return false;
 		Logd(TAG, "fling: velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset + ",mTotalScrollY:" + mTotalScrollY);
 		if (mFlingRunnable != null) {
 			layout.removeCallbacks(mFlingRunnable);
@@ -207,9 +190,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	public boolean onNestedFling(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target,
 								 float velocityX, float velocityY, boolean consumed) {
 		Loge(TAG, "NestedScrollingParent,onNestedFling: fling: velocityY = [" + velocityY + "], consumed = [" + consumed + "]");
-		if (mScrollTarget != target) {
-			return true;
-		}
+		if (!isCurrentView(target)) return true;
 		if (consumed) {
 			if (velocityY < 0) {
 				this.velocityY = velocityY;
@@ -224,9 +205,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		if (dy != 0) {
 			if (dy < 0) {
 				// We're scrolling down
-				if (mScrollTarget != target) {
-					return;
-				}
+				if (!isCurrentView(target)) return;
 				isNestedPreScroll = true;
 //				if (mTotalScrollY > mTotalScrollRange) {
 //					return;
@@ -235,9 +214,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 			} else {
 
 				// We're scrolling up
-				if (mScrollTarget != target) {
-					return;
-				}
+				if (!isCurrentView(target)) return;
 				if (mCurrentOffset == -mTotalScrollRange) {
 					Loge(TAG, "NestedScrollingParent,onNestedPreScroll: isNestedPreScroll=true:");
 					isNestedPreScroll = true;
@@ -252,9 +229,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	}
 
 	protected void dispatchFling(AppBarLayout child, View target) {
-		if (mScrollTarget != target) {
-			return;
-		}
+		if (!isCurrentView(target)) return;
 		if (this.velocityY == 0) {
 			return;
 		}
@@ -321,11 +296,9 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	}
 
 	protected void syncOffset(View view, int newOffset) {
-		if (mScrollTarget != view) {
-			return;
-		}
+		if (!isCurrentView(view)) return;
 		Logd(TAG, "syncOffset:   newOffset:" + newOffset
-				 + ",isNestedPreScroll：" + isNestedPreScroll + ",mCurrentOffset:" + mCurrentOffset);
+				+ ",isNestedPreScroll：" + isNestedPreScroll + ",mCurrentOffset:" + mCurrentOffset);
 		if (isNestedPreScroll) {
 			isNestedPreScroll = false;
 			return;
@@ -336,6 +309,13 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 			return;
 		}
 		setTopAndBottomOffset(newOffset);
+	}
+
+	private boolean isCurrentView(View view) {
+		if (mScrollTarget != view) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
