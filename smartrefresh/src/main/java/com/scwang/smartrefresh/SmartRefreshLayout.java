@@ -846,7 +846,8 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
                     }
                     Logd(TAG, "dispatchTouchEvent000: canLoadmore:" + mRefreshContent.canLoadmore() + ",canRefresh:" + mRefreshContent.canRefresh()
                             + ", mSpinner:" + mSpinner + ",dy:" + dy + ",dx:" + dx + ",currentOffset:" + currentOffset);
-                    if (Math.abs(dy) >= mTouchSlop && Math.abs(dx) < Math.abs(dy) && (currentOffset == 0 || currentOffset == -totalRange)) {//滑动允许最大角度为45度
+                    if (Math.abs(dy) >= mTouchSlop && Math.abs(dx) < Math.abs(dy)
+                            && ((currentOffset == 0&&dy>=0) || (currentOffset == -totalRange&&dy<=0))) {//滑动允许最大角度为45度
                         if (dy > 0 && (mSpinner < 0 || (mEnableRefresh && mRefreshContent.canRefresh()))) {
                             Loge(TAG, "dispatchTouchEvent111: mSpinner:" + mSpinner + ",dy:" + dy);
                             if (mSpinner < 0) {
@@ -967,7 +968,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
                     }
 
                     Logd(TAG, "dispatchTouchEvent444: isDraging:" + getViceState().isDraging());
-                    if (getViceState().isDraging() && (currentOffset == 0 || currentOffset == -totalRange)) {
+                    if (getViceState().isDraging() && ((currentOffset == 0&&spinner>=0) || (currentOffset == -totalRange&&spinner<=0))) {
                         moveSpinnerInfinitely(spinner);
                         return true;
                     }
