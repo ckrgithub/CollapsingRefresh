@@ -230,10 +230,10 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 					return;
 				}
 				isNestedPreScroll = true;
-				if (mTotalScrollY > mTotalScrollRange) {
-					return;
-				}
-				super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
+//				if (mTotalScrollY > mTotalScrollRange) {
+//					return;
+//				}
+//				super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
 			} else {
 
 				// We're scrolling up
