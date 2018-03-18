@@ -8,7 +8,7 @@ CollapsingToolbarLayout+ViewPager+RecyclerView的刷新功能。最低支持api 
 [下载 APK](apk/app-debug.apk)
 
 ## 功能及使用
-### 1.布局引用
+* **布局引用**
 ```
      <com.scwang.smartrefresh.SmartRefreshLayout
 	    xmlns:android="http://schemas.android.com/apk/res/android"
@@ -44,14 +44,14 @@ CollapsingToolbarLayout+ViewPager+RecyclerView的刷新功能。最低支持api 
 	        app:srlClassicsSpinnerStyle="Translate"/>
 	</com.scwang.smartrefresh.SmartRefreshLayout>
 ```
-### 2.代码使用
-#### 设置监听器
+* **代码使用**
+#### 1.设置监听器
 ```
 	appBarLayout.addOnOffsetChangedListener(this);
 	recyclerView.setOnSmoothScrollListener(appBarLayout);
 	smartRefreshLayout.setOnCollapsingListener(this);
 ```
-#### 是否允许刷新
+#### 2.是否允许刷新
 ```
 	@Override
 	public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
