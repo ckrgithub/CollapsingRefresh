@@ -38,7 +38,7 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
 	@BindDimen(R.dimen.size_5)
 	int paddingSize;
 	private MyAdapter mAdapter;
-	static OnSmoothScrollListener scrollListener;
+	static OnSmoothScrollListener mOnSmoothScrollListener;
 	private boolean isVisible;
 	private Handler handler = new Handler(Looper.myLooper());
 	private int verticalOffset;
@@ -46,7 +46,7 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
 
 
 	public static OneFragment newInstance(OnSmoothScrollListener onScrollListener) {
-		scrollListener = onScrollListener;
+		mOnSmoothScrollListener = onScrollListener;
 		Bundle args = new Bundle();
 		OneFragment fragment = new OneFragment();
 		fragment.setArguments(args);
@@ -59,8 +59,8 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
 		if (handler != null) {
 			handler = null;
 		}
-		if (scrollListener != null) {
-			scrollListener.removeOnOffsetChangedListener(this);
+		if (mOnSmoothScrollListener != null) {
+			mOnSmoothScrollListener.removeOnOffsetChangedListener(this);
 		}
 	}
 
@@ -72,10 +72,10 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
 	@Override
 	protected void init() {
 		Logd(TAG, "init: target:" + recyclerView);
-		scrollListener.addOnOffsetChangedListener(this);
-		recyclerView.setOnSmoothScrollListener(scrollListener);
-		smartRefreshLayout.setOnRefreshLoadmoreListener(this);
+		mOnSmoothScrollListener.addOnOffsetChangedListener(this);
+		recyclerView.setOnSmoothScrollListener(mOnSmoothScrollListener);
 		smartRefreshLayout.setOnCollapsingListener(this);
+		smartRefreshLayout.setOnRefreshLoadmoreListener(this);
 		setAdapter();
 	}
 
@@ -203,7 +203,7 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
 
 	@Override
 	public int getTotalCollapsedRange() {
-		return scrollListener == null ? 0 : scrollListener.getTotalCollapsedRange();
+		return mOnSmoothScrollListener == null ? 0 : mOnSmoothScrollListener.getTotalCollapsedRange();
 	}
 
 	@Override
