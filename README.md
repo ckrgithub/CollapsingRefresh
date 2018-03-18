@@ -44,6 +44,29 @@ CollapsingToolbarLayout+ViewPager+RecyclerView的刷新功能。最低支持api 
 	        app:srlClassicsSpinnerStyle="Translate"/>
 	</com.scwang.smartrefresh.SmartRefreshLayout>
 ```
+### 2.代码使用
+#### 设置监听器
+```
+	appBarLayout.addOnOffsetChangedListener(this);
+	recyclerView.setOnSmoothScrollListener(appBarLayout);
+	smartRefreshLayout.setOnCollapsingListener(this);
+```
+#### 是否允许刷新
+```
+	@Override
+	public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+		this.verticalOffset = verticalOffset;
+		Logd(TAG, "onOffsetChanged: verticalOffset:" + this.verticalOffset);
+		if (verticalOffset != 0) {
+			boolean enableRefresh = smartRefreshLayout.isEnableRefresh();
+			if (enableRefresh) {
+				smartRefreshLayout.setEnableRefresh(false);
+			}
+		} else {
+			smartRefreshLayout.setEnableRefresh(true);
+		}
+	}
+```
 
 ## 感谢
 [SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout)
