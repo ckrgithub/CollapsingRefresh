@@ -89,12 +89,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 
 	private void init(final AppBarLayout child) {
 		this.mAppBarLayout = child;
-//		setDragCallback(new DragCallback() {//不允许head布局拖动
-//			@Override
-//			public boolean canDrag(AppBarLayout appBarLayout) {
-//				return false;
-//			}
-//		});
 		final float ppi = child.getResources().getDisplayMetrics().density * 160.0f;
 		mPhysicalCoeff = SensorManager.GRAVITY_EARTH // g (m/s^2)
 				* 39.37f // inch/meter
@@ -391,9 +385,9 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 								isOverScroll = false;
 								int dy = 0;
 								if (velocityY > 0) {
-									dy = (currY - mTotalScrollRange) / 2;
+									dy = (currY - mTotalScrollRange) / 2-3;
 								} else {
-									dy = (currY + mTotalScrollRange) / 2;
+									dy = (currY + mTotalScrollRange) / 2+3;
 								}
 								Logd(TAG, "run: fling: dy:" + dy);
 								if (dy != 0) {
