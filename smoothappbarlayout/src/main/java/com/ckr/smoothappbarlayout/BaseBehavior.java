@@ -7,6 +7,8 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.Interpolator;
@@ -60,6 +62,13 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		}
 	};
 
+	private static final int INVALID_POINTER = -1;
+	private boolean mIsBeingDragged;
+	private int mActivePointerId = INVALID_POINTER;
+	private int mLastMotionY;
+	private int mTouchSlop = -1;
+	private VelocityTracker mVelocityTracker;
+
 	public BaseBehavior() {
 
 	}
@@ -80,17 +89,172 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 
 	private void init(final AppBarLayout child) {
 		this.mAppBarLayout = child;
-		setDragCallback(new DragCallback() {//不允许head布局拖动
-			@Override
-			public boolean canDrag(AppBarLayout appBarLayout) {
-				return false;
-			}
-		});
+//		setDragCallback(new DragCallback() {//不允许head布局拖动
+//			@Override
+//			public boolean canDrag(AppBarLayout appBarLayout) {
+//				return false;
+//			}
+//		});
 		final float ppi = child.getResources().getDisplayMetrics().density * 160.0f;
 		mPhysicalCoeff = SensorManager.GRAVITY_EARTH // g (m/s^2)
 				* 39.37f // inch/meter
 				* ppi
 				* 0.84f; // look and feel tuning
+	}
+
+	@Override
+	public boolean onInterceptTouchEvent(CoordinatorLayout parent, AppBarLayout child, MotionEvent ev) {
+//		return super.onInterceptTouchEvent(parent, child, ev);
+		if (mTouchSlop < 0) {
+			mTouchSlop = ViewConfiguration.get(parent.getContext()).getScaledTouchSlop();
+		}
+
+		final int action = ev.getAction();
+
+		// Shortcut since we're being dragged
+		if (action == MotionEvent.ACTION_MOVE && mIsBeingDragged) {
+			return true;
+		}
+
+		switch (ev.getActionMasked()) {
+			case MotionEvent.ACTION_DOWN: {
+				mIsBeingDragged = false;
+				final int x = (int) ev.getX();
+				final int y = (int) ev.getY();
+				if (canDragView(child) && parent.isPointInChildBounds(child, x, y)) {
+					mLastMotionY = y;
+					mActivePointerId = ev.getPointerId(0);
+					ensureVelocityTracker();
+				}
+				break;
+			}
+
+			case MotionEvent.ACTION_MOVE: {
+				final int activePointerId = mActivePointerId;
+				if (activePointerId == INVALID_POINTER) {
+					// If we don't have a valid id, the touch down wasn't on content.
+					break;
+				}
+				final int pointerIndex = ev.findPointerIndex(activePointerId);
+				if (pointerIndex == -1) {
+					break;
+				}
+
+				final int y = (int) ev.getY(pointerIndex);
+				final int yDiff = Math.abs(y - mLastMotionY);
+				if (yDiff > mTouchSlop) {
+					mIsBeingDragged = true;
+					mLastMotionY = y;
+				}
+				break;
+			}
+
+			case MotionEvent.ACTION_CANCEL:
+			case MotionEvent.ACTION_UP: {
+				mIsBeingDragged = false;
+				mActivePointerId = INVALID_POINTER;
+				if (mVelocityTracker != null) {
+					mVelocityTracker.recycle();
+					mVelocityTracker = null;
+				}
+				break;
+			}
+		}
+
+		if (mVelocityTracker != null) {
+			mVelocityTracker.addMovement(ev);
+		}
+
+		return mIsBeingDragged;
+	}
+
+	boolean canDragView(View view) {
+		return true;
+	}
+
+	private void ensureVelocityTracker() {
+		if (mVelocityTracker == null) {
+			mVelocityTracker = VelocityTracker.obtain();
+		}
+	}
+
+	@Override
+	public boolean onTouchEvent(CoordinatorLayout parent, AppBarLayout child, MotionEvent ev) {
+		if (mTouchSlop < 0) {
+			mTouchSlop = ViewConfiguration.get(parent.getContext()).getScaledTouchSlop();
+		}
+
+		switch (ev.getActionMasked()) {
+			case MotionEvent.ACTION_DOWN: {
+				final int x = (int) ev.getX();
+				final int y = (int) ev.getY();
+
+				if (parent.isPointInChildBounds(child, x, y) && canDragView(child)) {
+					mLastMotionY = y;
+					mActivePointerId = ev.getPointerId(0);
+					ensureVelocityTracker();
+				} else {
+					return false;
+				}
+				break;
+			}
+
+			case MotionEvent.ACTION_MOVE: {
+				final int activePointerIndex = ev.findPointerIndex(mActivePointerId);
+				if (activePointerIndex == -1) {
+					return false;
+				}
+
+				final int y = (int) ev.getY(activePointerIndex);
+				int dy = mLastMotionY - y;
+
+				if (!mIsBeingDragged && Math.abs(dy) > mTouchSlop) {
+					mIsBeingDragged = true;
+					if (dy > 0) {
+						dy -= mTouchSlop;
+					} else {
+						dy += mTouchSlop;
+					}
+				}
+
+				if (mIsBeingDragged) {
+					mLastMotionY = y;
+					// We're being dragged so scroll the ABL
+					if (dy != 0) {
+						Logd(TAG, "onTouchEvent: dy:" + dy + ",y:" + y + ",mCurrentOffset:" + mCurrentOffset);
+						int translationOffset = Math.max(-mTotalScrollRange, -dy);
+						Loge(TAG, "onTouchEvent: translationOffset:" + translationOffset);
+						syncOffset(mScrollTarget, translationOffset);
+					}
+				}
+				break;
+			}
+
+			case MotionEvent.ACTION_UP:
+				if (mVelocityTracker != null) {
+					mVelocityTracker.addMovement(ev);
+					mVelocityTracker.computeCurrentVelocity(1000);
+					float yvel = -mVelocityTracker.getYVelocity(mActivePointerId);
+					Logd(TAG, "onTouchEvent: yvel:"+yvel);
+					fling(mAppBarLayout, mScrollTarget, yvel, false,false);
+				}
+				// $FALLTHROUGH
+			case MotionEvent.ACTION_CANCEL: {
+				mIsBeingDragged = false;
+				mActivePointerId = INVALID_POINTER;
+				if (mVelocityTracker != null) {
+					mVelocityTracker.recycle();
+					mVelocityTracker = null;
+				}
+				break;
+			}
+		}
+
+		if (mVelocityTracker != null) {
+			mVelocityTracker.addMovement(ev);
+		}
+
+		return true;
 	}
 
 	@Override
@@ -139,7 +303,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 			isOverScroll = true;
 		}
 		Logd(TAG, "NestedScrollingParent: fling:  flingY:" + flingY + ",mTotalScrollRangeV:" + subV);
-		fling(child, target, -Math.abs(subVelocity2), isOverScroll);
+		fling(child, target, -Math.abs(subVelocity2), isOverScroll,true);
 	}
 
 	@Override
@@ -164,7 +328,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	 * @param isOverScroll
 	 * @return
 	 */
-	final boolean fling(AppBarLayout layout, View target, float velocityY, boolean isOverScroll) {
+	final boolean fling(AppBarLayout layout, View target, float velocityY, boolean isOverScroll,boolean isDispatch) {
 		if (!isCurrentView(target)) return false;
 		Logd(TAG, "fling: velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset + ",mTotalScrollY:" + mTotalScrollY);
 		if (mFlingRunnable != null) {
@@ -178,7 +342,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				, 0, 0, -mTotalScrollRange, mTotalScrollRange);
 		boolean canScroll = mScroller.computeScrollOffset();
 		if (canScroll) {
-			mFlingRunnable = new FlingRunnable(layout, target, velocityY, isOverScroll);
+			mFlingRunnable = new FlingRunnable(layout, target, velocityY, isOverScroll,isDispatch);
 			ViewCompat.postOnAnimation(layout, mFlingRunnable);
 			return true;
 		} else {
@@ -196,13 +360,15 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		private int mLastY = 0;
 		private boolean autoScroll;
 		private boolean isOverScroll;
+		private boolean isDispatch;
 
-		FlingRunnable(AppBarLayout layout, View target, float velocityY, boolean isOverScroll) {
+		FlingRunnable(AppBarLayout layout, View target, float velocityY,  boolean isOverScroll,boolean isDispatch) {
 			mLayout = layout;
 			scrollTarget = target;
 			this.mLastY = 0;
 			this.velocityY = velocityY;
 			this.isOverScroll = isOverScroll;
+			this.isDispatch = isDispatch;
 		}
 
 		@Override
@@ -214,7 +380,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 					int y = mLastY - currY;//-7.-11,8,33
 					mLastY = currY;
 					Loge(TAG, "run: syncOffset: currY:" + currY + ",y:" + y + ",velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset);
-					if (mCurrentOffset == -mTotalScrollRange && mOnFlingListener != null && !autoScroll && velocityY > 0) {
+					if (mCurrentOffset == -mTotalScrollRange && mOnFlingListener != null && !autoScroll && velocityY > 0&&isDispatch) {
 						autoScroll = true;
 						mOnFlingListener.onStartFling(scrollTarget, velocityY);
 					} else {

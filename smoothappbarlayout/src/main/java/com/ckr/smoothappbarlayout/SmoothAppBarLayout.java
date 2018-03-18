@@ -182,7 +182,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 
 		@Override
 		public void onStartFling(View view, float velocityY) {
-			fling(mAppBarLayout, view, velocityY, false);
+			fling(mAppBarLayout, view, velocityY, false,true);
 		}
 
 		@Override
