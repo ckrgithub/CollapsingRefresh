@@ -78,7 +78,7 @@ AppBarLayout+ViewPager+RecyclerView的刷新功能。最低支持api 16，recycl
   * 重构代码
 
 * **1.0.1-beta**
-  * 实现CollapsingToolbarLayout+ViewPager+RecyclerView的下拉刷新和上拉加载功能
+  * 实现AppBarLayout+ViewPager+RecyclerView的下拉刷新和上拉加载功能
 
 License
 -------
