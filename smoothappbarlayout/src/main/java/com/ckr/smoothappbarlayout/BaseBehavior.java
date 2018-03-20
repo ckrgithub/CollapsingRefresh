@@ -36,6 +36,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	protected int mTotalScrollY;//mScrollTarget总共滚动的距离
 	protected int mScrollYWhenPreFling;//mScrollTarget开始fling时的滚动距离
 	private boolean mIsOnInit = false;
+	protected boolean canDragHeader = true;
 	private Runnable mFlingRunnable;
 	private OverScroller mScroller;
 
@@ -118,7 +119,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				mIsBeingDragged = false;
 				final int x = (int) ev.getX();
 				final int y = (int) ev.getY();
-				if (canDragView(child) && parent.isPointInChildBounds(child, x, y)) {
+				if (canDragHeader && parent.isPointInChildBounds(child, x, y)) {
 					mLastMotionY = y;
 					mActivePointerId = ev.getPointerId(0);
 					ensureVelocityTracker();
@@ -160,10 +161,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		return mIsBeingDragged;
 	}
 
-	boolean canDragView(View view) {
-		return true;
-	}
-
 	private void ensureVelocityTracker() {
 		if (mVelocityTracker == null) {
 			mVelocityTracker = VelocityTracker.obtain();
@@ -187,7 +184,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				final int x = (int) ev.getX();
 				final int y = (int) ev.getY();
 
-				if (parent.isPointInChildBounds(child, x, y) && canDragView(child)) {
+				if (parent.isPointInChildBounds(child, x, y) && canDragHeader) {
 					mLastMotionY = y;
 					mActivePointerId = ev.getPointerId(0);
 					ensureVelocityTracker();

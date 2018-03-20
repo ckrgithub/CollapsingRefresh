@@ -18,4 +18,6 @@ public interface OnScrollListener extends OnCollapsingListener,OnFlingListener{
 
     void setOnFlingListener(OnFlingListener onFlingListener);
 
+    void setCanDragHeader(boolean allow);
+
 }
