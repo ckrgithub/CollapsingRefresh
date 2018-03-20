@@ -34,7 +34,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	protected AppBarLayout mAppBarLayout;
 	protected View mScrollTarget;//可滚动的view
 	protected int mTotalScrollY;//mScrollTarget总共滚动的距离
-	protected int mScrollYWhenPreFling;//mScrollTarget开始fling时的滚动距离
+	protected int mScrollYWhenFling;//mScrollTarget开始fling时的滚动距离
 	private boolean mIsOnInit = false;
 	protected boolean canDragHeader = true;
 	private Runnable mFlingRunnable;
@@ -44,11 +44,11 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	private int mTempTopBottomOffset = 0;
 	protected int mTotalScrollRange;
 	protected int mCurrentOffset;
-	private float velocityY;//向下滚动时的velocity
+	private float velocityY;//即将fling时的velocity
 	private boolean isNestedPreScroll;//防止跳动
 
 	protected OnFlingListener mOnFlingListener;
-	private double flingDistance;
+	private double mFlingDistance;
 
 	private float mPhysicalCoeff;
 	private static float DECELERATION_RATE = (float) (Math.log(0.78) / Math.log(0.9));
@@ -99,6 +99,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 
 	/**
 	 * see to {@link android.support.design.widget.HeaderBehavior}
+	 *
 	 * @param parent
 	 * @param child
 	 * @param ev
@@ -169,6 +170,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 
 	/**
 	 * see to {@link android.support.design.widget.HeaderBehavior}
+	 *
 	 * @param parent
 	 * @param child
 	 * @param ev
@@ -225,8 +227,8 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 					mVelocityTracker.addMovement(ev);
 					mVelocityTracker.computeCurrentVelocity(VELOCITY_UNITS);
 					float yvel = -mVelocityTracker.getYVelocity(mActivePointerId);
-					Logd(TAG, "onTouchEvent: yvel:"+yvel);
-					fling(mAppBarLayout, mScrollTarget, yvel, false,false);
+					Logd(TAG, "onTouchEvent: yvel:" + yvel);
+					fling(mAppBarLayout, mScrollTarget, yvel, false, false);
 				}
 				// $FALLTHROUGH
 			case MotionEvent.ACTION_CANCEL: {
@@ -247,7 +249,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 
 	@Override
 	public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, int dx, int dy, int[] consumed, int type) {
-		Logw(TAG, "NestedScrollingParent,onNestedPreScroll: dy:" + dy + ",mTotalScrollY：" + mTotalScrollY + ",mCurrentOffset:" + mCurrentOffset);
+		Logw(TAG, "NestedScrollingParent,onNestedPreScroll: dy:" + dy + ",mTotalScrollY:" + mTotalScrollY + ",mCurrentOffset:" + mCurrentOffset);
 		if (dy != 0) {
 			if (dy < 0) {
 				// We're scrolling down
@@ -269,31 +271,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		}
 	}
 
-	protected void dispatchFling(AppBarLayout child, View target) {
-		if (!isCurrentView(target)) return;
-		if (this.velocityY == 0) {
-			return;
-		}
-		Logd(TAG, "NestedScrollingParent  dispatchFling: mTotalScrollY:" + mTotalScrollY);
-		float velocityY = this.velocityY;
-		this.velocityY = 0;
-		flingDistance = getSplineFlingDistance((int) velocityY);
-		Logd(TAG, "NestedScrollingParent  fling: velocityY =" + velocityY + ",mScrollYWhenPreFling:" + mScrollYWhenPreFling
-				+ ",flingDistance:" + flingDistance);
-		float flingY = (float) ((flingDistance - mScrollYWhenPreFling) * velocityY / flingDistance);
-		int subVelocity = getVelocityWithDistance(mScrollYWhenPreFling);
-		int subV = getVelocityWithDistance(-mTotalScrollRange);
-		int subVelocity2 = getVelocityWithDistance(flingDistance - mScrollYWhenPreFling);
-		int sumVelocity = getVelocityWithDistance(flingDistance);
-		Logd(TAG, "NestedScrollingParent: fling:  subVelocity:" + subVelocity + ",subVelocity2:" + subVelocity2 + ",sumVelocity:" + sumVelocity);
-		boolean isOverScroll = false;
-		if (subVelocity2 > (subV + 1)) {//2495
-			isOverScroll = true;
-		}
-		Logd(TAG, "NestedScrollingParent: fling:  flingY:" + flingY + ",mTotalScrollRangeV:" + subV);
-		fling(child, target, -Math.abs(subVelocity2), isOverScroll,true);
-	}
-
 	@Override
 	public boolean onNestedFling(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target,
 								 float velocityX, float velocityY, boolean consumed) {
@@ -307,6 +284,53 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		return true;
 	}
 
+	protected void dispatchFling(AppBarLayout child, View target) {
+		if (!isCurrentView(target)) return;
+		if (this.velocityY == 0) {
+			return;
+		}
+		float velocityY = this.velocityY;
+		this.velocityY = 0;
+		mFlingDistance = getSplineFlingDistance((int) velocityY);
+		Logd(TAG, "fling: velocityY =" + velocityY + ",mScrollYWhenFling:" + mScrollYWhenFling
+				+ ",mFlingDistance:" + mFlingDistance);
+//		float flingY = (float) ((mFlingDistance - mScrollYWhenFling) * velocityY / mFlingDistance);
+//		int subVelocity = getVelocityByDistance(mScrollYWhenFling);
+//		int sumVelocity = getVelocityByDistance(mFlingDistance);
+//		Logd(TAG, "fling:  subVelocity:" + subVelocity + ",subVelocity2:" + subVelocity2 + ",sumVelocity:" + sumVelocity);
+		int subV = getVelocityByDistance(-mTotalScrollRange);
+		int curVelocity = getVelocityByDistance(mFlingDistance - mScrollYWhenFling);
+		Logd(TAG, "fling:  curVelocity:" + curVelocity + ",subV:" + subV);
+		boolean isOverScroll = false;
+		if (curVelocity > (subV + 1)) {//2495
+			isOverScroll = true;
+		}
+		fling(child, target, -Math.abs(curVelocity), isOverScroll, false);
+	}
+
+	/**
+	 * see to {@link OverScroller}
+	 *
+	 * @param velocity
+	 * @return
+	 */
+	private double getSplineFlingDistance(int velocity) {
+		final double l = getSplineDeceleration(velocity);
+		final double decelMinusOne = DECELERATION_RATE - 1.0;
+		return mFlingFriction * mPhysicalCoeff * Math.exp(DECELERATION_RATE / decelMinusOne * l);
+	}
+
+	private int getVelocityByDistance(double distance) {
+		final double decelMinusOne = DECELERATION_RATE - 1.0;
+		double l = Math.log(Math.abs(distance) / (mFlingFriction * mPhysicalCoeff)) * decelMinusOne / DECELERATION_RATE;
+		int velocity = (int) (Math.exp(l) * (mFlingFriction * mPhysicalCoeff) / INFLEXION);
+		return velocity;
+	}
+
+	private double getSplineDeceleration(int velocity) {
+		return Math.log(INFLEXION * Math.abs(velocity) / (mFlingFriction * mPhysicalCoeff));
+	}
+
 	/**
 	 * {@link android.support.design.widget.HeaderBehavior}中fling()
 	 *
@@ -316,7 +340,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	 * @param isOverScroll
 	 * @return
 	 */
-	final boolean fling(AppBarLayout layout, View target, float velocityY, boolean isOverScroll,boolean isDispatch) {
+	final boolean fling(AppBarLayout layout, View target, float velocityY, boolean isOverScroll, boolean isDispatch) {
 		if (!isCurrentView(target)) return false;
 		Logd(TAG, "fling: velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset + ",mTotalScrollY:" + mTotalScrollY);
 		if (mFlingRunnable != null) {
@@ -330,7 +354,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				, 0, 0, -mTotalScrollRange, mTotalScrollRange);
 		boolean canScroll = mScroller.computeScrollOffset();
 		if (canScroll) {
-			mFlingRunnable = new FlingRunnable(layout, target, velocityY, isOverScroll,isDispatch);
+			mFlingRunnable = new FlingRunnable(layout, target, velocityY, isOverScroll, isDispatch);
 			ViewCompat.postOnAnimation(layout, mFlingRunnable);
 			return true;
 		} else {
@@ -350,7 +374,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		private boolean isOverScroll;
 		private boolean isDispatch;
 
-		FlingRunnable(AppBarLayout layout, View target, float velocityY,  boolean isOverScroll,boolean isDispatch) {
+		FlingRunnable(AppBarLayout layout, View target, float velocityY, boolean isOverScroll, boolean isDispatch) {
 			mLayout = layout;
 			scrollTarget = target;
 			this.mLastY = 0;
@@ -368,7 +392,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 					int y = mLastY - currY;//-7.-11,8,33
 					mLastY = currY;
 					Loge(TAG, "run: syncOffset: currY:" + currY + ",y:" + y + ",velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset);
-					if (mCurrentOffset == -mTotalScrollRange && mOnFlingListener != null && !autoScroll && velocityY > 0&&isDispatch) {
+					if (mCurrentOffset == -mTotalScrollRange && mOnFlingListener != null && !autoScroll && velocityY > 0 && isDispatch) {
 						autoScroll = true;
 						mOnFlingListener.onStartFling(scrollTarget, velocityY);
 					} else {
@@ -379,9 +403,9 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 								isOverScroll = false;
 								int dy = 0;
 								if (velocityY > 0) {
-									dy = (currY - mTotalScrollRange) / 2-3;
+									dy = (currY - mTotalScrollRange) / 2 - 3;
 								} else {
-									dy = (currY + mTotalScrollRange) / 2+3;
+									dy = (currY + mTotalScrollRange) / 2 + 3;
 								}
 								Logd(TAG, "run: fling: dy:" + dy);
 								if (dy != 0) {
@@ -402,29 +426,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				}
 			}
 		}
-	}
-
-	/**
-	 * {@link OverScroller}中getSplineFlingDistance
-	 *
-	 * @param velocity
-	 * @return
-	 */
-	private double getSplineFlingDistance(int velocity) {
-		final double l = getSplineDeceleration(velocity);
-		final double decelMinusOne = DECELERATION_RATE - 1.0;
-		return mFlingFriction * mPhysicalCoeff * Math.exp(DECELERATION_RATE / decelMinusOne * l);
-	}
-
-	private int getVelocityWithDistance(double distance) {
-		final double decelMinusOne = DECELERATION_RATE - 1.0;
-		double l = Math.log(Math.abs(distance) / (mFlingFriction * mPhysicalCoeff)) * decelMinusOne / DECELERATION_RATE;
-		int velocity = (int) (Math.exp(l) * (mFlingFriction * mPhysicalCoeff) / INFLEXION);
-		return velocity;
-	}
-
-	private double getSplineDeceleration(int velocity) {
-		return Math.log(INFLEXION * Math.abs(velocity) / (mFlingFriction * mPhysicalCoeff));
 	}
 
 	protected void syncOffset(View view, int newOffset) {

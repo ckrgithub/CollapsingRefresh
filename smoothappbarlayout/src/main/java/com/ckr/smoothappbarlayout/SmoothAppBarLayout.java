@@ -187,7 +187,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 			}
 			mTotalScrollY = scrollY;
 			if (onStartNestedFling) {
-				mScrollYWhenPreFling = scrollY;
+				mScrollYWhenFling = scrollY;
 			}
 		}
 
