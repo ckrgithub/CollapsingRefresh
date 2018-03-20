@@ -171,8 +171,8 @@ public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListen
 	}
 
 	@Override
-	public int getTotalCollapsedRange() {
-		return scrollListener == null ? 0 : scrollListener.getTotalCollapsedRange();
+	public int getTotalRange() {
+		return scrollListener == null ? 0 : scrollListener.getTotalRange();
 	}
 
 	@Override

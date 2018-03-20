@@ -842,7 +842,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 					int totalRange = 0;
 					if (mOnCollapsingListener != null) {
 						currentOffset = mOnCollapsingListener.getCurrentOffset();
-						totalRange = mOnCollapsingListener.getTotalCollapsedRange();
+						totalRange = mOnCollapsingListener.getTotalRange();
 					}
 					Logd(TAG, "dispatchTouchEvent000: canLoadmore:" + mRefreshContent.canLoadmore() + ",canRefresh:" + mRefreshContent.canRefresh()
 							+ ", mSpinner:" + mSpinner + ",dy:" + dy + ",dx:" + dx + ",currentOffset:" + currentOffset);
@@ -922,7 +922,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 					int totalRange = 0;
 					if (mOnCollapsingListener != null) {
 						currentOffset = mOnCollapsingListener.getCurrentOffset();
-						totalRange = mOnCollapsingListener.getTotalCollapsedRange();
+						totalRange = mOnCollapsingListener.getTotalRange();
 					}
 					Logd(TAG, "dispatchTouchEvent333: isHeader:" + getViceState().isHeader() + ",isFooter:" + getViceState().isFooter()
 							+ ",spinner:" + spinner + ",mLastSpinner:" + mLastSpinner + ",dy:" + dy + ",mTouchSpinner:" + mTouchSpinner + ",mTouchY：" + mTouchY + ",currentOffset:" + currentOffset);
@@ -983,7 +983,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 				int totalRange = 0;
 				if (mOnCollapsingListener != null) {
 					currentOffset = mOnCollapsingListener.getCurrentOffset();
-					totalRange = mOnCollapsingListener.getTotalCollapsedRange();
+					totalRange = mOnCollapsingListener.getTotalRange();
 				}
 				Logd(TAG, "dispatchTouchEvent: action:" + e.getAction() + ",mFalsifyEvent:" + mFalsifyEvent + ",currentOffset：" + currentOffset + ",mSpinner：" + mSpinner);
 				if (currentOffset == 0) {

@@ -95,11 +95,11 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 	}
 
 	@Override
-	public int getTotalCollapsedRange() {
+	public int getTotalRange() {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		return smoothBehavior.getTotalCollapsedRange();
+		return smoothBehavior.getTotalRange();
 	}
 
 	@Override
@@ -160,7 +160,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 		}
 
 		@Override
-		public int getTotalCollapsedRange() {
+		public int getTotalRange() {
 			return mTotalScrollRange;
 		}
 

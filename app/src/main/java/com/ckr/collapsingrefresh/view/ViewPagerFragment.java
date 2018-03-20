@@ -141,7 +141,7 @@ public class ViewPagerFragment extends BaseFragment implements ViewPager.OnPageC
 				setting.setColorFilter(currentColor = Color.WHITE);
 				more.setColorFilter(currentColor);
 			}
-		} else if (verticalOffset == -this.appBarLayout.getTotalCollapsedRange()) {//collapsed
+		} else if (verticalOffset == -this.appBarLayout.getTotalRange()) {//collapsed
 			if (currentColor != tabTextColor) {
 				setting.setColorFilter(currentColor = tabTextColor);
 				more.setColorFilter(currentColor);

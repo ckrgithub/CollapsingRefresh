@@ -6,7 +6,7 @@ package com.scwang.smartrefresh.listener;
 
 public interface OnCollapsingListener {
 
-    int getTotalCollapsedRange();
+    int getTotalRange();
 
     int getCurrentOffset();
 }

@@ -96,20 +96,23 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				* 0.84f; // look and feel tuning
 	}
 
+	/**
+	 * see to {@link android.support.design.widget.HeaderBehavior}
+	 * @param parent
+	 * @param child
+	 * @param ev
+	 * @return
+	 */
 	@Override
 	public boolean onInterceptTouchEvent(CoordinatorLayout parent, AppBarLayout child, MotionEvent ev) {
-//		return super.onInterceptTouchEvent(parent, child, ev);
 		if (mTouchSlop < 0) {
 			mTouchSlop = ViewConfiguration.get(parent.getContext()).getScaledTouchSlop();
 		}
-
 		final int action = ev.getAction();
-
 		// Shortcut since we're being dragged
 		if (action == MotionEvent.ACTION_MOVE && mIsBeingDragged) {
 			return true;
 		}
-
 		switch (ev.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN: {
 				mIsBeingDragged = false;
@@ -122,7 +125,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				}
 				break;
 			}
-
 			case MotionEvent.ACTION_MOVE: {
 				final int activePointerId = mActivePointerId;
 				if (activePointerId == INVALID_POINTER) {
@@ -133,7 +135,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				if (pointerIndex == -1) {
 					break;
 				}
-
 				final int y = (int) ev.getY(pointerIndex);
 				final int yDiff = Math.abs(y - mLastMotionY);
 				if (yDiff > mTouchSlop) {
@@ -142,7 +143,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				}
 				break;
 			}
-
 			case MotionEvent.ACTION_CANCEL:
 			case MotionEvent.ACTION_UP: {
 				mIsBeingDragged = false;
@@ -154,11 +154,9 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				break;
 			}
 		}
-
 		if (mVelocityTracker != null) {
 			mVelocityTracker.addMovement(ev);
 		}
-
 		return mIsBeingDragged;
 	}
 
@@ -172,12 +170,18 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		}
 	}
 
+	/**
+	 * see to {@link android.support.design.widget.HeaderBehavior}
+	 * @param parent
+	 * @param child
+	 * @param ev
+	 * @return
+	 */
 	@Override
 	public boolean onTouchEvent(CoordinatorLayout parent, AppBarLayout child, MotionEvent ev) {
 		if (mTouchSlop < 0) {
 			mTouchSlop = ViewConfiguration.get(parent.getContext()).getScaledTouchSlop();
 		}
-
 		switch (ev.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN: {
 				final int x = (int) ev.getX();
@@ -192,16 +196,13 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				}
 				break;
 			}
-
 			case MotionEvent.ACTION_MOVE: {
 				final int activePointerIndex = ev.findPointerIndex(mActivePointerId);
 				if (activePointerIndex == -1) {
 					return false;
 				}
-
 				final int y = (int) ev.getY(activePointerIndex);
 				int dy = mLastMotionY - y;
-
 				if (!mIsBeingDragged && Math.abs(dy) > mTouchSlop) {
 					mIsBeingDragged = true;
 					if (dy > 0) {
@@ -210,7 +211,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 						dy += mTouchSlop;
 					}
 				}
-
 				if (mIsBeingDragged) {
 					mLastMotionY = y;
 					// We're being dragged so scroll the ABL
@@ -223,11 +223,10 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				}
 				break;
 			}
-
 			case MotionEvent.ACTION_UP:
 				if (mVelocityTracker != null) {
 					mVelocityTracker.addMovement(ev);
-					mVelocityTracker.computeCurrentVelocity(1000);
+					mVelocityTracker.computeCurrentVelocity(VELOCITY_UNITS);
 					float yvel = -mVelocityTracker.getYVelocity(mActivePointerId);
 					Logd(TAG, "onTouchEvent: yvel:"+yvel);
 					fling(mAppBarLayout, mScrollTarget, yvel, false,false);
@@ -243,11 +242,9 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				break;
 			}
 		}
-
 		if (mVelocityTracker != null) {
 			mVelocityTracker.addMovement(ev);
 		}
-
 		return true;
 	}
 
@@ -449,7 +446,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		setTopAndBottomOffset(newOffset);
 	}
 
-	private boolean isCurrentView(View view) {
+	protected boolean isCurrentView(View view) {
 		if (mScrollTarget != view) {
 			return false;
 		}
@@ -484,14 +481,18 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	@Override
 	protected void layoutChild(CoordinatorLayout parent, AppBarLayout child, int layoutDirection) {
 		super.layoutChild(parent, child, layoutDirection);
-		Logd(TAG, "layoutChild: viewPager.getMeasureHeight=1743:1920-239dp+432(maxScrollOffset)+36dp");
+		//Logd(TAG, "layoutChild: viewPager.getMeasureHeight=1743:1920-239dp+432(maxScrollOffset)+36dp");
+		getTotalScrollRange();
+	}
+
+	private void getTotalScrollRange() {
 		int height = this.mAppBarLayout.getHeight();
 		int minimumHeight = this.mAppBarLayout.getMinimumHeight();
 		mTotalScrollRange = height - minimumHeight;
-		Logd(TAG, "init: mTotalScrollRange:" + mTotalScrollRange + ",height:" + height + ",minimumHeight:" + minimumHeight);
+		Logd(TAG, "getTotalScrollRange:  mTotalScrollRange:" + mTotalScrollRange + ",height:" + height + ",minimumHeight:" + minimumHeight);
 	}
 
-	protected void dispatchOffsetUpdates(AppBarLayout layout, int translationOffset) {
+	protected void dispatchOffsetChanged(AppBarLayout layout, int translationOffset) {
 		if (layout instanceof SmoothAppBarLayout) {
 			List listeners = ((SmoothAppBarLayout) layout).mOffsetChangedListeners;
 			int i = 0;
@@ -511,7 +512,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	 */
 	public final class ViewOffsetHelper {
 		private final View mView;
-		private int mLayoutTop;
 		private int mOffsetTop;
 		private int curOffset;
 
@@ -520,11 +520,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		}
 
 		public void onViewLayout() {
-			// Now grab the intended top
-			Logd(TAG, "onViewLayout: " + mCurrentOffset);
-			mLayoutTop = mView.getTop();
 			// And offset it as needed
-//			updateOffsets();
 			if (mCurrentOffset != 0) {//底部上啦事件冲突
 				setTopAndBottomOffset(mCurrentOffset);
 			}
@@ -533,7 +529,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		private void updateOffsets() {
 			int offset = mOffsetTop;
 			int top = mView.getTop();
-			Logw(TAG, "updateOffsets: top:" + top + ",mLayoutTop:" + mLayoutTop + ",offset:" + offset);
+			Logw(TAG, "updateOffsets: top:" + top + ",offset:" + offset);
 			int newOffset;
 			if (top + offset > 0) {
 				offsetTopAndBottom(mView, -top);
@@ -554,10 +550,10 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				newOffset = top + offset;
 			}
 			mCurrentOffset = newOffset;
-			Logd(TAG, "fling: newOffset:" + newOffset + ",offset:" + offset);
+			Logd(TAG, "updateOffsets: newOffset:" + newOffset + ",offset:" + offset);
 			if (newOffset != curOffset) {
 				curOffset = newOffset;
-				dispatchOffsetUpdates(mAppBarLayout, newOffset);
+				dispatchOffsetChanged(mAppBarLayout, newOffset);
 			}
 		}
 

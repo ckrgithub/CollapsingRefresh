@@ -141,7 +141,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		ensureVelocityTracker();
 		if (mSmoothScrollListener != null) {
 			int currentOffset = mSmoothScrollListener.getCurrentOffset();
-			int totalScrollRange = mSmoothScrollListener.getTotalCollapsedRange();
+			int totalScrollRange = mSmoothScrollListener.getTotalRange();
 			int abs = Math.abs(currentOffset);
 			int state = 0;
 			if (abs < totalScrollRange) {
@@ -286,7 +286,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		Logd(TAG, "onStartFling: fling: velocityY:" + velocityY);
 		if (mSmoothScrollListener != null) {
 			int currentOffset = mSmoothScrollListener.getCurrentOffset();
-			int totalScrollRange = mSmoothScrollListener.getTotalCollapsedRange();
+			int totalScrollRange = mSmoothScrollListener.getTotalRange();
 			Logd(TAG, "onStartFling: fling:  currentOffset:" + currentOffset + ",mDiffFlingDistance:" + mDiffFlingDistance);
 			if (velocityY > 0 && currentOffset == -totalScrollRange) {
 				if (target instanceof RecyclerView) {

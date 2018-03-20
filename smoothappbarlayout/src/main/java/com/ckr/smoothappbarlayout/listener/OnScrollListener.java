@@ -15,5 +15,7 @@ public interface OnScrollListener extends OnCollapsingListener,OnFlingListener{
     void onScrollChanged(View view, int y, int dy);
 
     void onScrollValueChanged(View view, int scrollY, boolean onStartNestedFling);
+
     void setOnFlingListener(OnFlingListener onFlingListener);
+
 }

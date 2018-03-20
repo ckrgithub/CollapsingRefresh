@@ -202,8 +202,8 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
 	}
 
 	@Override
-	public int getTotalCollapsedRange() {
-		return mOnSmoothScrollListener == null ? 0 : mOnSmoothScrollListener.getTotalCollapsedRange();
+	public int getTotalRange() {
+		return mOnSmoothScrollListener == null ? 0 : mOnSmoothScrollListener.getTotalRange();
 	}
 
 	@Override
