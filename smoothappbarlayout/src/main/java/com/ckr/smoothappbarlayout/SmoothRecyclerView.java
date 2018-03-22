@@ -291,15 +291,10 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 					double fDistance = mDiffFlingDistance;
 					double flingDistance = mTotalFlingDistance;
 					Logd(TAG, "onStartFling: fling:  fDist:" + fDistance + ",mTotalFlingDistance:" + flingDistance);
-					int flingY = (int) (velocityY * Math.min(fDistance, flingDistance * 3 / 4f) / flingDistance);
 					int subVelocity = getVelocityWithDistance(fDistance);
-					int subVelocity2 = getVelocityWithDistance(flingDistance - fDistance);
-					int sumVelocity = getVelocityWithDistance(flingDistance);
-					Logd(TAG, "onStartFling: fling:  subVelocity:" + subVelocity + ",subV2:" + subVelocity2 + ",sumVelocity:" + sumVelocity);
-					boolean b = Math.abs(flingY) > 0;
+					boolean b = Math.abs(subVelocity) > 0;
 					if (b) {
 						fling(0, (int) subVelocity);
-						Logd(TAG, "onStartFling: fling: ,flingY:" + flingY);
 						mScrollState = SCROLL_STATE_IDLE;
 					}
 			}

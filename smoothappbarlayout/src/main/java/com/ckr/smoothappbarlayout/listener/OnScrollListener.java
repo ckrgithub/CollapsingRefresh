@@ -16,8 +16,6 @@ public interface OnScrollListener extends OnCollapsingListener,OnFlingListener{
 
     void onScrollValueChanged(View view, int scrollY, boolean onStartNestedFling);
 
-    void setOnFlingListener(OnFlingListener onFlingListener);
-
     void setCanDragHeader(boolean allow);
 
 }

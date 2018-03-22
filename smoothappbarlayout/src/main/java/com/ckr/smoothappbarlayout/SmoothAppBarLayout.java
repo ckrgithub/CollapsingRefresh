@@ -7,7 +7,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.ckr.smoothappbarlayout.listener.OnFlingListener;
 import com.ckr.smoothappbarlayout.listener.OnSmoothScrollListener;
 
 import java.lang.ref.WeakReference;
@@ -124,14 +123,6 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 	}
 
 	@Override
-	public void setOnFlingListener(OnFlingListener onFlingListener) {
-		if (smoothBehavior == null) {
-			initBehavior();
-		}
-		smoothBehavior.setOnFlingListener(onFlingListener);
-	}
-
-	@Override
 	public void setCanDragHeader(boolean allow) {
 		if (smoothBehavior == null) {
 			initBehavior();
@@ -193,11 +184,6 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 			if (mScrollState == 0) {
 				dispatchFling(mAppBarLayout, mScrollTarget);
 			}
-		}
-
-		@Override
-		public void setOnFlingListener(OnFlingListener onFlingListener) {
-			this.mOnFlingListener = onFlingListener;
 		}
 
 		@Override
