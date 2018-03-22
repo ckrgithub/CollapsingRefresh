@@ -14,7 +14,7 @@ import com.ckr.smoothappbarlayout.SmoothRecyclerView;
 import com.ckr.smoothappbarlayout.listener.OnSmoothScrollListener;
 import com.scwang.smartrefresh.SmartRefreshLayout;
 import com.scwang.smartrefresh.api.RefreshLayout;
-import com.scwang.smartrefresh.listener.OnCollapsingListener;
+import com.scwang.smartrefresh.listener.OnOffsetListener;
 import com.scwang.smartrefresh.listener.OnRefreshLoadmoreListener;
 import com.scwang.smartrefresh.util.LogUtil;
 
@@ -30,7 +30,7 @@ import static com.scwang.smartrefresh.util.LogUtil.Logd;
  * Created by PC大佬 on 2018/2/9.
  */
 
-public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListener, AppBarLayout.OnOffsetChangedListener, OnCollapsingListener {
+public class TwoFragment extends BaseFragment implements OnRefreshLoadmoreListener, AppBarLayout.OnOffsetChangedListener, OnOffsetListener {
 	private static final String TAG = "TwoFragment";
 	@BindView(R.id.recyclerView)
 	SmoothRecyclerView recyclerView;
