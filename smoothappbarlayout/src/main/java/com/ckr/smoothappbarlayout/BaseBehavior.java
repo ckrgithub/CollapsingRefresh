@@ -21,9 +21,9 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import static android.support.v4.view.ViewCompat.offsetTopAndBottom;
-import static com.scwang.smartrefresh.util.LogUtil.Logd;
-import static com.scwang.smartrefresh.util.LogUtil.Loge;
-import static com.scwang.smartrefresh.util.LogUtil.Logw;
+import static com.scwang.smartrefresh.util.RefreshLog.Logd;
+import static com.scwang.smartrefresh.util.RefreshLog.Loge;
+import static com.scwang.smartrefresh.util.RefreshLog.Logw;
 
 /**
  * Created by PC大佬 on 2018/2/9.

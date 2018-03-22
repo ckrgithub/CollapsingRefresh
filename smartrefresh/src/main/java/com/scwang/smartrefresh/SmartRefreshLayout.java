@@ -67,9 +67,9 @@ import static android.view.View.MeasureSpec.makeMeasureSpec;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.scwang.smartrefresh.util.DensityUtil.dp2px;
-import static com.scwang.smartrefresh.util.LogUtil.Logd;
-import static com.scwang.smartrefresh.util.LogUtil.Loge;
-import static com.scwang.smartrefresh.util.LogUtil.Logw;
+import static com.scwang.smartrefresh.util.RefreshLog.Logd;
+import static com.scwang.smartrefresh.util.RefreshLog.Loge;
+import static com.scwang.smartrefresh.util.RefreshLog.Logw;
 import static java.lang.System.currentTimeMillis;
 
 /**

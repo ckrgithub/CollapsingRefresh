@@ -49,7 +49,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static com.scwang.smartrefresh.util.LogUtil.Loge;
+import static com.scwang.smartrefresh.util.RefreshLog.Loge;
 
 /**
  * 刷新内容包装

@@ -23,7 +23,7 @@ import java.util.List;
 import butterknife.BindDimen;
 import butterknife.BindView;
 
-import static com.scwang.smartrefresh.util.LogUtil.Logd;
+import static com.scwang.smartrefresh.util.RefreshLog.Logd;
 
 /**
  * Created by PC大佬 on 2018/2/9.

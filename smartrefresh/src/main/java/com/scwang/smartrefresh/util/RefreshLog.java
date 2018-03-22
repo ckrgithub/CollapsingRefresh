@@ -6,12 +6,12 @@ import android.util.Log;
  * Created by PC大佬 on 2018/2/9.
  */
 
-public class LogUtil {
-	private static final String TAG = "LogUtil";
-	private static boolean DEBUG = true;
+public class RefreshLog {
+	private static final String TAG = "RefreshLog";
+	private static boolean DEBUG = false;
 
 	public static void debug() {
-		LogUtil.DEBUG = true;
+		RefreshLog.DEBUG = true;
 	}
 
 	public static void Logd(String tag, String msg) {
