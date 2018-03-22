@@ -33,7 +33,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	private static final int VELOCITY_UNITS = 1000;//1000 provides pixels per second
 	protected AppBarLayout mAppBarLayout;
 	protected View mScrollTarget;//可滚动的view
-	protected int mTotalScrollY;//mScrollTarget总共滚动的距离
 	protected int mScrollYWhenFling;//mScrollTarget开始fling时的滚动距离
 	private boolean mIsOnInit = false;
 	protected boolean canDragHeader = true;
@@ -45,10 +44,9 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	protected int mTotalScrollRange;
 	protected int mCurrentOffset;
 	private float velocityY;//即将fling时的velocity
+	private double mFlingDistance;//velocity对应的滚动距离
 	private boolean isNestedPreScroll;//防止跳动
 
-	protected OnFlingListener mOnFlingListener;
-	private double mFlingDistance;
 
 	private float mPhysicalCoeff;
 	private static float DECELERATION_RATE = (float) (Math.log(0.78) / Math.log(0.9));
@@ -244,7 +242,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 
 	@Override
 	public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, int dx, int dy, int[] consumed, int type) {
-		Logw(TAG, "NestedScrollingParent,onNestedPreScroll: dy:" + dy + ",mTotalScrollY:" + mTotalScrollY + ",mCurrentOffset:" + mCurrentOffset);
+		Logw(TAG, "NestedScrollingParent,onNestedPreScroll: dy:" + dy + ",mCurrentOffset:" + mCurrentOffset);
 		if (dy != 0) {
 			if (dy < 0) {
 				// We're scrolling down
@@ -333,7 +331,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	 */
 	final boolean fling(AppBarLayout layout, View target, float velocityY, boolean isOverScroll, boolean isDispatch) {
 		if (!isCurrentScrollTarget(target)) return false;
-		Logd(TAG, "fling: velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset + ",mTotalScrollY:" + mTotalScrollY);
+		Logd(TAG, "fling: velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset);
 		if (mFlingRunnable != null) {
 			layout.removeCallbacks(mFlingRunnable);
 			mFlingRunnable = null;

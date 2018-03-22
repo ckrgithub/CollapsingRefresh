@@ -174,16 +174,16 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 							if (state == 2) {
 								if (!forwardDirection) {
 									isInterruptFling = true;
-									Loge(TAG, "onTouchEvent: onScrollChanged  state:" + state + ",dy:" + dy + ",currentOffset:" + currentOffset);
+									Loge(TAG, "onTouchEvent: onScrolled  state:" + state + ",dy:" + dy + ",currentOffset:" + currentOffset);
 									if (mTotalScrollY == 0) {
-										mSmoothScrollListener.onScrollChanged(this, 0, -dy);
+										mSmoothScrollListener.onScrolled(this, 0, -dy);
 									}
 								}
 							} else {
 								if (mTotalScrollY == 0) {
-									Loge(TAG, "onTouchEvent: onScrollChanged  state:" + state + ",dy:" + dy + ",currentOffset:" + currentOffset);
+									Loge(TAG, "onTouchEvent: onScrolled  state:" + state + ",dy:" + dy + ",currentOffset:" + currentOffset);
 									isInterruptFling = true;
-									mSmoothScrollListener.onScrollChanged(this, 0, -dy);
+									mSmoothScrollListener.onScrolled(this, 0, -dy);
 								}
 							}
 							break;
@@ -325,7 +325,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 	@Override
 	public void onScrollStateChanged(int state) {
 		mScrollState = state;
-		Logd(TAG, "onScrollChanged: mScrollState:" + mScrollState);
+		Logd(TAG, "onScrolled: mScrollState:" + mScrollState);
 	}
 
 	@Override
@@ -337,9 +337,6 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 			forwardDirection = true;
 		} else {
 			forwardDirection = false;
-		}
-		if (mSmoothScrollListener != null) {
-			mSmoothScrollListener.onScrollValueChanged(this, mTotalScrollY, false);
 		}
 		if (mTotalScrollY == 0 && dy < 0) {
 			if (mSmoothScrollListener != null) {
@@ -353,7 +350,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 	public boolean fling(int velocityX, int velocityY) {
 		Loge(TAG, "fling: velocityX = [" + velocityX + "], velocityY:" + velocityY + "]" + ",mTotalScrollY：" + mTotalScrollY);
 		if (mSmoothScrollListener != null) {
-			mSmoothScrollListener.onScrollValueChanged(this, mTotalScrollY, true);
+			mSmoothScrollListener.onPreFling(this, mTotalScrollY);
 		}
 		if (velocityY > 0) {
 			return super.fling(velocityX, velocityY);

@@ -75,11 +75,11 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 	}
 
 	@Override
-	public void onScrollChanged(View view, int y, int dy) {
+	public void onScrolled(View view, int dx, int dy) {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		smoothBehavior.onScrollChanged(view, y, dy);
+		smoothBehavior.onScrolled(view, dx, dy);
 	}
 
 	@Override
@@ -99,11 +99,11 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 	}
 
 	@Override
-	public void onScrollValueChanged(View view, int scrollY, boolean onStartNestedFling) {
+	public void onPreFling(View view, int scrollY) {
 		if (smoothBehavior == null) {
 			initBehavior();
 		}
-		smoothBehavior.onScrollValueChanged(view, scrollY, onStartNestedFling);
+		smoothBehavior.onPreFling(view, scrollY);
 	}
 
 	@Override
@@ -146,8 +146,8 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 		}
 
 		@Override
-		public void onScrollChanged(View view, int y, int dy) {
-			syncOffset(view,dy);
+		public void onScrolled(View view, int dx, int dy) {
+			syncOffset(view, dy);
 		}
 
 		@Override
@@ -161,19 +161,16 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 		}
 
 		@Override
-		public void onScrollValueChanged(View view, int scrollY, boolean onStartNestedFling) {
+		public void onPreFling(View view, int scrollY) {
 			if (!isCurrentScrollTarget(view)) {
 				return;
 			}
-			mTotalScrollY = scrollY;
-			if (onStartNestedFling) {
-				mScrollYWhenFling = scrollY;
-			}
+			mScrollYWhenFling = scrollY;
 		}
 
 		@Override
 		public void onStartFling(View view, float velocityY) {
-			fling(mAppBarLayout, view, velocityY, false,true);
+			fling(mAppBarLayout, view, velocityY, false, true);
 		}
 
 		@Override
@@ -188,7 +185,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 
 		@Override
 		public void setCanDragHeader(boolean allow) {
-			canDragHeader=allow;
+			canDragHeader = allow;
 		}
 	}
 
