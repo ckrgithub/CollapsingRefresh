@@ -15,9 +15,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.scwang.smartrefresh.util.LogUtil.Logd;
-import static com.scwang.smartrefresh.util.LogUtil.Loge;
-
 
 /**
  * Created by PC大佬 on 2018/2/9.
@@ -159,15 +156,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 
 		@Override
 		public void onScrollChanged(View view, int y, int dy) {
-			if (!isCurrentView(view)) {
-				return;
-			}
-			if (dy != 0) {
-				Logd(TAG, "onScrollChanged: dy:" + dy + ",y:" + y + ",mCurrentOffset:" + mCurrentOffset);
-				int translationOffset = Math.max(-mTotalScrollRange, -dy);
-				Loge(TAG, "onScrollChanged: translationOffset:" + translationOffset);
-				syncOffset(view, translationOffset);
-			}
+			syncOffset(view,dy);
 		}
 
 		@Override
@@ -182,7 +171,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 
 		@Override
 		public void onScrollValueChanged(View view, int scrollY, boolean onStartNestedFling) {
-			if (!isCurrentView(view)) {
+			if (!isCurrentScrollTarget(view)) {
 				return;
 			}
 			mTotalScrollY = scrollY;
@@ -198,7 +187,7 @@ public class SmoothAppBarLayout extends AppBarLayout implements OnSmoothScrollLi
 
 		@Override
 		public void onDispatchFling(View view, int mScrollState) {
-			if (!isCurrentView(view)) {
+			if (!isCurrentScrollTarget(view)) {
 				return;
 			}
 			if (mScrollState == 0) {
