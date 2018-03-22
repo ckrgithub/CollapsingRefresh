@@ -213,7 +213,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				if (mIsBeingDragged) {
 					mLastMotionY = y;
 					// We're being dragged so scroll the ABL
-					syncOffset(dy);
+					syncOffset(-dy);
 				}
 				break;
 			}
@@ -260,8 +260,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				}
 				isNestedPreScroll = false;
 				Loge(TAG, "NestedScrollingParent,onNestedPreScroll: setTopAndBottomOffset:");
-				dy = Math.max(-mTotalScrollRange, -dy);
-				setTopAndBottomOffset(dy);
+				syncOffset(-dy);
 			}
 		}
 	}
@@ -361,7 +360,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		private final View scrollTarget;
 		private float velocityY;
 		private int mLastY = 0;
-		private boolean autoScroll;
 		private boolean isOverScroll;
 		private boolean isDispatch;
 
@@ -382,63 +380,41 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 					int currY = mScroller.getCurrY();
 					int y = mLastY - currY;
 					mLastY = currY;
-					Loge(TAG, "run: syncOffset: currY:" + currY + ",y:" + y + ",velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset);
-					if (mCurrentOffset == -mTotalScrollRange && mOnFlingListener != null && !autoScroll && velocityY > 0 && isDispatch) {
-
-						autoScroll = true;
-						mOnFlingListener.onStartFling(scrollTarget, velocityY);
-					} else {
-						if (y != 0) {
-							syncTopAndBottomOffset(y);
-						} else {
-							if (isOverScroll) {
-								isOverScroll = false;
-								int dy = 0;
-								if (velocityY > 0) {
-									dy = (currY - mTotalScrollRange) / 2 - 3;
-								} else {
-									dy = (currY + mTotalScrollRange) / 2 + 3;
+					Loge(TAG, "run: y:" + y + ",velocityY:" + velocityY + ",mCurrentOffset:" + mCurrentOffset);
+					if (mCurrentOffset == -mTotalScrollRange) {//collapsed
+						if (velocityY > 0) {// scrolling up
+							if (isDispatch) {
+								isDispatch = false;
+								if (scrollTarget instanceof OnFlingListener) {
+									((OnFlingListener) scrollTarget).onStartFling(scrollTarget, velocityY);
 								}
-								Logd(TAG, "run: fling: dy:" + dy);
-								syncTopAndBottomOffset(dy);
+//								if (mOnFlingListener != null) {
+//									mOnFlingListener.onStartFling(scrollTarget, velocityY);
+//								}
 							}
+						}
+					}
+					if (y != 0) {
+						syncTopAndBottomOffset(y);
+					} else {
+						if (isOverScroll) {
+							isOverScroll = false;
+							int dy = 0;
+							if (velocityY > 0) {
+								dy = (currY - mTotalScrollRange) / 2 - 3;
+							} else {
+								dy = (currY + mTotalScrollRange) / 2 + 3;
+							}
+							Logd(TAG, "run: fling: dy:" + dy);
+							syncTopAndBottomOffset(dy);
 						}
 					}
 					ViewCompat.postOnAnimation(mLayout, this);
 				} else {
-					Logd(TAG, "run: fling:  isFling=false");
-					autoScroll = false;
-					isOverScroll = false;
+					Logd(TAG, "run: isFinish()");
 				}
 			}
 		}
-	}
-
-	public void syncOffset(View view, int newOffset) {
-		if (!isCurrentScrollTarget(view)) return;
-		if (newOffset == 0) {
-			return;
-		}
-		newOffset = Math.max(-mTotalScrollRange, -newOffset);
-		Logd(TAG, "syncOffset:  newOffset:" + newOffset + ",isNestedPreScroll：" + isNestedPreScroll);
-		if (isNestedPreScroll) {
-			isNestedPreScroll = false;
-			return;
-		}
-		syncTopAndBottomOffset(newOffset);
-	}
-
-	protected void syncOffset(int newOffset) {
-		if (newOffset == 0) {
-			return;
-		}
-		newOffset = Math.max(-mTotalScrollRange, -newOffset);
-		Logd(TAG, "syncOffset:  newOffset:" + newOffset + ",isNestedPreScroll：" + isNestedPreScroll);
-		if (isNestedPreScroll) {
-			isNestedPreScroll = false;
-			return;
-		}
-		syncTopAndBottomOffset(newOffset);
 	}
 
 	protected boolean isCurrentScrollTarget(View target) {
@@ -448,12 +424,38 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 		return true;
 	}
 
+	/**
+	 * @param view
+	 * @param newOffset When newOffset < 0, We're scrolling up;When newOffset > 0,We're scrolling down
+	 */
+	public void syncOffset(View view, int newOffset) {
+		if (!isCurrentScrollTarget(view)) return;
+		Logd(TAG, "syncOffset:  newOffset:" + newOffset + ",isNestedPreScroll：" + isNestedPreScroll);
+		if (isNestedPreScroll) {
+			isNestedPreScroll = false;
+			return;
+		}
+		syncTopAndBottomOffset(newOffset);
+	}
+
+	/**
+	 * @param newOffset When newOffset < 0, We're scrolling up;When newOffset > 0,We're scrolling down
+	 */
+	protected void syncOffset(int newOffset) {
+		Logd(TAG, "syncOffset:  newOffset:" + newOffset + ",isNestedPreScroll：" + isNestedPreScroll);
+		if (isNestedPreScroll) {
+			isNestedPreScroll = false;
+			return;
+		}
+		syncTopAndBottomOffset(newOffset);
+	}
+
 	private void syncTopAndBottomOffset(int offset) {
 		if (mCurrentOffset == -mTotalScrollRange && offset < 0) {
 			return;
 		} else if (mCurrentOffset == 0 && offset > 0) {
 			return;
-		}else if (offset==0){
+		} else if (offset == 0) {
 			return;
 		}
 		setTopAndBottomOffset(offset);
