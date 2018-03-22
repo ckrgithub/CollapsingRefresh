@@ -328,6 +328,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	 * @param target
 	 * @param velocityY
 	 * @param isOverScroll
+	 * @param isDispatch    dispatch fling to scrollTarget
 	 * @return
 	 */
 	final boolean fling(AppBarLayout layout, View target, float velocityY, boolean isOverScroll, boolean isDispatch) {
@@ -388,9 +389,6 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 								if (scrollTarget instanceof OnFlingListener) {
 									((OnFlingListener) scrollTarget).onStartFling(scrollTarget, velocityY);
 								}
-//								if (mOnFlingListener != null) {
-//									mOnFlingListener.onStartFling(scrollTarget, velocityY);
-//								}
 							}
 						}
 					}
