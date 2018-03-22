@@ -101,7 +101,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="80"
+                            android:text="92"
                             android:textColor="#fff"
                             android:textSize="11sp" />
                     </LinearLayout>
@@ -165,7 +165,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="7"
+                            android:text="9"
                             android:textColor="#fff"
                             android:textSize="11sp" />
                     </LinearLayout>
