@@ -175,12 +175,12 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 								if (!forwardDirection) {
 									isInterruptFling = true;
 									Loge(TAG, "onTouchEvent: onScrolled  state:" + state + ",dy:" + dy + ",currentOffset:" + currentOffset);
-									if (mTotalScrollY == 0) {
+									if (mTotalScrollY <= 0) {
 										mSmoothScrollListener.onScrolled(this, 0, -dy);
 									}
 								}
 							} else {
-								if (mTotalScrollY == 0) {
+								if (mTotalScrollY <= 0) {
 									Loge(TAG, "onTouchEvent: onScrolled  state:" + state + ",dy:" + dy + ",currentOffset:" + currentOffset);
 									isInterruptFling = true;
 									mSmoothScrollListener.onScrolled(this, 0, -dy);

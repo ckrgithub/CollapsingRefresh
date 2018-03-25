@@ -31,6 +31,7 @@ import static com.scwang.smartrefresh.util.RefreshLog.Logd;
 
 public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListener, AppBarLayout.OnOffsetChangedListener, OnOffsetListener {
 	private static final String TAG = "OneFragment";
+	private static final int DELAY_MILLIS =10000;
 	@BindView(R.id.recyclerView)
 	SmoothRecyclerView recyclerView;
 	@BindView(R.id.refreshLayout)
@@ -138,7 +139,7 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
 						refreshUi();
 					}
 				}
-			}, 2000);
+			}, DELAY_MILLIS);
 		}
 	}
 
@@ -153,7 +154,7 @@ public class OneFragment extends BaseFragment implements OnRefreshLoadmoreListen
 						loadMoreUi();
 					}
 				}
-			}, 2000);
+			}, DELAY_MILLIS);
 		}
 	}
 

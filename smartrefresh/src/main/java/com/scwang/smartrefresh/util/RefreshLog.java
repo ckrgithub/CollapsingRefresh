@@ -8,7 +8,7 @@ import android.util.Log;
 
 public class RefreshLog {
 	private static final String TAG = "RefreshLog";
-	private static boolean DEBUG = false;
+	private static boolean DEBUG = true;
 
 	public static void debug() {
 		RefreshLog.DEBUG = true;
