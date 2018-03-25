@@ -75,7 +75,8 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
 		final int action = ev.getActionMasked();
-		Logd(TAG, "onInterceptTouchEvent: action:" + action + ",mIsBeingDragged:" + mIsBeingDragged);
+		int top = getTop();
+		Logd(TAG, "onInterceptTouchEvent: action:" + action + ",mIsBeingDragged:" + mIsBeingDragged+",top:"+top);
 		// Shortcut since we're being dragged
 		if (action == MotionEvent.ACTION_MOVE && mIsBeingDragged) {
 			return true;
