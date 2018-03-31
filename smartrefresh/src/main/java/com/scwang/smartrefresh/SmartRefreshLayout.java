@@ -740,6 +740,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 	}
 
 	boolean overSmooth = false;
+	boolean flag=false;
 
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent e) {
@@ -845,6 +846,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 					totalRange = mOnOffsetListener.getTotalRange();
 				}
 				other = false;
+				flag=false;
 				if ((!mIsBeingDragged || overSmooth)/* && (currentOffset != -totalRange || dy + mTouchSpinner <= 0)*/) {
 					Logd(TAG, "dispatchTouchEvent000: canLoadmore:" + mRefreshContent.canLoadmore() + ",canRefresh:" + mRefreshContent.canRefresh()
 							+ ", mSpinner:" + mSpinner + ",dy:" + dy + ",dx:" + dx + ",currentOffset:" + currentOffset);
@@ -912,6 +914,8 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 								if (mState == RefreshState.Refreshing && (currentOffset == -totalRange && dy + mTouchSpinner < 0)) {
 									Logd(TAG, "dispatchTouchEvent: mIsBeingDragged :" + mViceState);
 									long time = e.getEventTime();
+//									MotionEvent mFalsifyEvent = MotionEvent.obtain(time, time, MotionEvent.ACTION_DOWN, mTouchX + dx, mTouchY, 0);
+//									super.dispatchTouchEvent(mFalsifyEvent);
 									MotionEvent em = MotionEvent.obtain(time, time, MotionEvent.ACTION_MOVE, mTouchX + dx, mTouchY + dy + mTouchSpinner, 0);
 									return super.dispatchTouchEvent(em);
 								} else {
@@ -924,6 +928,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 						if ((mState != RefreshState.Refreshing/*&&mState!=RefreshState.Loading*/)
 								&& (mEnableLoadmore && mRefreshContent.canLoadmore() || (currentOffset == 0 && mEnableRefresh && mRefreshContent.canRefresh()))) {
 							overSmooth = false;
+							Logd(TAG, "dispatchTouchEvent: overSmooth = false");
 							if (dy > 0 && Math.abs(dx) > Math.abs(dy)) {
 								if (mSpinner < 0) {
 									setStatePullUpToLoad();
@@ -938,24 +943,28 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 							}
 						} else {
 							if (mState == RefreshState.Refreshing
-									&& ((currentOffset == -totalRange || currentOffset == 0) && dy + mTouchSpinner > 0)) {
-								Logd(TAG, "dispatchTouchEvent: mIsBeingDragged :" + mState);
+									/*&& ((currentOffset == -totalRange || currentOffset == 0))*/) {
+								Logd(TAG, "dispatchTouchEvent: mIsBeingDragged :" + mState + ",mSpinner;" + mSpinner);
 								if (mSpinner > 0) {
 									mIsBeingDragged = true;
+									if (mTouchSpinner == mHeaderHeight && dy != 0) {
+										flag=true;
+										dy = dy - mTouchSpinner;
+									}
 									setStatePullDownToRefresh();
-								} else {
-//										return super.dispatchTouchEvent(e);
-									/*if (dy >= 0) {
-									} else {
-										long time = e.getEventTime();
-										MotionEvent em = MotionEvent.obtain(time, time, MotionEvent.ACTION_MOVE, mTouchX + dx, mTouchY + dy + mTouchSpinner, 0);
-										return super.dispatchTouchEvent(em);
-									}*/
+								} else if (dy + mTouchSpinner < 0) {
+									float spinner = dy + mTouchSpinner;
+									Loge(TAG, "dispatchTouchEvent: spinner:" + spinner);
+									if (spinner + 0.5f > 0) {
+										return true;
+									}
 									long time = e.getEventTime();
 									MotionEvent mFalsifyEvent = MotionEvent.obtain(time, time, MotionEvent.ACTION_DOWN, mTouchX + dx, mTouchY, 0);
 									super.dispatchTouchEvent(mFalsifyEvent);
-									MotionEvent em = MotionEvent.obtain(time, time, MotionEvent.ACTION_MOVE, mTouchX + dx, mTouchY + dy + mTouchSpinner, 0);
+									MotionEvent em = MotionEvent.obtain(time, time, MotionEvent.ACTION_MOVE, mTouchX + dx, mTouchY + spinner, 0);
 									return super.dispatchTouchEvent(em);
+								} else {
+									return super.dispatchTouchEvent(e);
 								}
 							} else if (mState == RefreshState.Loading && (currentOffset == -totalRange && /*dy +*/ mTouchSpinner < 0)) {
 								Logd(TAG, "dispatchTouchEvent: mIsBeingDragged :" + mState);
@@ -999,7 +1008,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 							|| (getViceState().isFooter() && (spinner > 0 || mLastSpinner > 0))
 							|| (currentOffset != 0 && currentOffset != -totalRange)
 							/*|| (currentOffset == -totalRange && spinner > 0)*/) {
-						Loge(TAG, "dispatchTouchEvent333: 进入,mSpinner:" + mSpinner);
+						Loge(TAG, "dispatchTouchEvent333: 进入,mSpinner:" + mSpinner+",spinner:"+spinner);
 						long time = e.getEventTime();
 						if (mFalsifyEvent == null) {
 //                            mFalsifyEvent = MotionEvent.obtain(time, time, MotionEvent.ACTION_DOWN, e.getRawX(), e.getRawY(), 0);
@@ -1012,6 +1021,11 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 						mFalsifyEvent = null;
 //						mLastSpinner = (int) spinner;
 						if (mSpinner != 0) {
+//							if (mState == RefreshState.Refreshing) {
+//								if (flag&&spinner < 0) {
+//									moveSpinnerInfinitely(Math.abs(spinner));
+//								}
+//							}
 							moveSpinnerInfinitely(0);
 						}
 //						if (currentOffset == -totalRange&&!mRefreshContent.canLoadmore()) {
