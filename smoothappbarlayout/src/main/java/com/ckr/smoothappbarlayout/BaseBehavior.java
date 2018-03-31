@@ -3,6 +3,8 @@ package com.ckr.smoothappbarlayout;
 
 import android.content.Context;
 import android.hardware.SensorManager;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewCompat;
@@ -30,6 +32,8 @@ import static com.scwang.smartrefresh.util.RefreshLog.Logw;
  */
 public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnScrollListener {
 	private static final String TAG = "BaseBehavior";
+	private static final String ARG_SUPER = "args_super";
+	private static final String ARG_CURRENT_OFFSET = "args_current_offset";
 	private static final int VELOCITY_UNITS = 1000;//1000 provides pixels per second
 	protected AppBarLayout mAppBarLayout;
 	protected View mScrollTarget;//可滚动的view
@@ -327,7 +331,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 	 * @param target
 	 * @param velocityY
 	 * @param isOverScroll
-	 * @param isDispatch    dispatch fling to scrollTarget
+	 * @param isDispatch   dispatch fling to scrollTarget
 	 * @return
 	 */
 	final boolean fling(AppBarLayout layout, View target, float velocityY, boolean isOverScroll, boolean isDispatch) {
@@ -466,6 +470,22 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 			mTempTopBottomOffset = offset;
 		}
 		return false;
+	}
+
+	@Override
+	public void onRestoreInstanceState(CoordinatorLayout parent, AppBarLayout appBarLayout, Parcelable state) {
+		Bundle bundle = (Bundle) state;
+		mCurrentOffset = bundle.getInt(ARG_CURRENT_OFFSET);
+		Parcelable superState = bundle.getParcelable(ARG_SUPER);
+		super.onRestoreInstanceState(parent, appBarLayout, superState);
+	}
+
+	@Override
+	public Parcelable onSaveInstanceState(CoordinatorLayout parent, AppBarLayout abl) {
+		Bundle bundle = new Bundle();
+		bundle.putInt(ARG_CURRENT_OFFSET, mCurrentOffset);
+		bundle.putParcelable(ARG_SUPER, super.onSaveInstanceState(parent, abl));
+		return bundle;
 	}
 
 	@Override
