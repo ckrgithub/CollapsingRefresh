@@ -248,6 +248,7 @@ public abstract class BaseBehavior extends AppBarLayout.Behavior implements OnSc
 				// We're scrolling down
 				if (!isCurrentScrollTarget(target)) return;
 				isNestedPreScroll = true;
+				Logd(TAG, "NestedScrollingParent,onNestedPreScroll: isNestedPreScroll=true:");
 			} else {
 				// We're scrolling up
 				if (!isCurrentScrollTarget(target)) return;

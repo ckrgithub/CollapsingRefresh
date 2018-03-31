@@ -851,15 +851,15 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 					if (Math.abs(dy) >= mTouchSlop && Math.abs(dx) < Math.abs(dy)
 							&& ((currentOffset == 0 && dy >= 0) || (currentOffset == -totalRange && dy <= 0))) {//展开状态时只允许下拉，折叠时只允许上拉
 						if (dy > 0 && (mSpinner < 0 || (mEnableRefresh && mRefreshContent.canRefresh()))) {
-							Loge(TAG, "dispatchTouchEvent111: mSpinner:" + mSpinner + ",dy:" + dy + ",mState：" + mState+",mTouchSpinner:"+mTouchSpinner);
+							Loge(TAG, "dispatchTouchEvent111: mSpinner:" + mSpinner + ",dy:" + dy + ",mState：" + mState + ",mTouchSpinner:" + mTouchSpinner);
 //							if (false) {
 							if (mState == RefreshState.Refreshing && mSpinner >= 0) {
 								mIsBeingDragged = true;
-								if (mTouchSpinner==mHeaderHeight) {
-									dy=dy-mTouchSpinner;
+								if (mTouchSpinner == mHeaderHeight) {
+									dy = dy - mTouchSpinner;
 								}
 //								setStatePullUpToLoad();
-							}else {
+							} else {
 								if (mSpinner < 0) {
 									setStatePullUpToLoad();
 								} else {
@@ -891,8 +891,8 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 							super.dispatchTouchEvent(e);
 						} else {
 							Logd(TAG, "dispatchTouchEvent: 滑动允许最大角度为45度:" + mTouchSpinner + ",mState:" + mState);
-							if ((mState!=RefreshState.Refreshing/*&&mState!=RefreshState.Loading*/)
-									&&(mEnableLoadmore && mRefreshContent.canLoadmore()
+							if ((mState != RefreshState.Refreshing/*&&mState!=RefreshState.Loading*/)
+									&& (mEnableLoadmore && mRefreshContent.canLoadmore()
 									|| (currentOffset == 0 && mEnableRefresh && mRefreshContent.canRefresh()))) {
 								Logd(TAG, "dispatchTouchEvent: mEnableLoadmore = true");
 								overSmooth = false;
@@ -920,9 +920,9 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 							}
 						}
 					} else {
-						Logd(TAG, "dispatchTouchEvent: 滑动不允许:" + mTouchSpinner + ",mState:" + mState+",mViceState:"+mViceState);
-						if ((mState!=RefreshState.Refreshing/*&&mState!=RefreshState.Loading*/)
-								&&(mEnableLoadmore && mRefreshContent.canLoadmore() || (currentOffset == 0 && mEnableRefresh && mRefreshContent.canRefresh()))) {
+						Logd(TAG, "dispatchTouchEvent: 滑动不允许:" + mTouchSpinner + ",mState:" + mState + ",mViceState:" + mViceState);
+						if ((mState != RefreshState.Refreshing/*&&mState!=RefreshState.Loading*/)
+								&& (mEnableLoadmore && mRefreshContent.canLoadmore() || (currentOffset == 0 && mEnableRefresh && mRefreshContent.canRefresh()))) {
 							overSmooth = false;
 							if (dy > 0 && Math.abs(dx) > Math.abs(dy)) {
 								if (mSpinner < 0) {
@@ -937,11 +937,26 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 								super.dispatchTouchEvent(e);
 							}
 						} else {
-							if (mState == RefreshState.Refreshing && mSpinner > 0
-									&& ((currentOffset == -totalRange||currentOffset == 0) && dy + mTouchSpinner > 0)) {
+							if (mState == RefreshState.Refreshing
+									&& ((currentOffset == -totalRange || currentOffset == 0) && dy + mTouchSpinner > 0)) {
 								Logd(TAG, "dispatchTouchEvent: mIsBeingDragged :" + mState);
-								mIsBeingDragged = true;
-								setStatePullDownToRefresh();
+								if (mSpinner > 0) {
+									mIsBeingDragged = true;
+									setStatePullDownToRefresh();
+								} else {
+//										return super.dispatchTouchEvent(e);
+									/*if (dy >= 0) {
+									} else {
+										long time = e.getEventTime();
+										MotionEvent em = MotionEvent.obtain(time, time, MotionEvent.ACTION_MOVE, mTouchX + dx, mTouchY + dy + mTouchSpinner, 0);
+										return super.dispatchTouchEvent(em);
+									}*/
+									long time = e.getEventTime();
+									MotionEvent mFalsifyEvent = MotionEvent.obtain(time, time, MotionEvent.ACTION_DOWN, mTouchX + dx, mTouchY, 0);
+									super.dispatchTouchEvent(mFalsifyEvent);
+									MotionEvent em = MotionEvent.obtain(time, time, MotionEvent.ACTION_MOVE, mTouchX + dx, mTouchY + dy + mTouchSpinner, 0);
+									return super.dispatchTouchEvent(em);
+								}
 							} else if (mState == RefreshState.Loading && (currentOffset == -totalRange && /*dy +*/ mTouchSpinner < 0)) {
 								Logd(TAG, "dispatchTouchEvent: mIsBeingDragged :" + mState);
 								if (mSpinner < 0) {
@@ -1018,7 +1033,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 //                        return super.dispatchTouchEvent(e);
 					}
 
-					Logd(TAG, "dispatchTouchEvent444: mState:" + mState + ",mViceState:" + mViceState + ",isDraging:" + getViceState().isDraging()+",spinner："+spinner);
+					Logd(TAG, "dispatchTouchEvent444: mState:" + mState + ",mViceState:" + mViceState + ",isDraging:" + getViceState().isDraging() + ",spinner：" + spinner);
 					if (getViceState().isDraging()) {//展开状态时只允许下拉，折叠时只允许上拉
 						float moveSpinner = spinner;
 						if (currentOffset == 0 && moveSpinner >= 0) {

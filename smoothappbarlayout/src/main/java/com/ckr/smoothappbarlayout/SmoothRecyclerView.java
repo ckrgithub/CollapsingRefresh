@@ -28,7 +28,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 	private static final String TAG = "SmoothRecyclerView";
 	private static final String ARG_SCROLL_DISTANCE = "arg_scroll_distance";
 	private static final String ARG_SUPER = "arg_super";
-	private static final int VELOCITY_UNITS = 4000;//4000 provides pixels per second
+	private static final int VELOCITY_UNITS = 1000;//4000 provides pixels per second
 	private int mTotalScrollY;
 	private int mScrollState;
 	private boolean mIsBeingDragged;
@@ -339,7 +339,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		} else {
 			forwardDirection = false;
 		}
-		if (mTotalScrollY == 0 && dy < 0) {
+		if (mTotalScrollY == 0 && dy < 0&&mScrollState==SCROLL_STATE_SETTLING) {
 			if (mSmoothScrollListener != null) {
 				Logd(TAG, "fling:: startDispatch");
 				mSmoothScrollListener.onDispatchFling(this, SCROLL_STATE_IDLE);
