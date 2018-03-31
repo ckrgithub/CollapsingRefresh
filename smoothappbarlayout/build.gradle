@@ -1,4 +1,22 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+
+def siteUrl = 'https://github.com/ckrgithub/CollapsingRefresh'
+publish {
+    repoName = 'Refresh'
+    userOrg = 'ckrjfrog'
+    groupId = 'ckrjfrog.Refresh'
+    artifactId = 'CollapsingRefresh'
+    publishVersion = '1.0.1'
+    desc = 'AppBarLayout+ViewPager+RecyclerView的刷新功能'
+    website = siteUrl
+}
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
 
 android {
     compileSdkVersion rootProject.ext.androidConfig.compileSdkVersion
