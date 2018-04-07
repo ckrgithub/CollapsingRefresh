@@ -73,6 +73,11 @@ AppBarLayout+ViewPager+RecyclerView的刷新功能。最低支持api 16，recycl
 
 [smooth-app-bar-layout](https://github.com/henrytao-me/smooth-app-bar-layout)
 
+## 我的开源项目
+[PageRecyclerView](https://github.com/ckrgithub/PageRecyclerView)：自定义RecyclerView实现翻页功能及无限轮播
+
+[FlexItemDecoration](https://github.com/ckrgithub/FlexItemDecoration)：recyclerView分割线的绘制
+
 ## 更新日志
 * **1.0.1-release(进行中)**
   * 重构代码
