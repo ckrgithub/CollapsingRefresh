@@ -6,8 +6,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.androidConfig.minSdkVersion
         targetSdkVersion rootProject.ext.androidConfig.targetSdkVersion
-        versionCode rootProject.ext.appConfig.versionCode
-        versionName rootProject.ext.appConfig.versionName
+        versionCode 101
+        versionName "1.0.1"
 
     }
 
