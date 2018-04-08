@@ -76,7 +76,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
 		final int action = ev.getActionMasked();
 		int top = getTop();
-		Logd(TAG, "onInterceptTouchEvent: action:" + action + ",mIsBeingDragged:" + mIsBeingDragged+",top:"+top);
+		Logd(TAG, "onInterceptTouchEvent: action:" + action + ",mIsBeingDragged:" + mIsBeingDragged + ",top:" + top);
 		// Shortcut since we're being dragged
 		if (action == MotionEvent.ACTION_MOVE && mIsBeingDragged) {
 			return true;
@@ -157,6 +157,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 			Logd(TAG, "onTouchEvent: action:" + action + ",state:" + state + ", mScrollState:" + mScrollState
 					+ ",abs:" + abs + ",totalScrollRange:" + totalScrollRange + ",mTotalScrollY：" + mTotalScrollY);
 			if (state > 0) {
+				mTotalScrollY=0;
 				if (mScrollState != SCROLL_STATE_SETTLING) {
 					switch (action) {
 						case MotionEvent.ACTION_DOWN:
@@ -176,16 +177,12 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 								if (!forwardDirection) {
 									isInterruptFling = true;
 									Loge(TAG, "onTouchEvent: onScrolled  state:" + state + ",dy:" + dy + ",currentOffset:" + currentOffset);
-									if (mTotalScrollY <= 0) {
-										mSmoothScrollListener.onScrolled(this, 0, -dy);
-									}
-								}
-							} else {
-								if (mTotalScrollY <= 0) {
-									Loge(TAG, "onTouchEvent: onScrolled  state:" + state + ",dy:" + dy + ",currentOffset:" + currentOffset);
-									isInterruptFling = true;
 									mSmoothScrollListener.onScrolled(this, 0, -dy);
 								}
+							} else {
+								Loge(TAG, "onTouchEvent: onScrolled  state:" + state + ",dy:" + dy + ",currentOffset:" + currentOffset);
+								isInterruptFling = true;
+								mSmoothScrollListener.onScrolled(this, 0, -dy);
 							}
 							break;
 						case MotionEvent.ACTION_CANCEL:
@@ -197,7 +194,7 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 						case MotionEvent.ACTION_UP:
 							Logd(TAG, "onTouchEvent: fling: ACTION_UP:" + currentOffset + ",forwardDirection：" + forwardDirection);
 							if (!forwardDirection && currentOffset == 0) {
-							} else if (mTotalScrollY == 0) {
+							} else {
 								isInterruptFling = true;
 								eventAddedToVelocityTracker = true;
 								addEventToVelocityTracker(e);
@@ -289,15 +286,15 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 			int totalScrollRange = mSmoothScrollListener.getTotalRange();
 			Logd(TAG, "onStartFling: fling:  currentOffset:" + currentOffset + ",mDiffFlingDistance:" + mDiffFlingDistance);
 			if (velocityY > 0 && currentOffset == -totalScrollRange) {
-					double fDistance = mDiffFlingDistance;
-					double flingDistance = mTotalFlingDistance;
-					Logd(TAG, "onStartFling: fling:  fDist:" + fDistance + ",mTotalFlingDistance:" + flingDistance);
-					int subVelocity = getVelocityWithDistance(fDistance);
-					boolean b = Math.abs(subVelocity) > 0;
-					if (b) {
-						fling(0, (int) subVelocity);
-						mScrollState = SCROLL_STATE_IDLE;
-					}
+				double fDistance = mDiffFlingDistance;
+				double flingDistance = mTotalFlingDistance;
+				Logd(TAG, "onStartFling: fling:  fDist:" + fDistance + ",mTotalFlingDistance:" + flingDistance);
+				int subVelocity = getVelocityWithDistance(fDistance);
+				boolean b = Math.abs(subVelocity) > 0;
+				if (b) {
+					fling(0, (int) subVelocity);
+					mScrollState = SCROLL_STATE_IDLE;
+				}
 			}
 		}
 	}
@@ -331,7 +328,6 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 
 	@Override
 	public void onScrolled(int dx, int dy) {
-		super.onScrolled(dx, dy);
 		mTotalScrollY += dy;
 		Logd(TAG, "onScrolled() NestedScrollingParent: mTotalScrollY = [" + mTotalScrollY + "], dy = [" + dy + "]");
 		if (dy > 0) {
@@ -339,8 +335,8 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		} else {
 			forwardDirection = false;
 		}
-		if (mTotalScrollY <= 0 && dy < 0&&mScrollState==SCROLL_STATE_SETTLING) {
-			mTotalScrollY=0;
+		if (mTotalScrollY <= 0 && dy < 0 && mScrollState == SCROLL_STATE_SETTLING) {
+			mTotalScrollY = 0;
 			if (mSmoothScrollListener != null) {
 				Logd(TAG, "fling:: startDispatch");
 				mSmoothScrollListener.onDispatchFling(this, SCROLL_STATE_IDLE);
