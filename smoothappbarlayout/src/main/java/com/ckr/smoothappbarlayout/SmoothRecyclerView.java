@@ -155,9 +155,8 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 				}
 			}
 			Logd(TAG, "onTouchEvent: action:" + action + ",state:" + state + ", mScrollState:" + mScrollState
-					+ ",abs:" + abs + ",totalScrollRange:" + totalScrollRange + ",mTotalScrollY：" + mTotalScrollY);
+					+ ",abs:" + abs + ",totalScrollRange:" + totalScrollRange);
 			if (state > 0) {
-				mTotalScrollY=0;
 				if (mScrollState != SCROLL_STATE_SETTLING) {
 					switch (action) {
 						case MotionEvent.ACTION_DOWN:
@@ -335,11 +334,17 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		} else {
 			forwardDirection = false;
 		}
-		if (mTotalScrollY <= 0 && dy < 0 && mScrollState == SCROLL_STATE_SETTLING) {
-			mTotalScrollY = 0;
-			if (mSmoothScrollListener != null) {
-				Logd(TAG, "fling:: startDispatch");
-				mSmoothScrollListener.onDispatchFling(this, SCROLL_STATE_IDLE);
+		if (dy < 0 && mScrollState == SCROLL_STATE_SETTLING) {
+			boolean canScrollDown = canScrollVertically(-1);
+			Logd(TAG, "onScrolled(): canScrollDown:" + canScrollDown);
+			if (!canScrollDown) {
+				if (mTotalScrollY != 0) {
+					mTotalScrollY = 0;
+				}
+				if (mSmoothScrollListener != null) {
+					Logd(TAG, "fling:: startDispatch");
+					mSmoothScrollListener.onDispatchFling(this, SCROLL_STATE_IDLE);
+				}
 			}
 		}
 	}
