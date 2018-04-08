@@ -51,9 +51,9 @@ public abstract class BaseAdpater<T, E extends BaseViewHolder> extends RecyclerV
 			throw new ArrayIndexOutOfBoundsException(start);
 		}
 		data.add(start, t);
-		int len = data.size() - start;
-		notifyItemChanged(start);
-//		notifyDataSetChanged();
+//		int len = data.size() - start;
+//		notifyItemChanged(start);
+		notifyDataSetChanged();
 	}
 
 	public void updateItem(T t) {
