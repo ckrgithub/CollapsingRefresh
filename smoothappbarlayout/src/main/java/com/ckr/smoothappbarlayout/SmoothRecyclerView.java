@@ -339,7 +339,8 @@ public class SmoothRecyclerView extends RecyclerView implements OnFlingListener 
 		} else {
 			forwardDirection = false;
 		}
-		if (mTotalScrollY == 0 && dy < 0&&mScrollState==SCROLL_STATE_SETTLING) {
+		if (mTotalScrollY <= 0 && dy < 0&&mScrollState==SCROLL_STATE_SETTLING) {
+			mTotalScrollY=0;
 			if (mSmoothScrollListener != null) {
 				Logd(TAG, "fling:: startDispatch");
 				mSmoothScrollListener.onDispatchFling(this, SCROLL_STATE_IDLE);
