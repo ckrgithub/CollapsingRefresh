@@ -744,7 +744,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent e) {
-		Logd(TAG, "dispatchTouchEvent: mNestedScrollInProgress：" + mNestedScrollInProgress);
+		Logd(TAG, "dispatchTouchEvent: mNestedScrollInProgress:" + mNestedScrollInProgress);
 		//<editor-fold desc="多点触摸计算代码">
 		final int action = MotionEventCompat.getActionMasked(e);
 		final boolean pointerUp = action == MotionEvent.ACTION_POINTER_UP;
