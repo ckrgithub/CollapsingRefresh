@@ -1,7 +1,7 @@
 //全局参数
 ext {
     appConfig = [
-            versionCode  : 1,
+            versionCode  : 101,
             versionName  : "1.0.1",
             applicationId: "com.ckr.collapsingrefresh",
     ]
