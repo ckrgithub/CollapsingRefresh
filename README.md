@@ -16,8 +16,8 @@ AppBarLayout+ViewPager+RecyclerView的刷新功能。最低支持api 16，recycl
 	    android:id="@+id/refreshLayout"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    app:srlDisableContentWhenLoading="true"
-	    app:srlDisableContentWhenRefresh="true"
+	    app:srlDisableContentWhenLoading="false"
+	    app:srlDisableContentWhenRefresh="false"
 	    app:srlEnableAutoLoadmore="false"
 	    app:srlEnableHeaderTranslationContent="true"
 	    app:srlEnableLoadmore="true">
