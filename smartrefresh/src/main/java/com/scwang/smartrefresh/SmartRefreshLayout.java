@@ -739,8 +739,8 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 		return super.onInterceptTouchEvent(ev);
 	}
 
-	boolean overSmooth = false;
-	boolean flag = false;
+	boolean overSmooth = false;//无法说明
+	boolean flag = false;//无法说明
 
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent e) {
@@ -934,7 +934,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 									setStatePullDownToRefresh();
 								}else {
 									if (flag) {
-										if (currentOffset == 0 || currentOffset == totalRange) {
+										if (currentOffset == 0) {
 											flag = false;
 										}
 										if (mTouchSpinner > 0) {
