@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         app:srlClassicsSpinnerStyle="Translate"/>
 
-    <com.ckr.smoothappbarlayout.SmoothRecyclerView
+    <com.ckr.behavior.SmoothRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

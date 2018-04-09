@@ -15,7 +15,7 @@ import android.widget.ImageButton;
 import com.ckr.collapsingrefresh.R;
 import com.ckr.collapsingrefresh.util.StatusBarUtil;
 import com.ckr.collapsingrefresh.widget.MyFragmentPagerAdapter;
-import com.ckr.smoothappbarlayout.SmoothAppBarLayout;
+import com.ckr.behavior.SmoothAppBarLayout;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,5 @@
 
-package com.ckr.smoothappbarlayout;
+package com.ckr.behavior;
 
 import android.content.Context;
 import android.hardware.SensorManager;
@@ -16,16 +16,16 @@ import android.view.ViewConfiguration;
 import android.view.animation.Interpolator;
 import android.widget.OverScroller;
 
-import com.ckr.smoothappbarlayout.listener.OnFlingListener;
-import com.ckr.smoothappbarlayout.listener.OnScrollListener;
+import com.ckr.behavior.listener.OnFlingListener;
+import com.ckr.behavior.listener.OnScrollListener;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 import static android.support.v4.view.ViewCompat.offsetTopAndBottom;
-import static com.ckr.smoothappbarlayout.util.RefreshLog.Logd;
-import static com.ckr.smoothappbarlayout.util.RefreshLog.Loge;
-import static com.ckr.smoothappbarlayout.util.RefreshLog.Logw;
+import static com.ckr.behavior.util.RefreshLog.Logd;
+import static com.ckr.behavior.util.RefreshLog.Loge;
+import static com.ckr.behavior.util.RefreshLog.Logw;
 
 /**
  * Created by PC大佬 on 2018/2/9.

@@ -35,8 +35,8 @@ import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.ScrollView;
 
-import com.ckr.smoothappbarlayout.R;
-import com.ckr.smoothappbarlayout.listener.OnOffsetListener;
+import com.ckr.behavior.R;
+import com.ckr.behavior.listener.OnOffsetListener;
 import com.scwang.smartrefresh.api.DefaultRefreshFooterCreater;
 import com.scwang.smartrefresh.api.DefaultRefreshHeaderCreater;
 import com.scwang.smartrefresh.api.RefreshContent;
@@ -67,9 +67,9 @@ import static android.view.View.MeasureSpec.getSize;
 import static android.view.View.MeasureSpec.makeMeasureSpec;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static com.ckr.smoothappbarlayout.util.RefreshLog.Logd;
-import static com.ckr.smoothappbarlayout.util.RefreshLog.Loge;
-import static com.ckr.smoothappbarlayout.util.RefreshLog.Logw;
+import static com.ckr.behavior.util.RefreshLog.Logd;
+import static com.ckr.behavior.util.RefreshLog.Loge;
+import static com.ckr.behavior.util.RefreshLog.Logw;
 import static com.scwang.smartrefresh.util.DensityUtil.dp2px;
 import static java.lang.System.currentTimeMillis;
 

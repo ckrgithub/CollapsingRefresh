@@ -1,4 +1,4 @@
-package com.ckr.smoothappbarlayout.listener;
+package com.ckr.behavior.listener;
 
 import android.view.View;
 

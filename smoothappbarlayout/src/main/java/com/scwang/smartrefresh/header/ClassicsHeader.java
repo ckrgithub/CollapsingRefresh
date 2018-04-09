@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.ckr.smoothappbarlayout.R;
+import com.ckr.behavior.R;
 import com.scwang.smartrefresh.api.RefreshHeader;
 import com.scwang.smartrefresh.api.RefreshKernel;
 import com.scwang.smartrefresh.api.RefreshLayout;

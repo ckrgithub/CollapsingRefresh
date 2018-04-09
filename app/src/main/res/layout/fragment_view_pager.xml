@@ -13,7 +13,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
     <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
 
-    <com.ckr.smoothappbarlayout.SmoothAppBarLayout
+    <com.ckr.behavior.SmoothAppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/mine_info_height"
@@ -235,7 +235,7 @@
                 app:tabIndicatorHeight="0dp"
                 app:tabTextAppearance="@style/TabTextAppearance"></android.support.design.widget.TabLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
-    </com.ckr.smoothappbarlayout.SmoothAppBarLayout>
+    </com.ckr.behavior.SmoothAppBarLayout>
 </android.support.design.widget.CoordinatorLayout>
 
 

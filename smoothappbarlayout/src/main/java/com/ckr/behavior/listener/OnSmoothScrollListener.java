@@ -1,5 +1,5 @@
 
-package com.ckr.smoothappbarlayout.listener;
+package com.ckr.behavior.listener;
 
 import android.support.design.widget.AppBarLayout;
 

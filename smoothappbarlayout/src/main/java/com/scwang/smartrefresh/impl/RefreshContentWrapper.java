@@ -49,7 +49,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static com.ckr.smoothappbarlayout.util.RefreshLog.Loge;
+import static com.ckr.behavior.util.RefreshLog.Loge;
 
 /**
  * 刷新内容包装

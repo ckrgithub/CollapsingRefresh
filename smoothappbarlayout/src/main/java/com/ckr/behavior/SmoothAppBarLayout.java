@@ -1,5 +1,5 @@
 
-package com.ckr.smoothappbarlayout;
+package com.ckr.behavior;
 
 import android.content.Context;
 import android.support.design.widget.AppBarLayout;
@@ -7,7 +7,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.ckr.smoothappbarlayout.listener.OnSmoothScrollListener;
+import com.ckr.behavior.listener.OnSmoothScrollListener;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

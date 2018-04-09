@@ -1,4 +1,4 @@
-package com.ckr.smoothappbarlayout;
+package com.ckr.behavior;
 
 import android.content.Context;
 import android.hardware.SensorManager;
@@ -12,12 +12,12 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-import com.ckr.smoothappbarlayout.listener.OnFlingListener;
-import com.ckr.smoothappbarlayout.listener.OnSmoothScrollListener;
+import com.ckr.behavior.listener.OnFlingListener;
+import com.ckr.behavior.listener.OnSmoothScrollListener;
 
-import static com.ckr.smoothappbarlayout.util.RefreshLog.Logd;
-import static com.ckr.smoothappbarlayout.util.RefreshLog.Loge;
-import static com.ckr.smoothappbarlayout.util.RefreshLog.Logw;
+import static com.ckr.behavior.util.RefreshLog.Logd;
+import static com.ckr.behavior.util.RefreshLog.Loge;
+import static com.ckr.behavior.util.RefreshLog.Logw;
 
 
 /**

@@ -1,4 +1,4 @@
-package com.ckr.smoothappbarlayout.listener;
+package com.ckr.behavior.listener;
 
 /**
  * Created by Administrator on 2018/3/14.
