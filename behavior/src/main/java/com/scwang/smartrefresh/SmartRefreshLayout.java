@@ -938,7 +938,6 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 									mIsBeingDragged = true;
 									setStatePullDownToRefresh();
 								} else {
-									overSmooth = false;
 									if (flag) {
 										if (currentOffset == 0) {
 											flag = false;
@@ -955,6 +954,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 											flag = false;
 										}
 									}
+									overSmooth = false;
 									return super.dispatchTouchEvent(e);
 								}
 							} else if (mState == RefreshState.Loading && (currentOffset == -totalRange && mTouchSpinner < 0)) {
