@@ -848,6 +848,8 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 								mIsBeingDragged = true;
 								if (mTouchSpinner == mHeaderHeight) {
 									dy = dy - mTouchSpinner;
+//									mTouchY = touchY - mTouchSlop;
+//									dy = touchY - mTouchY;
 								}
 							} else {
 								if (mSpinner < 0) {
@@ -911,8 +913,20 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 					} else {
 						Logd(TAG, "dispatchTouchEvent: 滑动不允许:" + mTouchSpinner + ",mState:" + mState + ",mViceState:" + mViceState);
 						if ((mState != RefreshState.Refreshing)
-								&& (mEnableLoadmore && mRefreshContent.canLoadmore() || (currentOffset == 0 && mEnableRefresh && mRefreshContent.canRefresh()))) {
-							overSmooth = false;
+								&& (mEnableLoadmore && mRefreshContent.canLoadmore())) {
+//							overSmooth = false;
+							Logd(TAG, "dispatchTouchEvent: overSmooth = false");
+							if (dy < 0 && Math.abs(dx) > Math.abs(dy) && mSpinner < 0) {
+								setStatePullUpToLoad();
+								mIsBeingDragged = true;
+								mTouchY = touchY - mTouchSlop;
+								dy = touchY - mTouchY;
+								e.setAction(MotionEvent.ACTION_CANCEL);
+								super.dispatchTouchEvent(e);
+							}
+						} else if ((mState != RefreshState.Refreshing)
+								&& (currentOffset == 0 && mEnableRefresh && mRefreshContent.canRefresh())) {
+//							overSmooth = false;
 							Logd(TAG, "dispatchTouchEvent: overSmooth = false");
 							if (dy > 0 && Math.abs(dx) > Math.abs(dy)) {
 								if (mSpinner < 0) {
@@ -933,7 +947,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 									flag = false;
 									mIsBeingDragged = true;
 									setStatePullDownToRefresh();
-								}else {
+								} else {
 									if (flag) {
 										if (currentOffset == 0) {
 											flag = false;
@@ -984,7 +998,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 					}
 					if ((mRefreshContent != null)
 							&& (getViceState().isHeader() && (spinner < 0 || mLastSpinner < 0))
-							|| (getViceState().isFooter() && (spinner > 0 || mLastSpinner > 0))
+							|| (getViceState().isFooter() && (spinner > 0 || mLastSpinner > 0)&&mState!=RefreshState.Refreshing)
 							|| (currentOffset != 0 && currentOffset != -totalRange)) {
 						Loge(TAG, "dispatchTouchEvent333: 进入,mSpinner:" + mSpinner + ",spinner:" + spinner);
 						long time = e.getEventTime();
