@@ -1,1 +1,1 @@
-include ':app', ':smoothappbarlayout', ':smartrefresh'
+include ':app', ':behavior', ':smartrefresh'
