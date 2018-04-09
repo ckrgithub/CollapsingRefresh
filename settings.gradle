@@ -1,1 +1,1 @@
-include ':app', ':behavior', ':smartrefresh'
+include ':app', ':behavior'
