@@ -7,6 +7,15 @@ AppBarLayout+ViewPager+RecyclerView的刷新功能。最低支持api 16，recycl
 ## Demo
 [下载 APK](apk/app-debug.apk)
 
+## 依赖
+### 添加依赖：
+```
+	dependencies {
+		implementation 'ckrjfrog.Refresh:CollapsingRefresh:1.0.2'//gradle plugin 3.0(包含)以上使用
+		//compile 'ckrjfrog.Refresh:CollapsingRefresh:1.0.2'//gradle plugin 3.0一下使用
+	}
+```
+
 ## 功能及使用
 ### 1.布局引用
 ```
@@ -82,7 +91,7 @@ AppBarLayout+ViewPager+RecyclerView的刷新功能。最低支持api 16，recycl
 * **1.0.1-release**
   * 修复：上拉刷新时拖动布局会闪烁的bug等一系列bug
   * 其他：重构代码完成
-
+  * 依赖：ckrjfrog.Refresh:CollapsingRefresh:1.0.2
 
 * **1.0.1-beta**
   * 实现AppBarLayout+ViewPager+RecyclerView的下拉刷新和上拉加载功能
