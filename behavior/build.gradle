@@ -8,7 +8,7 @@ publish {
     userOrg = 'ckrjfrog'
     groupId = 'ckrjfrog.Refresh'
     artifactId = 'CollapsingRefresh'
-    publishVersion = '1.0.2'
+    publishVersion = '1.0.3'
     desc = 'AppBarLayout+ViewPager+RecyclerView的刷新功能'
     website = siteUrl
 }
@@ -24,8 +24,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.androidConfig.minSdkVersion
         targetSdkVersion rootProject.ext.androidConfig.targetSdkVersion
-        versionCode 102
-        versionName "1.0.2"
+        versionCode 103
+        versionName "1.0.3"
 
     }
 
