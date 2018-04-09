@@ -80,8 +80,9 @@ AppBarLayout+ViewPager+RecyclerView的刷新功能。最低支持api 16，recycl
 
 ## 更新日志
 * **1.0.1-release**
-  * 重构代码完成
-  * 修复一系列bug
+  * 修复：上拉刷新时拖动布局会闪烁的bug等一系列bug
+  * 其他：重构代码完成
+
 
 * **1.0.1-beta**
   * 实现AppBarLayout+ViewPager+RecyclerView的下拉刷新和上拉加载功能
