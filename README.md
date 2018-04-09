@@ -79,8 +79,9 @@ AppBarLayout+ViewPager+RecyclerView的刷新功能。最低支持api 16，recycl
 [FlexItemDecoration](https://github.com/ckrgithub/FlexItemDecoration)：recyclerView分割线的绘制
 
 ## 更新日志
-* **1.0.1-release(进行中)**
-  * 重构代码
+* **1.0.1-release**
+  * 重构代码完成
+  * 修复一系列bug
 
 * **1.0.1-beta**
   * 实现AppBarLayout+ViewPager+RecyclerView的下拉刷新和上拉加载功能
