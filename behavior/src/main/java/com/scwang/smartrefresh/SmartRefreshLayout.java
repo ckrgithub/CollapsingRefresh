@@ -888,7 +888,9 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 									if (mSpinner < 0) {
 										setStatePullUpToLoad();
 									} else {
-										setStatePullDownToRefresh();
+										if (currentOffset == 0) {
+											setStatePullDownToRefresh();
+										}
 									}
 									mIsBeingDragged = true;
 									mTouchY = touchY - mTouchSlop;
@@ -917,21 +919,16 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 							if (dy > 0 && Math.abs(dx) > Math.abs(dy)) {
 								if (mSpinner < 0) {
 									setStatePullUpToLoad();
-									mIsBeingDragged = true;
-									mTouchY = touchY - mTouchSlop;
-									dy = touchY - mTouchY;
-									e.setAction(MotionEvent.ACTION_CANCEL);
-									super.dispatchTouchEvent(e);
 								} else {
 									if (currentOffset == 0) {
 										setStatePullDownToRefresh();
 									}
-									mIsBeingDragged = true;
-									mTouchY = touchY - mTouchSlop;
-									dy = touchY - mTouchY;
-									e.setAction(MotionEvent.ACTION_CANCEL);
-									super.dispatchTouchEvent(e);
 								}
+								mIsBeingDragged = true;
+								mTouchY = touchY - mTouchSlop;
+								dy = touchY - mTouchY;
+								e.setAction(MotionEvent.ACTION_CANCEL);
+								super.dispatchTouchEvent(e);
 							}
 						} else {
 							if (mState == RefreshState.Refreshing) {
@@ -992,7 +989,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 					}
 					if ((mRefreshContent != null)
 							&& (getViceState().isHeader() && (spinner < 0 || mLastSpinner < 0))
-							|| (getViceState().isFooter() && (spinner > 0 || mLastSpinner > 0)&&mState != RefreshState.Refreshing)
+							|| (getViceState().isFooter() && (spinner > 0 || mLastSpinner > 0) && mState != RefreshState.Refreshing)
 							|| (currentOffset != 0 && currentOffset != -totalRange)) {
 						Loge(TAG, "dispatchTouchEvent333: 进入,mSpinner:" + mSpinner + ",spinner:" + spinner);
 						long time = e.getEventTime();
