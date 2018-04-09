@@ -992,7 +992,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 					}
 					if ((mRefreshContent != null)
 							&& (getViceState().isHeader() && (spinner < 0 || mLastSpinner < 0))
-							|| (getViceState().isFooter() && (spinner > 0 || mLastSpinner > 0))
+							|| (getViceState().isFooter() && (spinner > 0 || mLastSpinner > 0)&&mState != RefreshState.Refreshing)
 							|| (currentOffset != 0 && currentOffset != -totalRange)) {
 						Loge(TAG, "dispatchTouchEvent333: 进入,mSpinner:" + mSpinner + ",spinner:" + spinner);
 						long time = e.getEventTime();
