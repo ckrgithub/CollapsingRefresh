@@ -910,10 +910,10 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 						}
 					} else {
 						Logd(TAG, "dispatchTouchEvent: 滑动不允许:" + mTouchSpinner + ",mState:" + mState + ",mViceState:" + mViceState);
-						overSmooth = false;
 						if ((mState != RefreshState.Refreshing)
 								&& (mEnableLoadmore && mRefreshContent.canLoadmore() || (currentOffset == 0 && mEnableRefresh && mRefreshContent.canRefresh()))) {
 							Logd(TAG, "dispatchTouchEvent: overSmooth = false");
+							overSmooth = false;
 							if (dy > 0 && Math.abs(dx) > Math.abs(dy)) {
 								if (mSpinner < 0) {
 									setStatePullUpToLoad();
@@ -941,6 +941,7 @@ public class SmartRefreshLayout extends ViewGroup implements RefreshLayout {
 									mIsBeingDragged = true;
 									setStatePullDownToRefresh();
 								} else {
+									overSmooth = false;
 									if (flag) {
 										if (currentOffset == 0) {
 											flag = false;
