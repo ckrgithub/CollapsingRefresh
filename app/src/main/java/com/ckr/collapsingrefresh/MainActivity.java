@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.ckr.collapsingrefresh.view.ViewPagerFragment;
-import com.scwang.smartrefresh.util.RefreshLog;
+import com.ckr.smoothappbarlayout.util.RefreshLog;
 
 /**
  * Created by PC大佬 on 2018/2/9.

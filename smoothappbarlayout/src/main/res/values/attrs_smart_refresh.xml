@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+
+
+    <declare-styleable name="SmartRefreshLayout">
+        <attr name="srlPrimaryColor" />
+        <attr name="srlAccentColor" />
+        <attr name="srlReboundDuration" format="integer" />
+        <attr name="srlHeaderHeight" format="dimension" />
+        <attr name="srlFooterHeight" format="dimension" />
+        <attr name="srlDragRate" format="float" />
+        <attr name="srlHeaderMaxDragRate" format="float" />
+        <attr name="srlFooterMaxDragRate" format="float" />
+        <attr name="srlEnableRefresh" format="boolean" />
+        <attr name="srlEnableLoadmore" format="boolean" />
+        <attr name="srlEnableHeaderTranslationContent" format="boolean" />
+        <attr name="srlEnableFooterTranslationContent" format="boolean" />
+        <attr name="srlEnablePreviewInEditMode" format="boolean" />
+        <attr name="srlEnableAutoLoadmore" format="boolean" />
+        <attr name="srlEnableOverScrollBounce" format="boolean" />
+        <attr name="srlEnablePureScrollMode" format="boolean" />
+        <attr name="srlEnableNestedScrolling" format="boolean" />
+        <attr name="srlEnableScrollContentWhenLoaded" format="boolean" />
+        <attr name="srlDisableContentWhenRefresh" format="boolean" />
+        <attr name="srlDisableContentWhenLoading" format="boolean" />
+        <attr name="srlFixedHeaderViewId" format="reference" />
+        <attr name="srlFixedFooterViewId" format="reference" />
+        <attr name="srlHeaderFixBehind" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="SmartRefreshLayout_Layout">
+        <attr name="srlSpinnerStyle" />
+        <attr name="srlBackgroundColor" format="color" />
+    </declare-styleable>
+
+
+    <attr name="srlSpinnerStyle" format="enum">
+        <enum name="Translate" value="0" /><!--平行移动-->
+        <enum name="Scale" value="1" /><!--拉伸形变-->
+        <enum name="FixedFront" value="2" /><!--固定在前面-->
+        <enum name="FixedBehind" value="3" /><!--固定在背后-->
+    </attr>
+
+    <declare-styleable name="ClassicsHeader">
+        <attr name="srlClassicsSpinnerStyle" />
+        <attr name="srlPrimaryColor" />
+        <attr name="srlAccentColor" />
+        <attr name="srlArrowDrawable" />
+        <attr name="srlProgressDrawable" />
+    </declare-styleable>
+
+    <declare-styleable name="ClassicsFooter">
+        <attr name="srlClassicsSpinnerStyle" />
+        <attr name="srlPrimaryColor" />
+        <attr name="srlAccentColor" />
+        <attr name="srlArrowDrawable" />
+        <attr name="srlProgressDrawable" />
+    </declare-styleable>
+    <attr name="srlClassicsSpinnerStyle" format="enum">
+        <enum name="Translate" value="0" /><!--平行移动-->
+        <enum name="Scale" value="1" /><!--拉伸形变-->
+        <enum name="FixedBehind" value="3" /><!--固定在背后-->
+    </attr>
+    <attr name="srlPrimaryColor" format="color" /><!--主要颜色-->
+    <attr name="srlAccentColor" format="color" /><!--强调颜色-->
+    <attr name="srlArrowDrawable" format="reference" /><!--箭头图片-->
+    <attr name="srlProgressDrawable" format="reference" /><!--转动图片-->
+    <attr name="srlEnableHorizontalDrag" format="boolean" /><!--支持水平拖动-->
+
+</resources>

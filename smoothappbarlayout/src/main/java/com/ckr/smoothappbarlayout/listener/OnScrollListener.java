@@ -2,8 +2,6 @@ package com.ckr.smoothappbarlayout.listener;
 
 import android.view.View;
 
-import com.scwang.smartrefresh.listener.OnOffsetListener;
-
 /**
  * Created by Administrator on 2018/3/14.
  */

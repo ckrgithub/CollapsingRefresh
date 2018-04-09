@@ -5,7 +5,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
-import static com.scwang.smartrefresh.util.RefreshLog.Logd;
+import static com.ckr.smoothappbarlayout.util.RefreshLog.Logd;
 
 
 /**

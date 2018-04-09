@@ -15,9 +15,9 @@ import android.view.ViewConfiguration;
 import com.ckr.smoothappbarlayout.listener.OnFlingListener;
 import com.ckr.smoothappbarlayout.listener.OnSmoothScrollListener;
 
-import static com.scwang.smartrefresh.util.RefreshLog.Logd;
-import static com.scwang.smartrefresh.util.RefreshLog.Loge;
-import static com.scwang.smartrefresh.util.RefreshLog.Logw;
+import static com.ckr.smoothappbarlayout.util.RefreshLog.Logd;
+import static com.ckr.smoothappbarlayout.util.RefreshLog.Loge;
+import static com.ckr.smoothappbarlayout.util.RefreshLog.Logw;
 
 
 /**
