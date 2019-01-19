@@ -37,7 +37,7 @@ AppBarLayout+ViewPager+RecyclerView的刷新功能。最低支持api 16，recycl
 	        android:layout_height="wrap_content"
 	        app:srlClassicsSpinnerStyle="Translate"/>
 	
-	    <com.ckr.smoothappbarlayout.SmoothRecyclerView
+	    <com.ckr.behavior.SmoothRecyclerView
 	        android:id="@+id/recyclerView"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
